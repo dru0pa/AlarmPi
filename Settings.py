@@ -23,7 +23,7 @@ class Settings:
    TABLE_NAME='settings'
 
    # Path to executable to modify volume
-   VOL_CMD='/usr/bin/vol'
+   VOL_CMD='../vol'
 
    # Our default settings for when we create the table
    DEFAULTS= [
