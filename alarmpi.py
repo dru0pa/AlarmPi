@@ -51,17 +51,20 @@ class AlarmPi:
       alarm = AlarmThread.AlarmThread()
       alarm.setDaemon(True)
 
-      log.debug("Loading LCD")
-      lcd = LcdThread.LcdThread(alarm,self.stop)
-      lcd.setDaemon(True)
-      lcd.start()
+      use_lcd = settings.getInt('use_lcd')
+      if use_lcd == 1:
+          log.debug("Loading LCD")
+          lcd = LcdThread.LcdThread(alarm,self.stop)
+          lcd.setDaemon(True)
+          lcd.start()
 
-      log.debug("Loading brightness control")
-      bright = BrightnessThread.BrightnessThread()
-      bright.setDaemon(True)
-      bright.registerControlObject(clock.segment.disp)
-      bright.registerControlObject(lcd)
-      bright.start()
+          log.debug("Loading brightness control")
+          bright = BrightnessThread.BrightnessThread()
+          bright.setDaemon(True)
+          bright.registerControlObject(clock.segment.disp)
+          bright.registerControlObject(lcd)
+          bright.start()
+
 
       # If there's a manual alarm time set in the database, then load it
       manual = settings.getInt('manual_alarm')
