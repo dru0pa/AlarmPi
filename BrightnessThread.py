@@ -73,7 +73,7 @@ class BrightnessThread(threading.Thread):
          #percentage = reading/100
          #newLevel = int(percentage * maxBright)
 
-         newLevel = int(reading/2666.66666666666667)
+         newLevel = int(reading/333.33333333333333)
 
          if(newLevel>maxBright):
             newLevel = maxBright
