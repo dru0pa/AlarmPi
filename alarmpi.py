@@ -74,7 +74,7 @@ class AlarmPi:
          alarm.autoSetAlarm()
       else:
          log.info("manual: %s", manual)
-         alarmTime = datetime.datetime.utcfromtimestamp(manual)
+         alarmTime = datetime.datetime.fromtimestamp(manual)
          log.info("Loaded previously set manual alarm time of %s",alarmTime)
 
          #alarmTime2 = dateutil.parser.parse(manual,ignoretz=True)
