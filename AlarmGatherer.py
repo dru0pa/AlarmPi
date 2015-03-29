@@ -93,9 +93,11 @@ class AlarmGatherer:
    def getNextEventLocation(self, includeToday=False):
       log.debug("Fetching next event location (including today=%s)" % (includeToday))
       nextEvent = self.getNextEvent(today=includeToday)
-      if(nextEvent['location'] is not None):
-         return nextEvent['location']
-      
+      try:
+         if(nextEvent['location'] is not None):
+            return nextEvent['location']
+      except KeyError:
+         log.debug("No key for location")
       return None
 
    def getDefaultAlarmTime(self):
