@@ -64,7 +64,8 @@ class AlarmPi:
       bright = BrightnessThread.BrightnessThread()
       bright.setDaemon(True)
       bright.registerControlObject(clock.segment.disp)
-      bright.registerControlObject(lcd)
+      if use_lcd == 1:
+          bright.registerControlObject(lcd)
       bright.start()
 
 
