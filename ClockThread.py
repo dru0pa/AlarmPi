@@ -4,6 +4,7 @@ import time
 import datetime
 import pytz
 import threading
+import Settings
 from Adafruit_7Segment import SevenSegment
 
 class ClockThread(threading.Thread):
@@ -12,6 +13,7 @@ class ClockThread(threading.Thread):
       threading.Thread.__init__(self)
       self.segment = SevenSegment(address=0x70)
       self.stopping=False
+      self.settings = Settings.Settings()
 
    def stop(self):
       self.segment.disp.clear()
