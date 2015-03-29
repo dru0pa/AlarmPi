@@ -27,7 +27,7 @@ class Settings:
 
    # Our default settings for when we create the table
    DEFAULTS= [
-      ('volume','80'), # Volume
+      ('volume','100'), # Volume
       ('station','0'), # Radio station to play
       ('radio_delay','10'), # Delay (secs) to wait for radio to start
       ('snooze_length','5'), # Time (mins) to snooze for
