@@ -31,7 +31,7 @@ class AlarmThread(threading.Thread):
       self.settings = Settings.Settings()
       self.media = MediaPlayer.MediaPlayer()
       self.alarmGatherer = AlarmGatherer.AlarmGatherer()
-      self.weather = WeatherFetcher()
+      self.weatherFetcher = WeatherFetcher()
 
       self.fromEvent = False # False if auto or manual, True if from an event
 
@@ -89,7 +89,7 @@ class AlarmThread(threading.Thread):
 
          weather = ""
          try:
-            weather = self.weather.getWeather().speech()
+            weather = self.weatherFetcher.getWeather().speech()
          except Exception:
             log.exception("Failed to get weather information")
 
