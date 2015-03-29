@@ -75,8 +75,7 @@ class AlarmGatherer:
          maxResults='1',
          orderBy='startTime',
          singleEvents='true',
-         timeMin="%sZ" % (time.isoformat()),
-         location=''
+         timeMin="%sZ" % (time.isoformat())
       ).execute()
 
       events = result.get('items', [])
@@ -94,7 +93,7 @@ class AlarmGatherer:
    def getNextEventLocation(self, includeToday=False):
       log.debug("Fetching next event location (including today=%s)" % (includeToday))
       nextEvent = self.getNextEvent(today=includeToday)
-      if(nextEvent['location']):
+      if(nextEvent['location'] is not None):
          return nextEvent['location']
       
       return None
