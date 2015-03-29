@@ -65,8 +65,7 @@ class BrightnessThread(threading.Thread):
             self.manualTimeout=-1
             continue
 
-         reading = float(self.sensor.readLux())
-         log.debug("reading: %s" % (reading))
+         reading = float(self.sensor.readFull())
          
          #if(reading>100):
          #   reading = 100 # Seems like a sensible max for the IR sensor, can go into the 10's of thousands
