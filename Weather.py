@@ -27,6 +27,7 @@ class WeatherFetcher:
             log.debug("Making request to OpenWeatherMap")
             response = requests.get('http://api.openweathermap.org/data/2.5/weather?q=%s' % (place), timeout=3)
             log.debug("Completed request to OpenWeatherMap")
+            log.debug("http://api.openweathermap.org/data/2.5/weather?q=%s" % (place))
             response = response.json()
             log.debug("Parsed response")
          except:
