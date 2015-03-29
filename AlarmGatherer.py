@@ -85,12 +85,12 @@ class AlarmGatherer:
       log.debug("Fetching next event time (including today=%s)" % (includeToday))
       nextEvent = self.getNextEvent(today=includeToday)
       start = dateutil.parser.parse(nextEvent['start']['dateTime'])
-      start2 = dateutil.parser.parse(nextEvent['start']['dateTime'],ignoretz=True)
-      start3 = start.replace(tzinfo=pytz.timezone(self.settings.get('timezone')))
+      #start2 = dateutil.parser.parse(nextEvent['start']['dateTime'],ignoretz=True)
+      #start3 = start.replace(tzinfo=pytz.timezone(self.settings.get('timezone')))
 
-      log.info("start: %s", start)
-      log.info("start2: %s", start2)
-      log.info("start3: %s", start3)
+      #log.info("start: %s", start)
+      #log.info("start2: %s", start2)
+      #log.info("start3: %s", start3)
 
       return start
 

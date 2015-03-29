@@ -242,8 +242,8 @@ class AlarmThread(threading.Thread):
       while(not self.stopping):
           now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
 
-          log.info("now: %s", now)
-          log.info("nextAlarm: %s", self.nextAlarm)
+          #log.info("now: %s", now)
+          #log.info("nextAlarm: %s", self.nextAlarm)
 
           if(self.nextAlarm is not None and self.fromEvent and self.alarmInSeconds() < 3600 and not self.travelCalculated):
              # We're inside 1hr of an event alarm being triggered, and we've not taken into account the current traffic situation
