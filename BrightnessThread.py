@@ -81,7 +81,7 @@ class BrightnessThread(threading.Thread):
          self.readings.pop(0)
          self.readings.append(newLevel)
 
-         avgLevel = int( sum(self.readings) / float(len(self.readings)) )
+         avgLevel = int( sum(self.readings) / float(len(self.readings) * 2) )
 
          levelDiff = abs(self.currentLevel - avgLevel)
 
