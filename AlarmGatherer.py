@@ -94,8 +94,7 @@ class AlarmGatherer:
       log.debug("Fetching next event location (including today=%s)" % (includeToday))
       nextEvent = self.getNextEvent(today=includeToday)
       try:
-         if(nextEvent['location'] is not None):
-            return nextEvent['location']
+         return nextEvent['location']
       except KeyError:
          log.debug("No key for location")
       return None
