@@ -86,7 +86,7 @@ class AlarmGatherer:
       nextEvent = self.getNextEvent(today=includeToday)
       start = dateutil.parser.parse(nextEvent['start']['dateTime'])
       #start = dateutil.parser.parse(nextEvent['start']['dateTime'],ignoretz=True)
-      #start = start.replace(tzinfo=pytz.timezone(self.settings.get('timezone')))
+      start = start.replace(tzinfo=pytz.timezone(self.settings.get('timezone')))
 
       return start
 
