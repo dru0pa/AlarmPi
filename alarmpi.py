@@ -101,7 +101,8 @@ class AlarmPi:
       web.stop()
       alarm.stop()
       clock.stop()
-      lcd.stop()
+      if use_lcd == 1:
+         lcd.stop()
       bright.stop()
 
       log.info("Shutdown complete, now exiting")
