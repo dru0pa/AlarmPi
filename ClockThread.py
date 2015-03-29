@@ -23,7 +23,7 @@ class ClockThread(threading.Thread):
       while(not self.stopping):
           now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
           #hour = now.hour
-          hour = now.strftime("%I").lstrip("0")
+          hour = int(now.strftime("%I").lstrip("0"))
 
           minute = now.minute
           second = now.second
