@@ -2,6 +2,18 @@ import time
 import threading
 import TSL2561
 import Settings
+import logging
+
+log = logging.getLogger('root')
+log.setLevel(logging.DEBUG)
+
+stream = logging.StreamHandler(sys.stdout)
+stream.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+stream.setFormatter(formatter)
+
+log.addHandler(stream)
 
 LOOP_TIME = float(0.1)
 
@@ -72,10 +84,10 @@ class BrightnessThread(threading.Thread):
 
          levelDiff = abs(self.currentLevel - avgLevel)
 
-#         print "Reading: %s, Percentage: %s, NewLevel: %s, AvgLevel: %s, Diff: %s" % (reading,percentage,newLevel,avgLevel,levelDiff)
+         log.debug("Reading: %s, Percentage: %s, NewLevel: %s, AvgLevel: %s, Diff: %s" % (reading,percentage,newLevel,avgLevel,levelDiff))
 
          if(levelDiff>=2):
-#            print "Updating brightness to %s" % (avgLevel)
+            log.debug("Updating brightness to %s" % (avgLevel))
             self.currentLevel=avgLevel
             self.updateBrightness()
 
