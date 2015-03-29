@@ -40,7 +40,7 @@ class Settings:
       ('calendar',CalendarCredentials.CALENDAR), # Calendar to gather events from
       ('holiday_mode','0'), # Is holiday mode (no auto-alarm setting) enabled?
       ('sfx_enabled','1'), # Are sound effects enabled?
-      ('default_wake','0930'), # If our alarm gets scheduled for later than this, ignore and default to this
+      ('default_wake','0630'), # If our alarm gets scheduled for later than this, ignore and default to this
       ('alarm_timeout','120'), # If the alarm is still going off after this many minutes, stop it
       ('weather_location','New York, NY'), # The location to load weather for
       ('weather_on_alarm','1'), # Read out the weather on alarm cancel
