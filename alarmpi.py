@@ -2,6 +2,8 @@
 
 import logging
 import sys
+import pytz
+import dateutil.parser
 
 log = logging.getLogger('root')
 log.setLevel(logging.DEBUG)
@@ -72,6 +74,13 @@ class AlarmPi:
          alarm.autoSetAlarm()
       else:
          alarmTime = datetime.datetime.utcfromtimestamp(manual)
+
+         alarmTime2 = dateutil.parser.parse(manual,ignoretz=True)
+         alarmTime3 = manual.replace(tzinfo=pytz.timezone(self.settings.get('timezone')))
+
+         log.info("alarmTime2: %s", alarmTime2)
+         log.info("alarmTime3: %s", alarmTime3)
+
          log.info("Loaded previously set manual alarm time of %s",alarmTime)
          alarm.manualSetAlarm(alarmTime)
 
