@@ -12,6 +12,7 @@ import logging
 import urllib2
 from Weather import WeatherFetcher
 from TravelCalculator import TravelCalculator
+from InputWorker import InputWorker
 
 log = logging.getLogger('root')
 
@@ -117,6 +118,19 @@ class AlarmThread(threading.Thread):
    def silenceAlarm(self):
       log.info("Silencing alarm")
       self.media.stopPlayer()
+
+   # Called by InputWorker on press of the cancel button
+   def cancel(self):
+      if self.isAlarmSounding() or self.isSnoozing():
+         # Stop the alarm!
+         self.stopAlarm()
+         return
+
+      if self.alarmInSeconds() < self.settings.getInt('preempt_cancel'):
+         # We're in the allowable window for pre-empting a cancel alarm, and we're not in the menu
+         log.info("Pre-empt cancel triggered")
+         self.stopAlarm()
+         return
 
    def autoSetAlarm(self):
       if self.settings.getInt('holiday_mode')==1:
