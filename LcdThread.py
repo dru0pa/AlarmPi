@@ -113,7 +113,7 @@ class LcdThread(threading.Thread):
             elif self.menu.backgroundRadioActive():
                message = "Radio player on"
             else:
-               now = datetime.datetime.now(pytz.timezone('Europe/London'))
+               now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
                message = formatDate(now)
                message+="\n"
             

@@ -140,7 +140,7 @@ class MenuControl(threading.Thread):
          self.menuPointer = len(menuItems)-1
 
    def __alarmTimeFromInput(self):
-      manAlarmTime = datetime.datetime.now(pytz.timezone('Europe/London'))
+      manAlarmTime = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
       manAlarmTime += datetime.timedelta(minutes=1 + (5*self.tmp))
       manAlarmTime = manAlarmTime.replace(
          minute = (manAlarmTime.minute - (manAlarmTime.minute%5)),

@@ -48,6 +48,7 @@ class Settings:
       ('location_home','Lyndale Road, Redhill, Surrey, UK'), # Location for home
       ('location_work','Gatwick Airport'), # Default location for work (if lookup from event fails)
       ('use_lcd','0'), # Use LCD or not
+      ('timezone','US/Eastern'), # pytz timezone
    ]
 
    def __init__(self):

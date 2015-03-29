@@ -86,7 +86,7 @@ class AlarmGatherer:
       nextEvent = self.getNextEvent(today=includeToday)
       start = dateutil.parser.parse(nextEvent['start']['dateTime'])
       #start = dateutil.parser.parse(nextEvent['start']['dateTime'],ignoretz=True)
-      #start = start.replace(tzinfo=pytz.timezone('Europe/London'))
+      #start = start.replace(tzinfo=pytz.timezone(self.settings.get('timezone')))
 
       return start
 
@@ -103,7 +103,7 @@ class AlarmGatherer:
       defaultHour = int(defaultTime[:2])
       defaultMin = int(defaultTime[2:])
       
-      alarm = datetime.datetime.now(pytz.timezone('Europe/London'))
+      alarm = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
       alarm += datetime.timedelta(days=1) # Move to tomorrow
       alarm = alarm.replace(hour=defaultHour,minute=defaultMin,second=0,microsecond=0)
 
