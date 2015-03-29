@@ -3,6 +3,7 @@ import threading
 import TSL2561
 import Settings
 import logging
+import sys
 
 log = logging.getLogger('root')
 log.setLevel(logging.DEBUG)
