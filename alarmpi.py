@@ -74,7 +74,7 @@ class AlarmPi:
          alarm.autoSetAlarm()
       else:
          log.info("manual: %s", manual)
-         alarmTime = datetime.datetime.fromtimestamp(manual,settings.get('timezone'))
+         alarmTime = datetime.datetime.fromtimestamp(manual,tzinfo=pytz.timezone(self.settings.get('timezone')))
          log.info("Loaded previously set manual alarm time of %s",alarmTime)
 
          #alarmTime2 = dateutil.parser.parse(manual,ignoretz=True)
