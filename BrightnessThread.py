@@ -66,6 +66,7 @@ class BrightnessThread(threading.Thread):
             continue
 
          reading = float(self.sensor.readIR())
+         log.debug("reading: ", reading)
          
          if(reading>100):
             reading = 100 # Seems like a sensible max for the IR sensor, can go into the 10's of thousands
@@ -81,7 +82,7 @@ class BrightnessThread(threading.Thread):
          self.readings.pop(0)
          self.readings.append(newLevel)
 
-         avgLevel = int( sum(self.readings) / float(len(self.readings) * 2) )
+         avgLevel = int( sum(self.readings) / float(len(self.readings)) )
 
          levelDiff = abs(self.currentLevel - avgLevel)
 
