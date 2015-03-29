@@ -42,11 +42,11 @@ class Settings:
       ('sfx_enabled','1'), # Are sound effects enabled?
       ('default_wake','0930'), # If our alarm gets scheduled for later than this, ignore and default to this
       ('alarm_timeout','120'), # If the alarm is still going off after this many minutes, stop it
-      ('weather_location','Gatwick'), # The location to load weather for
+      ('weather_location','New York, NY'), # The location to load weather for
       ('weather_on_alarm','1'), # Read out the weather on alarm cancel
       ('preempt_cancel','600'), # Number of seconds before an alarm that we're allowed to cancel it
-      ('location_home','Lyndale Road, Redhill, Surrey, UK'), # Location for home
-      ('location_work','Gatwick Airport'), # Default location for work (if lookup from event fails)
+      ('location_home','201 E 19th st, New York, NY'), # Location for home
+      ('location_work','Stamford, CT'), # Default location for work (if lookup from event fails)
       ('use_lcd','0'), # Use LCD or not
       ('timezone','US/Eastern'), # pytz timezone
    ]
