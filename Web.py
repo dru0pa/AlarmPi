@@ -53,7 +53,7 @@ class index:
 
       alarmHour = int(form['time'].value[:2])
       alarmMin = int(form['time'].value[2:])
-      time = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
+      time = datetime.datetime.now(pytz.timezone(settings.get('timezone')))
 
       # So we don't set an alarm in the past
       if alarmHour < time.hour:
