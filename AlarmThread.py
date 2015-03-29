@@ -39,6 +39,9 @@ class AlarmThread(threading.Thread):
       self.travelTime = 0 # The travel time we last fetched
       self.travelCalculated = False # Have we re-calculated travel for this alarm cycle?
 
+      self.rotor = InputWorker(self)
+      self.rotor.start()
+
    def stop(self):
       log.info("Stopping alarm thread")
       if(self.media.playerActive()):
@@ -98,7 +101,7 @@ class AlarmThread(threading.Thread):
          salutation = "morning" if now.strftime("%p")=="AM" else "afternoon" if int(hour) < 18 else "evening"
 
          # Today is Monday 31st of October, the time is 9 56 AM
-         speech = "Good %s Matt. Today is %s %s %s, the time is %s %s %s. " % (salutation, now.strftime("%A"), day, now.strftime("%B"), hour, now.strftime("%M"), now.strftime("%p"))
+         speech = "Good %s Joel. Today is %s %s %s, the time is %s %s %s. " % (salutation, now.strftime("%A"), day, now.strftime("%B"), hour, now.strftime("%M"), now.strftime("%p"))
          speech += weather
 
          self.media.playSpeech(speech)
@@ -123,6 +126,7 @@ class AlarmThread(threading.Thread):
    def cancel(self):
       if self.isAlarmSounding() or self.isSnoozing():
          # Stop the alarm!
+         log.info("Alarm cancel triggered")
          self.stopAlarm()
          return
 
@@ -256,8 +260,8 @@ class AlarmThread(threading.Thread):
       while(not self.stopping):
           now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
 
-          log.info("now: %s", now)
-          log.info("nextAlarm: %s", self.nextAlarm)
+          #log.info("now: %s", now)
+          #log.info("nextAlarm: %s", self.nextAlarm)
 
           if(self.nextAlarm is not None and self.fromEvent and self.alarmInSeconds() < 3600 and not self.travelCalculated):
              # We're inside 1hr of an event alarm being triggered, and we've not taken into account the current traffic situation
