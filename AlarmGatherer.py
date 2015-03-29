@@ -75,7 +75,8 @@ class AlarmGatherer:
          maxResults='1',
          orderBy='startTime',
          singleEvents='true',
-         timeMin="%sZ" % (time.isoformat())
+         timeMin="%sZ" % (time.isoformat()),
+         location=''
       ).execute()
 
       events = result.get('items', [])
