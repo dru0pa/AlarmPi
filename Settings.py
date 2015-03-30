@@ -35,7 +35,7 @@ class Settings:
       ('min_brightness','1'), # Minimum brightness
       ('brightness_timeout','20'), # Time (secs) after which we should revert to auto-brightness
       ('menu_timeout','20'), # Time (secs) after which an un-touched menu should close
-      ('wakeup_time','75'), # Time (mins) before event that alarm should be triggered (excluding travel time) (30 mins pre-shift + 45 mins wakeup)
+      ('wakeup_time','0'), # Time (mins) before event that alarm should be triggered (excluding travel time) (30 mins pre-shift + 45 mins wakeup)
       ('manual_alarm',''), # Manual alarm time (default not set)
       ('calendar',CalendarCredentials.CALENDAR), # Calendar to gather events from
       ('holiday_mode','0'), # Is holiday mode (no auto-alarm setting) enabled?
