@@ -34,5 +34,7 @@ class ClockThread(threading.Thread):
           # Set minutes
           self.segment.writeDigit(3, int(minute / 10))   # Tens
           self.segment.writeDigit(4, minute % 10)        # Ones
+          #  Toggle colon
+          self.segment.setColon(second % 2)              # Toggle colon at 1Hz
 
           time.sleep(1)

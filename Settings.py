@@ -30,9 +30,9 @@ class Settings:
       ('volume','85'), # Volume
       ('station','0'), # Radio station to play
       ('radio_delay','10'), # Delay (secs) to wait for radio to start
-      ('snooze_length','5'), # Time (mins) to snooze for
+      ('snooze_length','9'), # Time (mins) to snooze for
       ('max_brightness','15'), # Maximum brightness
-      ('min_brightness','1'), # Minimum brightness
+      ('min_brightness','0'), # Minimum brightness
       ('brightness_timeout','20'), # Time (secs) after which we should revert to auto-brightness
       ('menu_timeout','20'), # Time (secs) after which an un-touched menu should close
       ('wakeup_time','0'), # Time (mins) before event that alarm should be triggered (excluding travel time) (30 mins pre-shift + 45 mins wakeup)
