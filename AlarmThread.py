@@ -124,9 +124,13 @@ class AlarmThread(threading.Thread):
 
    # Called by InputWorker on press of the cancel button
    def cancel(self):
-      if self.isAlarmSounding() or self.isSnoozing():
+      if self.isAlarmSounding():
+         # Lets snooze for a while
+         self.snooze()
+         return
+
+      if self.isSnoozing():
          # Stop the alarm!
-         log.info("Alarm cancel triggered")
          self.stopAlarm()
          return
 

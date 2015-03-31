@@ -79,12 +79,7 @@ class LcdThread(threading.Thread):
 
    # Called by InputWorker on press of the cancel button
    def cancel(self):
-      if self.alarmThread.isAlarmSounding():
-         # Lets snooze for a while
-         self.alarmThread.snooze()
-         return
-
-      if self.alarmThread.isSnoozing():
+      if self.alarmThread.isAlarmSounding() or self.alarmThread.isSnoozing():
          # Stop the alarm!
          self.alarmThread.stopAlarm()
          return
