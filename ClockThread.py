@@ -14,7 +14,6 @@ class ClockThread(threading.Thread):
       self.segment = SevenSegment(address=0x70)
       self.stopping=False
       self.settings = Settings.Settings()
-      self.colon = 0
 
    def stop(self):
       self.segment.disp.clear()
@@ -35,8 +34,8 @@ class ClockThread(threading.Thread):
           # Set minutes
           self.segment.writeDigit(3, int(minute / 10))   # Tens
           self.segment.writeDigit(4, minute % 10)        # Ones
-          # Toggle colon
-          self.segment.writeDigitRaw(2, self.colon)
-          self.colon = self.colon ^ 0x2
+          # Set colon
+          self.segment.writeDigitRaw(2, 1)
+
 
           time.sleep(1)
