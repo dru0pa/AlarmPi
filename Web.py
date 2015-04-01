@@ -79,6 +79,13 @@ class reset:
       return render.confirmation("Alarm has been auto-set to %s" % (alarmTime))
 
 class set:
+   def getDynamicForm(self):
+      dynamicForm = []
+      for form in settings.DEFAULTS:
+         if form[3] == 'textbox':
+            dynamicForm.append(form.Textbox(form[0],form.notnull,form.regexp(form[5],form[6]),description=form[2],value=form[1]))
+      return dynamicForm
+
    def getForm(self):
       return form.Form(
          form.Textbox("home",
@@ -138,10 +145,27 @@ class set:
       )
 
    def GET(self):
-      form = self.getForm()()
+      form = self.getDynamicForm()()
       return render.settings(form)
 
    def POST(self):
+      form = self.getDynamicForm()()
+      if not form.validates():
+         return render.settings(form)
+
+      changes = []
+      log.debug("Processing web request for settings changes")
+
+      for singleForm in form:
+         if singleForm.value != settings.get(singleForm.value):
+            changes.append("Set %s to %s" % (singleForm.name, singleForm.value))
+      text = "Configuring settings:<p><ul><li>%s</li></ul>" % ("</li><li>".join(changes))
+      for c in changes:
+         log.debug(c)
+
+      return render.confirmation(text)
+
+   def POST_OLD(self):
       form = self.getForm()()
       if not form.validates():
          return render.settings(form)

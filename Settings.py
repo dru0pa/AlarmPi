@@ -27,28 +27,28 @@ class Settings:
 
    # Our default settings for when we create the table
    DEFAULTS= [
-      ('volume','85'), # Volume
-      ('station','0'), # Radio station to play
-      ('radio_delay','10'), # Delay (secs) to wait for radio to start
-      ('snooze_length','9'), # Time (mins) to snooze for
-      ('max_brightness','15'), # Maximum brightness
-      ('min_brightness','0'), # Minimum brightness
-      ('brightness_timeout','20'), # Time (secs) after which we should revert to auto-brightness
-      ('menu_timeout','20'), # Time (secs) after which an un-touched menu should close
-      ('wakeup_time','0'), # Time (mins) before event that alarm should be triggered (excluding travel time) (30 mins pre-shift + 45 mins wakeup)
-      ('manual_alarm',''), # Manual alarm time (default not set)
-      ('calendar',CalendarCredentials.CALENDAR), # Calendar to gather events from
-      ('holiday_mode','0'), # Is holiday mode (no auto-alarm setting) enabled?
-      ('sfx_enabled','1'), # Are sound effects enabled?
-      ('default_wake','0630'), # If our alarm gets scheduled for later than this, ignore and default to this
-      ('alarm_timeout','120'), # If the alarm is still going off after this many minutes, stop it
-      ('weather_location','New York, NY'), # The location to load weather for
-      ('weather_on_alarm','1'), # Read out the weather on alarm cancel
-      ('preempt_cancel','600'), # Number of seconds before an alarm that we're allowed to cancel it
-      ('location_home','201 E 19th st, New York, NY'), # Location for home
-      ('location_work','Stamford, CT'), # Default location for work (if lookup from event fails)
-      ('use_lcd','0'), # Use LCD or not
-      ('timezone','US/Eastern'), # pytz timezone
+      ('volume','85','Volume','textbox','standard','',''), # Volume
+      ('station','0','Radio Station to Play','textbox','advanced','\d+','Must be a digit'), # Radio station to play
+      ('radio_delay','10','Radio Delay','textbox','advanced',''), # Delay (secs) to wait for radio to start
+      ('snooze_length','9','Time (minutes) to Snooze','textbox','standard','\d+','Must be a digit'), # Time (mins) to snooze for
+      ('max_brightness','15','Maximum Brightness (0-15)','textbox','standard','\d+','Must be a digit'), # Maximum brightness
+      ('min_brightness','0','Minimum Brightness (0-15)','textbox','standard','\d+','Must be a digit'), # Minimum brightness
+      ('brightness_timeout','20','Time (seconds) after which to revert back to auto-brightness','textbox','advanced','\d+','Must be a digit'), # Time (secs) after which we should revert to auto-brightness
+      ('menu_timeout','20','Time (seconds) after which an untouched menu should close','textbox','advanced','\d+','Must be a digit'), # Time (secs) after which an un-touched menu should close
+      ('wakeup_time','0','Time (minutes) before event to sound alarm','textbox','advanced','\d+','Must be a digit'), # Time (mins) before event that alarm should be triggered (excluding travel time) (30 mins pre-shift + 45 mins wakeup)
+      ('manual_alarm','','Manual alarm time','textbox','invisible','[0-2][0-9][0-5][0-9]','Must be a 24hr time'), # Manual alarm time (default not set)
+      ('calendar',CalendarCredentials.CALENDAR,'Calendar to gather events from','textbox','invisible','',''), # Calendar to gather events from
+      ('holiday_mode','0','Is Holiday Mode Enabled (no-alarm)','textbox','standard','\d+','Must be a digit'), # Is holiday mode (no auto-alarm setting) enabled?0
+      ('sfx_enabled','1','Are sound affects enabled','textbox','advanced','\d+','Must be a digit'), # Are sound effects enabled?
+      ('default_wake','','If the alarm is scheduled for later than this, ignore and default to this','textbox','advanced','[0-2][0-9][0-5][0-9]','Must be a 24hr time'), # If our alarm gets scheduled for later than this, ignore and default to this
+      ('alarm_timeout','120','Time (minutes) to automatically cancel an alarm','textbox','standard','\d+','Must be a digit'), # If the alarm is still going off after this many minutes, stop it
+      ('weather_location','New York, NY','Location for which to fetch weather','textbox','standard','',''), # The location to load weather for0
+      ('weather_on_alarm','1','Speak weather on alarm cancel','textbox','standard','\d+','Must be a digit'), # Read out the weather on alarm cancel
+      ('preempt_cancel','600','Time (seconds) before an alarm in which it can be cancelled','textbox','advanced','\d+','Must be a digit'), # Number of seconds before an alarm that we're allowed to cancel it
+      ('location_home','201 E 19th st, New York, NY','Location used for travel time calculation','textbox','standard','',''), # Location for home
+      ('location_work','Stamford, CT','Location of event used for travel time calculation','textbox','standard','',''), # Default location for work (if lookup from event fails)
+      ('use_lcd','0','Use LCD or not','textbox','invisible','\d+','Must be a digit'), # Use LCD or not
+      ('timezone','US/Eastern','PYTZ timezone','textbox','invisible','',''), # pytz timezone
    ]
 
    def __init__(self):
@@ -67,8 +67,8 @@ class Settings:
 
    def firstRun(self):
       log.warn("Running first-time SQLite set-up")
-      self.c.execute('CREATE TABLE '+self.TABLE_NAME+' (name text, value text)')
-      self.c.executemany('INSERT INTO '+self.TABLE_NAME+' VALUES (?,?)',self.DEFAULTS)
+      self.c.execute('CREATE TABLE '+self.TABLE_NAME+' (name text, value text, desc text, form_type text, form_visibility text, form_validation text, form_validation_message text)')
+      self.c.executemany('INSERT INTO '+self.TABLE_NAME+' VALUES (?,?,?,?,?,?,?)',self.DEFAULTS)
       self.conn.commit()
 
    def get(self,key):
