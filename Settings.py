@@ -29,7 +29,7 @@ class Settings:
    DEFAULTS= [
       ('volume','85','Volume','textbox','standard','',''), # Volume
       ('station','0','Radio Station to Play','textbox','advanced','\d+','Must be a digit'), # Radio station to play
-      ('radio_delay','10','Radio Delay','textbox','advanced',''), # Delay (secs) to wait for radio to start
+      ('radio_delay','10','Radio Delay','textbox','advanced','',''), # Delay (secs) to wait for radio to start
       ('snooze_length','9','Time (minutes) to Snooze','textbox','standard','\d+','Must be a digit'), # Time (mins) to snooze for
       ('max_brightness','15','Maximum Brightness (0-15)','textbox','standard','\d+','Must be a digit'), # Maximum brightness
       ('min_brightness','0','Minimum Brightness (0-15)','textbox','standard','\d+','Must be a digit'), # Minimum brightness
