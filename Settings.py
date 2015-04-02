@@ -291,106 +291,106 @@ class Settings:
         self.settings = []
 
 
-def getStations(self):
-    stations = ''
-    # Radio stations we can play through mplayer
-    STATIONS = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
-                "BBC Radio 2": "http://www.radiofeeds.co.uk/bbcradio2.pls",
-                "Capital FM": "http://ms1.capitalinteractive.co.uk/fm_high",
-                "Kerrang Radio": "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u",
-                "Magic 105.4": "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u",
-                "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
-                "XFM": "http://media-ice.musicradio.com/XFM.m3u",
-                "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
-    for station in STATIONS.keys():
-        stations += station
-    return stations
+    def getStations(self):
+        stations = ''
+        # Radio stations we can play through mplayer
+        STATIONS = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
+                    "BBC Radio 2": "http://www.radiofeeds.co.uk/bbcradio2.pls",
+                    "Capital FM": "http://ms1.capitalinteractive.co.uk/fm_high",
+                    "Kerrang Radio": "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u",
+                    "Magic 105.4": "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u",
+                    "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
+                    "XFM": "http://media-ice.musicradio.com/XFM.m3u",
+                    "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
+        for station in STATIONS.keys():
+            stations += station
+        return stations
 
 
-def setupDb(self):
-    # This method called once from alarmpi main class
-    # Check to see if our table exists, if not then create and populate it
-    r = self.c.execute('SELECT COUNT(*) FROM sqlite_master WHERE type="table" AND name=?;', (self.TABLE_NAME,))
-    if self.c.fetchone()[0] == 0:
-        self.firstRun()
-    # Set the volume on this machine to what we think it should be
-    self.setVolume(self.getInt('volume'))
+    def setupDb(self):
+        # This method called once from alarmpi main class
+        # Check to see if our table exists, if not then create and populate it
+        r = self.c.execute('SELECT COUNT(*) FROM sqlite_master WHERE type="table" AND name=?;', (self.TABLE_NAME,))
+        if self.c.fetchone()[0] == 0:
+            self.firstRun()
+        # Set the volume on this machine to what we think it should be
+        self.setVolume(self.getInt('volume'))
 
 
-def setup(self):
-    # This method called once from alarmpi main class
-    # Check to see if our JSON file exists, if not then create and populate it
-    with open(self.JSON_NAME) as data_file:
-        self.settings = json.load(self.jsonFile)
-    if self.settings is None:
-        self.firstRun()
-    # Set the volume on this machine to what we think it should be
-    self.setVolume(self.getInt('volume'))
+    def setup(self):
+        # This method called once from alarmpi main class
+        # Check to see if our JSON file exists, if not then create and populate it
+        with open(self.JSON_NAME) as data_file:
+            self.settings = json.load(self.jsonFile)
+        if self.settings is None:
+            self.firstRun()
+        # Set the volume on this machine to what we think it should be
+        self.setVolume(self.getInt('volume'))
 
 
-def firstRunDb(self):
-    log.warn("Running first-time SQLite set-up")
-    self.c.execute(
-        'CREATE TABLE ' + self.TABLE_NAME + ' (name text, value text, desc text, form_type text, form_visibility text, form_validation text, form_validation_message text)')
-    self.c.executemany('INSERT INTO ' + self.TABLE_NAME + ' VALUES (?,?,?,?,?,?,?)', self.DEFAULTS)
-    self.conn.commit()
+    def firstRunDb(self):
+        log.warn("Running first-time SQLite set-up")
+        self.c.execute(
+            'CREATE TABLE ' + self.TABLE_NAME + ' (name text, value text, desc text, form_type text, form_visibility text, form_validation text, form_validation_message text)')
+        self.c.executemany('INSERT INTO ' + self.TABLE_NAME + ' VALUES (?,?,?,?,?,?,?)', self.DEFAULTS)
+        self.conn.commit()
 
 
-def firstRun(self):
-    log.warn("Running first-time JSON set-up")
-    json.dump(self.DEFAULTS, self.jsonFile)
+    def firstRun(self):
+        log.warn("Running first-time JSON set-up")
+        json.dump(self.DEFAULTS, self.jsonFile)
 
 
-def getDb(self, key):
-    self.c.execute('SELECT * FROM ' + self.TABLE_NAME + ' WHERE name=?', (key,))
-    r = self.c.fetchone()
-    if r is None:
-        raise Exception('Could not find setting %s' % (key))
-    return r[1]
+    def getDb(self, key):
+        self.c.execute('SELECT * FROM ' + self.TABLE_NAME + ' WHERE name=?', (key,))
+        r = self.c.fetchone()
+        if r is None:
+            raise Exception('Could not find setting %s' % (key))
+        return r[1]
 
 
-def get(self, key):
-    r = self.settings[key]["value"]
-    if r is None:
-        raise Exception('Could not find setting %s' % (key))
-    return r
+    def get(self, key):
+        r = self.settings[key]["value"]
+        if r is None:
+            raise Exception('Could not find setting %s' % (key))
+        return r
 
 
-def getInt(self, key):
-    try:
-        return int(self.get(key))
-    except ValueError:
-        log.warn("Could not fetch %s as integer, value was [%s], returning 0", key, self.get(key))
-        return 0
+    def getInt(self, key):
+        try:
+            return int(self.get(key))
+        except ValueError:
+            log.warn("Could not fetch %s as integer, value was [%s], returning 0", key, self.get(key))
+            return 0
 
 
-def setDb(self, key, val):
-    self.get(key)  # So we know if it doesn't exist
+    def setDb(self, key, val):
+        self.get(key)  # So we know if it doesn't exist
 
-    if key == "volume":
-        self.setVolume(val)
+        if key == "volume":
+            self.setVolume(val)
 
-    self.c.execute('UPDATE ' + self.TABLE_NAME + ' SET value=? where name=?', (val, key,))
-    self.conn.commit()
-
-
-def set(self, key, val):
-    self.get(key)  # So we know if it doesn't exist
-
-    if key == "volume":
-        self.setVolume(val)
-
-    self.settings[key]["value"] = val
-    json.dump(self.settings, self.jsonFile)
+        self.c.execute('UPDATE ' + self.TABLE_NAME + ' SET value=? where name=?', (val, key,))
+        self.conn.commit()
 
 
-def setVolume(self, val):
-    subprocess.Popen("%s %s" % (self.VOL_CMD, val), stdout=subprocess.PIPE, shell=True)
-    log.info("Volume adjusted to %s", val)
+    def set(self, key, val):
+        self.get(key)  # So we know if it doesn't exist
+
+        if key == "volume":
+            self.setVolume(val)
+
+        self.settings[key]["value"] = val
+        json.dump(self.settings, self.jsonFile)
 
 
-def __del__(self):
-    self.conn.close()
+    def setVolume(self, val):
+        subprocess.Popen("%s %s" % (self.VOL_CMD, val), stdout=subprocess.PIPE, shell=True)
+        log.info("Volume adjusted to %s", val)
+
+
+    def __del__(self):
+        self.conn.close()
 
 
 if __name__ == '__main__':
