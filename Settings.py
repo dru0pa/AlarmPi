@@ -352,7 +352,6 @@ class Settings:
             }
         }
 
-        print json.dumps(defaults)
         with open(self.JSON_NAME, 'w+') as self.jsonFile:
             json.dump(defaults, self.jsonFile, sort_keys=True, indent=4, separators=(',', ': '))
 
@@ -366,7 +365,6 @@ class Settings:
 
 
     def get(self, key):
-        print "SEttings: " + json.dumps(self.settings)
         r = self.settings[key]["value"]
         if r is None:
             raise Exception('Could not find setting %s' % (key))
