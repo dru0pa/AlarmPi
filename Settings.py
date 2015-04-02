@@ -8,8 +8,7 @@ import pytz
 log = logging.getLogger('root')
 
 # Radio stations we can play through mplayer
-STATIONS = json.dump(
-    [
+STATIONS = [
        {"name":"BBC Radio 1", "url":"http://www.radiofeeds.co.uk/bbcradio1.pls"},
        {"name":"BBC Radio 2", "url":"http://www.radiofeeds.co.uk/bbcradio2.pls"},
        {"name":"Capital FM", "url":"http://ms1.capitalinteractive.co.uk/fm_high"},
@@ -19,7 +18,6 @@ STATIONS = json.dump(
        {"name":"XFM", "url":"http://media-ice.musicradio.com/XFM.m3u"},
        {"name":"BBC Radio London", "url":"http://www.radiofeeds.co.uk/bbclondon.pls"},
     ]
-)
 
 class Settings:
    # Database connection details
@@ -199,7 +197,7 @@ class Settings:
         "formRegexp":"",
         "formRegexpMessage":"",
         "formNullable":"notnull",
-        "formDropdownValues":STATIONS["name"]
+        "formDropdownValues":STATIONS["name"].iteritems()
       },
       "radio_delay":{
         "formOrder":31,
