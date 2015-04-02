@@ -65,7 +65,7 @@ class Settings:
         with open(self.JSON_NAME) as self.jsonFile:
             try:
                 self.settings = json.load(self.jsonFile)
-                log.debug("settings: %s" % json.dumps(self.settings))
+                #log.debug("settings: %s" % json.dumps(self.settings))
             except ValueError as e:
                 log.error("ValueError: %s " % e.message)
                 self.firstRun()
