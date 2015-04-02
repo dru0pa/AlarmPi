@@ -4,9 +4,18 @@ import CalendarCredentials
 import logging
 import json
 import pytz
+import sys
 
 log = logging.getLogger('root')
+log.setLevel(logging.DEBUG)
 
+stream = logging.StreamHandler(sys.stdout)
+stream.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+stream.setFormatter(formatter)
+
+log.addHandler(stream)
 
 class Settings:
     # Database connection details
@@ -19,8 +28,8 @@ class Settings:
 
     def __init__(self):
         # self.conn = sqlite3.connect(self.DB_NAME, check_same_thread=False)
-        self.jsonFile = open(self.JSON_NAME, 'w+')
-        #self.c = self.conn.cursor()
+        self.jsonFile = None
+        # self.c = self.conn.cursor()
         self.settings = []
 
 
@@ -53,11 +62,12 @@ class Settings:
     def setup(self):
         # This method called once from alarmpi main class
         # Check to see if our JSON file exists, if not then create and populate it
-        with open(self.JSON_NAME) as data_file:
+        with open(self.JSON_NAME) as self.jsonFile:
             try:
                 self.settings = json.load(self.jsonFile)
-                log.debug("settings: %s" % json.dump(self.settings))
-            except ValueError:
+                log.debug("settings: %s" % json.dumps(self.settings))
+            except ValueError as e:
+                log.error("ValueError: %s " % e.message)
                 self.firstRun()
 
         # Set the volume on this machine to what we think it should be
@@ -75,7 +85,7 @@ class Settings:
     def firstRun(self):
         log.warn("Running first-time JSON set-up")
 
-        DEFAULTS = {
+        defaults = {
             "snooze_length": {
                 "formOrder": 1,
                 "key": "snooze_length",
@@ -242,7 +252,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": range(0,16)
+                "formDropdownValues": range(0, 16)
             },
             "max_brightness": {
                 "formOrder": 41,
@@ -254,7 +264,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": range(0,16)
+                "formDropdownValues": range(0, 16)
             },
             "brightness_timeout": {
                 "formOrder": 42,
@@ -342,7 +352,9 @@ class Settings:
             }
         }
 
-        json.dump(DEFAULTS, self.jsonFile)
+        print json.dumps(defaults)
+        with open(self.JSON_NAME, 'w+') as self.jsonFile:
+            json.dump(defaults, self.jsonFile, sort_keys=True, indent=4, separators=(',', ': '))
 
 
     def getDb(self, key):
@@ -355,7 +367,7 @@ class Settings:
 
     def get(self, key):
         print "SEttings: " + json.dumps(self.settings)
-        r = self.settings[0][key]["value"]
+        r = self.settings[key]["value"]
         if r is None:
             raise Exception('Could not find setting %s' % (key))
         return r
@@ -385,7 +397,7 @@ class Settings:
         if key == "volume":
             self.setVolume(val)
 
-        self.settings[0][key]["value"] = val
+        self.settings[key]["value"] = val
         json.dump(self.settings, self.jsonFile)
 
 
@@ -394,12 +406,12 @@ class Settings:
         log.info("Volume adjusted to %s", val)
 
 
-    def __del__(self):
-        self.conn.close()
+        # def __del__(self):
+        #self.conn.close()
 
 
 if __name__ == '__main__':
     print "Showing all current settings"
     mySettings = Settings()
-    for s in mySettings.DEFAULTS:
-        print "%s = %s" % (s[0], mySettings.get(s[0]))
+    mySettings.setup()
+    print mySettings.settings.items()
