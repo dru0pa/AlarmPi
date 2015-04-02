@@ -18,6 +18,61 @@ class Settings:
     VOL_CMD = '../vol'
 
     def __init__(self):
+        # self.conn = sqlite3.connect(self.DB_NAME, check_same_thread=False)
+        self.jsonFile = open(self.JSON_NAME, 'w+')
+        #self.c = self.conn.cursor()
+        self.settings = []
+
+
+    def getStations(self):
+        stations = ''
+        # Radio stations we can play through mplayer
+        STATIONS = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
+                    "BBC Radio 2": "http://www.radiofeeds.co.uk/bbcradio2.pls",
+                    "Capital FM": "http://ms1.capitalinteractive.co.uk/fm_high",
+                    "Kerrang Radio": "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u",
+                    "Magic 105.4": "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u",
+                    "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
+                    "XFM": "http://media-ice.musicradio.com/XFM.m3u",
+                    "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
+        for station in STATIONS.keys():
+            stations += station
+        return stations
+
+
+    def setupDb(self):
+        # This method called once from alarmpi main class
+        # Check to see if our table exists, if not then create and populate it
+        r = self.c.execute('SELECT COUNT(*) FROM sqlite_master WHERE type="table" AND name=?;', (self.TABLE_NAME,))
+        if self.c.fetchone()[0] == 0:
+            self.firstRun()
+        # Set the volume on this machine to what we think it should be
+        self.setVolume(self.getInt('volume'))
+
+
+    def setup(self):
+        # This method called once from alarmpi main class
+        # Check to see if our JSON file exists, if not then create and populate it
+        with open(self.JSON_NAME) as data_file:
+            try:
+                self.settings = json.load(self.jsonFile)
+            except ValueError:
+                self.firstRun()
+
+        # Set the volume on this machine to what we think it should be
+        self.setVolume(self.getInt('volume'))
+
+
+    def firstRunDb(self):
+        log.warn("Running first-time SQLite set-up")
+        self.c.execute(
+            'CREATE TABLE ' + self.TABLE_NAME + ' (name text, value text, desc text, form_type text, form_visibility text, form_validation text, form_validation_message text)')
+        self.c.executemany('INSERT INTO ' + self.TABLE_NAME + ' VALUES (?,?,?,?,?,?,?)', self.DEFAULTS)
+        self.conn.commit()
+
+
+    def firstRun(self):
+        log.warn("Running first-time JSON set-up")
 
         DEFAULTS = {
             "snooze_length": {
@@ -285,62 +340,8 @@ class Settings:
                 "formDropdownValues": ""
             }
         }
-        # self.conn = sqlite3.connect(self.DB_NAME, check_same_thread=False)
-        self.jsonFile = open(self.JSON_NAME, 'w+')
-        #self.c = self.conn.cursor()
-        self.settings = []
 
-
-    def getStations(self):
-        stations = ''
-        # Radio stations we can play through mplayer
-        STATIONS = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
-                    "BBC Radio 2": "http://www.radiofeeds.co.uk/bbcradio2.pls",
-                    "Capital FM": "http://ms1.capitalinteractive.co.uk/fm_high",
-                    "Kerrang Radio": "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u",
-                    "Magic 105.4": "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u",
-                    "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
-                    "XFM": "http://media-ice.musicradio.com/XFM.m3u",
-                    "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
-        for station in STATIONS.keys():
-            stations += station
-        return stations
-
-
-    def setupDb(self):
-        # This method called once from alarmpi main class
-        # Check to see if our table exists, if not then create and populate it
-        r = self.c.execute('SELECT COUNT(*) FROM sqlite_master WHERE type="table" AND name=?;', (self.TABLE_NAME,))
-        if self.c.fetchone()[0] == 0:
-            self.firstRun()
-        # Set the volume on this machine to what we think it should be
-        self.setVolume(self.getInt('volume'))
-
-
-    def setup(self):
-        # This method called once from alarmpi main class
-        # Check to see if our JSON file exists, if not then create and populate it
-        with open(self.JSON_NAME) as data_file:
-            try:
-                self.settings = json.load(self.jsonFile)
-            except ValueError:
-                self.firstRun()
-
-        # Set the volume on this machine to what we think it should be
-        self.setVolume(self.getInt('volume'))
-
-
-    def firstRunDb(self):
-        log.warn("Running first-time SQLite set-up")
-        self.c.execute(
-            'CREATE TABLE ' + self.TABLE_NAME + ' (name text, value text, desc text, form_type text, form_visibility text, form_validation text, form_validation_message text)')
-        self.c.executemany('INSERT INTO ' + self.TABLE_NAME + ' VALUES (?,?,?,?,?,?,?)', self.DEFAULTS)
-        self.conn.commit()
-
-
-    def firstRun(self):
-        log.warn("Running first-time JSON set-up")
-        json.dump(self.DEFAULTS, self.jsonFile)
+        json.dump(DEFAULTS, self.jsonFile)
 
 
     def getDb(self, key):
