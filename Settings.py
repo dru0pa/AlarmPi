@@ -302,7 +302,7 @@ class Settings:
 
 def getStations(self):
     stations = ''
-    for station in STATIONS.keys():
+    for station in self.STATIONS.keys():
         stations += station
     return stations
 
