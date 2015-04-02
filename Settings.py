@@ -354,6 +354,7 @@ class Settings:
 
 
     def get(self, key):
+        print self.settings
         r = self.settings[0][key]["value"]
         if r is None:
             raise Exception('Could not find setting %s' % (key))
