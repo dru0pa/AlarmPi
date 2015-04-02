@@ -321,9 +321,11 @@ class Settings:
         # This method called once from alarmpi main class
         # Check to see if our JSON file exists, if not then create and populate it
         with open(self.JSON_NAME) as data_file:
-            self.settings = json.load(self.jsonFile)
-        if self.settings is None:
-            self.firstRun()
+            try:
+                self.settings = json.load(self.jsonFile)
+            except ValueError:
+                self.firstRun()
+
         # Set the volume on this machine to what we think it should be
         self.setVolume(self.getInt('volume'))
 
