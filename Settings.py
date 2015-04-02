@@ -241,7 +241,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": xrange(0, 15)
+                "formDropdownValues": range(0,16)
             },
             "max_brightness": {
                 "formOrder": 41,
@@ -253,7 +253,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": xrange(0, 15)
+                "formDropdownValues": range(0,16)
             },
             "brightness_timeout": {
                 "formOrder": 42,
