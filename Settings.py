@@ -171,7 +171,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": self.getStations()
+                "formDropdownValues": getStations()
             },
             "radio_delay": {
                 "formOrder": 31,
