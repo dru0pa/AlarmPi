@@ -18,15 +18,6 @@ class Settings:
     VOL_CMD = '../vol'
 
     def __init__(self):
-        # Radio stations we can play through mplayer
-        STATIONS = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
-                    "BBC Radio 2": "http://www.radiofeeds.co.uk/bbcradio2.pls",
-                    "Capital FM": "http://ms1.capitalinteractive.co.uk/fm_high",
-                    "Kerrang Radio": "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u",
-                    "Magic 105.4": "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u",
-                    "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
-                    "XFM": "http://media-ice.musicradio.com/XFM.m3u",
-                    "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
 
         DEFAULTS = {
             "snooze_length": {
@@ -302,7 +293,16 @@ class Settings:
 
 def getStations(self):
     stations = ''
-    for station in self.STATIONS.keys():
+    # Radio stations we can play through mplayer
+    STATIONS = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
+                "BBC Radio 2": "http://www.radiofeeds.co.uk/bbcradio2.pls",
+                "Capital FM": "http://ms1.capitalinteractive.co.uk/fm_high",
+                "Kerrang Radio": "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u",
+                "Magic 105.4": "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u",
+                "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
+                "XFM": "http://media-ice.musicradio.com/XFM.m3u",
+                "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
+    for station in STATIONS.keys():
         stations += station
     return stations
 
