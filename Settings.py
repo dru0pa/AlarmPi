@@ -162,7 +162,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": getStations(self)
+                "formDropdownValues": self.getStations()
             },
             "radio_delay": {
                 "formOrder": 31,
