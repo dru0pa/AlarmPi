@@ -353,7 +353,7 @@ class Settings:
 
 
     def get(self, key):
-        r = self.settings[key]["value"]
+        r = self.settings[0][key]["value"]
         if r is None:
             raise Exception('Could not find setting %s' % (key))
         return r
@@ -383,7 +383,7 @@ class Settings:
         if key == "volume":
             self.setVolume(val)
 
-        self.settings[key]["value"] = val
+        self.settings[0][key]["value"] = val
         json.dump(self.settings, self.jsonFile)
 
 
@@ -398,6 +398,6 @@ class Settings:
 
 if __name__ == '__main__':
     print "Showing all current settings"
-    settings = Settings()
-    for s in settings.DEFAULTS:
-        print "%s = %s" % (s[0], settings.get(s[0]))
+    mySettings = Settings()
+    for s in mySettings.DEFAULTS:
+        print "%s = %s" % (s[0], mySettings.get(s[0]))
