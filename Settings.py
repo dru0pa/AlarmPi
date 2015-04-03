@@ -237,7 +237,7 @@ class Settings:
             "station": {
                 "formOrder": 30,
                 "key": "station",
-                "value": "BBC Radio 1",
+                "value": "http://www.radiofeeds.co.uk/bbcradio1.pls",
                 "description": "Radio Station to Play",
                 "formType": "dropdown",
                 "visibility": "standard",
