@@ -180,9 +180,9 @@ class set:
         changes = []
         log.debug("Processing web request for settings changes")
 
-        for singleForm in form:
-            if singleForm.value != settings.get(singleForm.value):
-                changes.append("Set %s to %s" % (singleForm.name, singleForm.value))
+        for k, v in form.iteritems():
+            if k[v] != settings.get(k[v]):
+                changes.append("Set %s to %s" % (k, v))
         text = "Configuring settings:<p><ul><li>%s</li></ul>" % ("</li><li>".join(changes))
         for c in changes:
             log.debug(c)
