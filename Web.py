@@ -98,8 +98,8 @@ class set:
             else:
                 nullArg = ()
             if dict["formType"] == 'textbox':
-                dynamic_form.add_input(form.Textbox(dict["key"], description=dict["description"],
-                                 value=dict["value"], *nullArg))
+                dynamic_form.add_input(form.Textbox(dict["key"], description=dict["description"], #, form.regexp(dict["formRegexp"], dict["formRegexpMessage"])
+                                 value=dict["value"])) # , *nullArg
             elif dict["formType"] == 'radio':
                 dynamic_form.add_input(form.Radio(dict["key"], args=dict["formDropdownValues"], description=dict["description"],
                                  value=dict["value"]))
