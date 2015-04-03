@@ -125,7 +125,7 @@ class Settings:
             "default_wake": {
                 "formOrder": 4,
                 "key": "default_wake",
-                "value": "",
+                "value": "1100",
                 "description": "If the alarm is scheduled for later than this ignore and default to this",
                 "formType": "textbox",
                 "visibility": "advanced",
