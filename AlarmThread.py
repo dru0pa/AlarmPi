@@ -21,14 +21,15 @@ def suffix(d):
 
 class AlarmThread(threading.Thread):
 
-   def __init__(self):
+   def __init__(self, settings):
       threading.Thread.__init__(self)
       self.stopping=False
       self.nextAlarm=None
       self.alarmTimeout=None
       self.snoozing = False
 
-      self.settings = Settings.Settings()
+      #self.settings = Settings.Settings()
+      self.settings = settings
       self.media = MediaPlayer.MediaPlayer()
       self.alarmGatherer = AlarmGatherer.AlarmGatherer()
       self.weatherFetcher = WeatherFetcher()

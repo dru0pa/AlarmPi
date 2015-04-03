@@ -47,7 +47,7 @@ class AlarmPi:
       #media.playVoice('Starting up')
 
       log.debug("Loading clock")
-      clock = ClockThread.ClockThread()
+      clock = ClockThread.ClockThread(settings)
       clock.setDaemon(True)
 
       log.debug("Loading alarm control")
