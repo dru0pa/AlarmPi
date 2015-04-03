@@ -22,6 +22,11 @@ alarm = None
 
 log = logging.getLogger('root')
 
+class DynamicForm(form.Form):
+    def add_input(self, new_input):
+        list_inputs = list(self.inputs)
+        list_inputs.append(new_input)
+        self.inputs = tuple(list_inputs)
 
 class index:
     def getAlarmForm(self):
@@ -84,13 +89,16 @@ class reset:
 
 class set:
     def getDynamicForm(self):
-        dynamicForm = []
+        dynamic_form = DynamicForm(form.Textbox('placeholder',form.is_hidden))
+        #dynamicForm = []
         for setting, dict in settings.settings.iteritems():
             if dict["formType"] == 'textbox':
-                dynamicForm.append(
-                    form.Textbox(dict["key"], form.notnull, form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
+                dynamic_form.add_input(form.Textbox(dict["key"], form.notnull, form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
                                  value=dict["value"]))
-        return form.Form(tuple(dynamicForm))
+                #dynamicForm.append(
+                #    form.Textbox(dict["key"], form.notnull, form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
+                #                 value=dict["value"]))
+        return dynamic_form
 
     def getForm(self):
         return form.Form(
@@ -152,8 +160,8 @@ class set:
 
     def GET(self):
         form = self.getDynamicForm()
-        form2 = self.getForm()
-        return render.settings(form2)
+        #form2 = self.getForm()
+        return render.settings(form)
 
     def POST(self):
         form = self.getDynamicForm()()
