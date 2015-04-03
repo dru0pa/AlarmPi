@@ -18,11 +18,13 @@ stream.setFormatter(formatter)
 
 log.addHandler(stream)
 
+# Database connection details
+DB_NAME = 'settings.db'
+JSON_NAME = 'settings.json'
+TABLE_NAME = 'settings'
+
+
 class Settings:
-    # Database connection details
-    DB_NAME = 'settings.db'
-    JSON_NAME = 'settings.json'
-    TABLE_NAME = 'settings'
 
     # Path to executable to modify volume
     VOL_CMD = '../vol'
@@ -71,7 +73,7 @@ class Settings:
         # This method called once from alarmpi main class
         # Check to see if our JSON file exists, if not then create and populate it
         try:
-            with open(self.JSON_NAME, 'r') as f:
+            with open(JSON_NAME, 'r') as f:
                 try:
                     self.settings = json.load(f)
                     #log.debug("settings: %s" % json.dumps(self.settings))
@@ -378,8 +380,8 @@ class Settings:
             }
         }
 
-        with open(self.JSON_NAME, 'w+') as self.jsonFile:
-            json.dump(defaults, self.jsonFile, indent=4, separators=(',', ': '))
+        with open(JSON_NAME, 'w+') as self.jsonFile:
+            json.dump(defaults, self.jsonFile, sort_keys=True, indent=4, separators=(',', ': '))
 
         self.settings = defaults
 
@@ -424,7 +426,8 @@ class Settings:
             self.setVolume(val)
 
         self.settings[key]["value"] = val
-        with open(self.JSON_NAME, 'w') as f:
+        log.info("setting {0} to {1}".format(key, val))
+        with open(JSON_NAME, 'w') as f:
             json.dump(self.settings, f, sort_keys=True, indent=4, separators=(',', ': '))
 
 
@@ -438,9 +441,21 @@ class Settings:
 
 
 if __name__ == '__main__':
-    print "Showing all current settings"
+    #print "Showing all current settings"
     mySettings = Settings()
     mySettings.setup()
-    print mySettings.get('location_home')
-    mySettings.set('volume', '80')
-    print mySettings.settings.items()
+    #print mySettings.get('location_home')
+    mySettings.set('max_brightness', '10')
+    #print json.dumps(mySettings.settings, sort_keys=True, indent=4, separators=(',', ': '))
+
+    try:
+        with open(JSON_NAME, 'r') as f:
+            try:
+                json_string =  json.load(f)
+            except ValueError as e:
+                log.error("ValueError: {0}".format(e.args))
+    except IOError as io:
+        log.error("IOError: {0}".format(io.args))
+
+    print json.dumps(json_string, sort_keys=True, indent=4, separators=(',', ': '))
+
