@@ -33,7 +33,7 @@ class AlarmThread(threading.Thread):
         self.settings = settings
         #self.media = MediaPlayer.MediaPlayer()
         self.media = media
-        self.alarmGatherer = AlarmGatherer.AlarmGatherer()
+        self.alarmGatherer = AlarmGatherer.AlarmGatherer(settings)
         #self.weatherFetcher = WeatherFetcher()
         self.weatherFetcher = weather
 

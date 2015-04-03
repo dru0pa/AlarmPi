@@ -18,7 +18,7 @@ log = logging.getLogger('root')
 FLAGS = gflags.FLAGS
 
 class AlarmGatherer:
-   def __init__(self):
+   def __init__(self, settings):
       self.FLOW = OAuth2WebServerFlow(
          client_id=CalendarCredentials.CLIENT_ID,
          client_secret=CalendarCredentials.CLIENT_SECRET,
@@ -26,7 +26,8 @@ class AlarmGatherer:
          user_agent='AlarmPi/1.0'
       )
 
-      self.settings = Settings.Settings()
+      #self.settings = Settings.Settings()
+      self.settings = settings
 
       FLAGS.auth_local_webserver = False
 

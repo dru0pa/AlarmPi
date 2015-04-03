@@ -72,7 +72,7 @@ class AlarmPi:
             lcd.start()
 
         log.debug("Loading brightness control")
-        bright = BrightnessThread.BrightnessThread()
+        bright = BrightnessThread.BrightnessThread(settings)
         bright.setDaemon(True)
         bright.registerControlObject(clock.segment.disp)
         if use_lcd == 1:
