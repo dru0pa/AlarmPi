@@ -15,15 +15,15 @@ def suffix(d):
 weatherFetcher = WeatherFetcher()
 log = logging.getLogger('root')
 
-log.setLevel(logging.DEBUG)
-
-stream = logging.StreamHandler(sys.stdout)
-stream.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
-stream.setFormatter(formatter)
-
-log.addHandler(stream)
+# log.setLevel(logging.DEBUG)
+#
+# stream = logging.StreamHandler(sys.stdout)
+# stream.setLevel(logging.DEBUG)
+#
+# formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+# stream.setFormatter(formatter)
+#
+# log.addHandler(stream)
 
 log.debug("Loading settings")
 settings = Settings.Settings()

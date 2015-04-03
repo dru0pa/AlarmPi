@@ -6,15 +6,15 @@ import logging
 import sys
 
 log = logging.getLogger('root')
-log.setLevel(logging.DEBUG)
-
-stream = logging.StreamHandler(sys.stdout)
-stream.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
-stream.setFormatter(formatter)
-
-log.addHandler(stream)
+# log.setLevel(logging.DEBUG)
+#
+# stream = logging.StreamHandler(sys.stdout)
+# stream.setLevel(logging.DEBUG)
+#
+# formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+# stream.setFormatter(formatter)
+#
+# log.addHandler(stream)
 
 LOOP_TIME = float(0.1)
 
