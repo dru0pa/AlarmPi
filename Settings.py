@@ -53,9 +53,9 @@ class Settings:
                     ("Smooth Radio", "http://media-ice.musicradio.com/SmoothUK.m3u"),
                     ("XFM", "http://media-ice.musicradio.com/XFM.m3u"),
                     ("BBC Radio London", "http://www.radiofeeds.co.uk/bbclondon.pls")]
-        for station in STATIONS.keys():
+        for station in STATIONS_DICT.keys():
             stations += station
-        return stations
+        return STATIONS
 
 
     def setupDb(self):
