@@ -43,7 +43,6 @@ class AlarmPi:
         log.debug("Loading settings")
         settings = Settings.Settings()
         settings.setup()
-        log.debug("location_home: %s" % settings.get('location_home'))
 
         log.debug("Loading media")
         media = MediaPlayer.MediaPlayer(settings)

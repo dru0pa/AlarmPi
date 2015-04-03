@@ -189,7 +189,7 @@ class Settings:
             "weather_on_alarm": {
                 "formOrder": 20,
                 "key": "weather_on_alarm",
-                "value": "1",
+                "value": 1,
                 "description": "Speak weather on alarm cancel",
                 "formType": "radio",
                 "visibility": "standard",
