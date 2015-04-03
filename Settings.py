@@ -5,6 +5,7 @@ import logging
 import json
 import pytz
 import sys
+from codecs import BOM_UTF8
 
 log = logging.getLogger('root')
 log.setLevel(logging.DEBUG)
@@ -16,7 +17,6 @@ formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(mess
 stream.setFormatter(formatter)
 
 log.addHandler(stream)
-
 
 class Settings:
     # Database connection details
@@ -70,14 +70,17 @@ class Settings:
     def setup(self):
         # This method called once from alarmpi main class
         # Check to see if our JSON file exists, if not then create and populate it
-        with open(self.JSON_NAME, 'w+') as f:
-            try:
-                self.settings = json.load(f)
-                #self.settings = sorted(jsonString.iteritems(), key=lambda (x, y): y['formOrder'])
-                log.debug("settings: %s" % json.dumps(self.settings))
-            except ValueError as e:
-                log.error("ValueError: %s " % e.message)
-                self.firstRun()
+        try:
+            with open(self.JSON_NAME, 'r') as f:
+                try:
+                    self.settings = json.load(f)
+                    #log.debug("settings: %s" % json.dumps(self.settings))
+                except ValueError as e:
+                    log.error("ValueError: {0}".format(e.args))
+                    self.firstRun()
+        except IOError as io:
+            log.error("IOError: {0}".format(io.args))
+            self.firstRun()
 
         # Set the volume on this machine to what we think it should be
         self.setVolume(self.getInt('volume'))
@@ -421,7 +424,7 @@ class Settings:
             self.setVolume(val)
 
         self.settings[key]["value"] = val
-        with open(self.JSON_NAME, 'w+') as f:
+        with open(self.JSON_NAME, 'w') as f:
             json.dump(self.settings, f, sort_keys=True, indent=4, separators=(',', ': '))
 
 
