@@ -364,7 +364,7 @@ class Settings:
         }
 
         with open(self.JSON_NAME, 'w+') as self.jsonFile:
-            json.dump(defaults, self.jsonFile, sort_keys=True, indent=4, separators=(',', ': '))
+            json.dump(defaults, self.jsonFile, indent=4, separators=(',', ': '))
 
         self.settings = defaults
 
