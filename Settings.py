@@ -99,7 +99,7 @@ class Settings:
     def firstRun(self):
         log.warn("Running first-time JSON set-up")
 
-        true_false = ["true", "false"]
+        true_false = [1, 2]
 
         defaults = {
             "snooze_length": {
@@ -129,7 +129,7 @@ class Settings:
             "holiday_mode": {
                 "formOrder": 3,
                 "key": "holiday_mode",
-                "value": "false",
+                "value": "0",
                 "description": "Is Holiday Mode Enabled (no-alarm)",
                 "formType": "radio",
                 "visibility": "standard",
@@ -189,7 +189,7 @@ class Settings:
             "weather_on_alarm": {
                 "formOrder": 20,
                 "key": "weather_on_alarm",
-                "value": "true",
+                "value": "1",
                 "description": "Speak weather on alarm cancel",
                 "formType": "radio",
                 "visibility": "standard",
@@ -297,7 +297,7 @@ class Settings:
             "use_lcd": {
                 "formOrder": 43,
                 "key": "use_lcd",
-                "value": "false",
+                "value": "0",
                 "description": "Use LCD or not",
                 "formType": "radio",
                 "visibility": "standard",
@@ -309,7 +309,7 @@ class Settings:
             "sfx_enabled": {
                 "formOrder": 44,
                 "key": "sfx_enabled",
-                "value": "true",
+                "value": "1",
                 "description": "Are sound affects enabled",
                 "formType": "radio",
                 "visibility": "advanced",
