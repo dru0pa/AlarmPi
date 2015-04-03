@@ -90,7 +90,7 @@ class set:
                 dynamicForm.append(
                     form.Textbox(dict["key"], form.notnull, form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
                                  value=dict["value"]))
-        return form.Form(dynamicForm)
+        return form.Form(tuple(dynamicForm))
 
     def getForm(self):
         return form.Form(
