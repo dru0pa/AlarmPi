@@ -17,7 +17,7 @@ urls = (
 render = web.template.render('web/', cache=False, base='layout')
 
 #settings = Settings()
-settings = None
+#settings = None
 alarm = None
 
 log = logging.getLogger('root')
@@ -55,7 +55,7 @@ class index:
 
         alarmHour = int(form['time'].value[:2])
         alarmMin = int(form['time'].value[2:])
-        time = datetime.datetime.now(pytz.timezone(settings.get('timezone')))
+        time = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
 
         # So we don't set an alarm in the past
         if alarmHour < time.hour:
@@ -85,11 +85,11 @@ class reset:
 class set:
     def getDynamicForm(self):
         dynamicForm = []
-        for setting, dict in settings:
-            if settings[setting][dict]["formType"] == 'textbox':
+        for setting, dict in self.settings:
+            if self.settings[setting][dict]["formType"] == 'textbox':
                 dynamicForm.append(
-                    form.Textbox(settings[setting][dict]["key"], form.notnull, form.regexp(settings[setting][dict]["formRegexp"], settings[setting][dict]["formRegexpMessage"]), description=settings[setting][dict]["description"],
-                                 value=settings[setting][dict]["value"]))
+                    form.Textbox(self.settings[setting][dict]["key"], form.notnull, form.regexp(self.settings[setting][dict]["formRegexp"], self.settings[setting][dict]["formRegexpMessage"]), description=self.settings[setting][dict]["description"],
+                                 value=self.settings[setting][dict]["value"]))
         return dynamicForm
 
     def getForm(self):
@@ -97,55 +97,55 @@ class set:
             form.Textbox("home",
                          form.notnull,
                          description="Home location",
-                         value=settings.get('location_home'),
+                         value=self.settings.get('location_home'),
                          ),
             form.Textbox("work",
                          form.notnull,
                          description="Work location",
-                         value=settings.get('location_work'),
+                         value=self.settings.get('location_work'),
                          ),
             form.Textbox("weatherloc",
                          form.notnull,
                          description="Weather location",
-                         value=settings.get('weather_location'),
+                         value=self.settings.get('weather_location'),
                          ),
             form.Textbox("snooze",
                          form.notnull,
                          form.regexp('\d+', 'Must be a digit'),
                          description="Snooze Length (minutes)",
-                         value=settings.getInt('snooze_length'),
+                         value=self.settings.getInt('snooze_length'),
                          ),
             form.Textbox("wakeup",
                          form.notnull,
                          form.regexp('\d+', 'Must be a digit'),
                          description="Time (mins) before event for alarm",
-                         value=settings.getInt('wakeup_time'),
+                         value=self.settings.getInt('wakeup_time'),
                          ),
             form.Textbox("precancel",
                          form.notnull,
                          form.regexp('\d+', 'Must be a digit'),
                          description="Pre-empt cancel alarm allowed (secs)",
-                         value=settings.get('preempt_cancel'),
+                         value=self.settings.get('preempt_cancel'),
                          ),
             form.Textbox("waketime",
                          form.notnull,
                          form.regexp('[0-2][0-9][0-5][0-9]', 'Must be a 24hr time'),
                          description="Default wakeup time",
-                         value=settings.get('default_wake'),
+                         value=self.settings.get('default_wake'),
                          ),
             form.Checkbox("holidaymode",
                           description="Holiday mode enabled",
-                          checked=(settings.getInt('holiday_mode') == 1),
+                          checked=(self.settings.getInt('holiday_mode') == 1),
                           value="holiday",
                           ),
             form.Checkbox("weatheronalarm",
                           description="Play weather after alarm",
-                          checked=(settings.getInt('weather_on_alarm') == 1),
+                          checked=(self.settings.getInt('weather_on_alarm') == 1),
                           value="weatheronalarm",
                           ),
             form.Checkbox("sfx",
                           description="SFX enabled",
-                          checked=(settings.getInt('sfx_enabled') == 1),
+                          checked=(self.settings.getInt('sfx_enabled') == 1),
                           value="sfx",
                           ),
         )
@@ -163,7 +163,7 @@ class set:
         log.debug("Processing web request for settings changes")
 
         for singleForm in form:
-            if singleForm.value != settings.get(singleForm.value):
+            if singleForm.value != self.settings.get(singleForm.value):
                 changes.append("Set %s to %s" % (singleForm.name, singleForm.value))
         text = "Configuring settings:<p><ul><li>%s</li></ul>" % ("</li><li>".join(changes))
         for c in changes:
@@ -179,38 +179,38 @@ class set:
         changes = []
         log.debug("Processing web request for settings changes")
 
-        if form['home'].value != settings.get('location_home'):
+        if form['home'].value != self.settings.get('location_home'):
             changes.append("Set Home location to %s" % (form['home'].value))
-            settings.set('location_home', form['home'].value)
+            self.settings.set('location_home', form['home'].value)
 
-        if form['work'].value != settings.get('location_work'):
+        if form['work'].value != self.settings.get('location_work'):
             changes.append("Set Work location to %s" % (form['work'].value))
-            settings.set('location_work', form['work'].value)
+            self.settings.set('location_work', form['work'].value)
 
-        if form['weatherloc'].value != settings.get('weather_location'):
+        if form['weatherloc'].value != self.settings.get('weather_location'):
             changes.append("Set weather location to %s" % (form['weatherloc'].value))
-            settings.set('weather_location', form['weatherloc'].value)
+            self.settings.set('weather_location', form['weatherloc'].value)
 
-        if int(form['snooze'].value) != settings.getInt('snooze_length'):
+        if int(form['snooze'].value) != self.settings.getInt('snooze_length'):
             changes.append("Set snooze length to %s" % (form['snooze'].value))
-            settings.set('snooze_length', form['snooze'].value)
+            self.settings.set('snooze_length', form['snooze'].value)
 
-        if int(form['wakeup'].value) != settings.getInt('wakeup_time'):
+        if int(form['wakeup'].value) != self.settings.getInt('wakeup_time'):
             changes.append("Set wakeup time to %s" % (form['wakeup'].value))
-            settings.set('wakup_time', form['wakeup'].value)
+            self.settings.set('wakup_time', form['wakeup'].value)
 
-        if int(form['precancel'].value) != settings.getInt('preempt_cancel'):
+        if int(form['precancel'].value) != self.settings.getInt('preempt_cancel'):
             changes.append("Set pre-emptive cancel time to %s seconds" % (form['precancel'].value))
-            settings.set('preempt_cancel', form['precancel'].value)
+            self.settings.set('preempt_cancel', form['precancel'].value)
 
-        if form['waketime'].value != settings.get('default_wake'):
+        if form['waketime'].value != self.settings.get('default_wake'):
             changes.append("Set default wake time to %s" % (form['waketime'].value))
-            settings.set('default_wake', form['waketime'].value)
+            self.settings.set('default_wake', form['waketime'].value)
 
-        if form['holidaymode'].checked != (settings.getInt('holiday_mode') == 1):
+        if form['holidaymode'].checked != (self.settings.getInt('holiday_mode') == 1):
             changes.append("Setting holiday mode to %s" % (form['holidaymode'].checked))
-            settings.set('holiday_mode', 1 if form['holidaymode'].checked else 0)
-            if (settings.getInt('holiday_mode') == 1):
+            self.settings.set('holiday_mode', 1 if form['holidaymode'].checked else 0)
+            if (self.settings.getInt('holiday_mode') == 1):
                 # Just enabled holiday mode, so clear any alarms
                 log.debug("Enabling holiday mode, clearing alarms")
                 alarm.clearAlarm()
@@ -219,13 +219,13 @@ class set:
                 log.debug("Disabling holiday mode, auto-setting alarm")
                 alarm.autoSetAlarm()
 
-        if form['weatheronalarm'].checked != (settings.getInt('weather_on_alarm') == 1):
+        if form['weatheronalarm'].checked != (self.settings.getInt('weather_on_alarm') == 1):
             changes.append("Setting weather on alarm to %s" % (form['weatheronalarm'].checked))
-            settings.set('weather_on_alarm', 1 if form['weatheronalarm'].checked else 0)
+            self.settings.set('weather_on_alarm', 1 if form['weatheronalarm'].checked else 0)
 
-        if form['sfx'].checked != (settings.getInt('sfx_enabled') == 1):
+        if form['sfx'].checked != (self.settings.getInt('sfx_enabled') == 1):
             changes.append("Setting SFX to %s" % (form['sfx'].checked))
-            settings.set('sfx_enabled', 1 if form['sfx'].checked else 0)
+            self.settings.set('sfx_enabled', 1 if form['sfx'].checked else 0)
 
         text = "Configuring settings:<p><ul><li>%s</li></ul>" % ("</li><li>".join(changes))
         # For debugging purposes
@@ -241,10 +241,11 @@ class api:
 
 
 class WebApplication(threading.Thread):
-    def __init__(self, alarmThread, settings):
+    def __init__(self, alarmThread, mySettings):
         global alarm
         threading.Thread.__init__(self)
         alarm = alarmThread
+        settings = mySettings
 
 
     def run(self):
