@@ -16,267 +16,275 @@ from InputWorker import InputWorker
 
 log = logging.getLogger('root')
 
+
 def suffix(d):
-   return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
+    return 'th' if 11 <= d <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(d % 10, 'th')
+
 
 class AlarmThread(threading.Thread):
+    def __init__(self, settings, media, weather):
+        threading.Thread.__init__(self)
+        self.stopping = False
+        self.nextAlarm = None
+        self.alarmTimeout = None
+        self.snoozing = False
 
-   def __init__(self, settings):
-      threading.Thread.__init__(self)
-      self.stopping=False
-      self.nextAlarm=None
-      self.alarmTimeout=None
-      self.snoozing = False
+        # self.settings = Settings.Settings()
+        self.settings = settings
+        #self.media = MediaPlayer.MediaPlayer()
+        self.media = media
+        self.alarmGatherer = AlarmGatherer.AlarmGatherer()
+        #self.weatherFetcher = WeatherFetcher()
+        self.weatherFetcher = weather
 
-      #self.settings = Settings.Settings()
-      self.settings = settings
-      self.media = MediaPlayer.MediaPlayer()
-      self.alarmGatherer = AlarmGatherer.AlarmGatherer()
-      self.weatherFetcher = WeatherFetcher()
+        #self.rotor = InputWorker(self)
+        #self.rotor.start()
 
-      self.fromEvent = False # False if auto or manual, True if from an event
+        self.fromEvent = False  # False if auto or manual, True if from an event
 
-      self.travel = TravelCalculator(self.settings.get('location_home'))
-      self.travelTime = 0 # The travel time we last fetched
-      self.travelCalculated = False # Have we re-calculated travel for this alarm cycle?
+        self.travel = TravelCalculator(self.settings.get('location_home'))
+        self.travelTime = 0  # The travel time we last fetched
+        self.travelCalculated = False  # Have we re-calculated travel for this alarm cycle?
 
-      self.rotor = InputWorker(self)
-      self.rotor.start()
 
-   def stop(self):
-      log.info("Stopping alarm thread")
-      if(self.media.playerActive()):
-         self.stopAlarm()
-      self.stopping=True
+    def stop(self):
+        log.info("Stopping alarm thread")
+        if (self.media.playerActive()):
+            self.stopAlarm()
+        self.stopping = True
 
-   def isAlarmSounding(self):
-      return (self.media.playerActive() and self.nextAlarm is not None and self.nextAlarm < datetime.datetime.now(pytz.timezone(self.settings.get('timezone'))))
+    def isAlarmSounding(self):
+        return (self.media.playerActive() and self.nextAlarm is not None and self.nextAlarm < datetime.datetime.now(
+            pytz.timezone(self.settings.get('timezone'))))
 
-   def isSnoozing(self):
-      return self.snoozing
+    def isSnoozing(self):
+        return self.snoozing
 
-   def getNextAlarm(self):
-      return self.nextAlarm
+    def getNextAlarm(self):
+        return self.nextAlarm
 
-   def snooze(self):
-      log.info("Snoozing alarm for %s minutes", self.settings.getInt('snooze_length'))
-      self.silenceAlarm()
+    def snooze(self):
+        log.info("Snoozing alarm for %s minutes", self.settings.getInt('snooze_length'))
+        self.silenceAlarm()
 
-      alarmTime = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
-      alarmTime += datetime.timedelta(minutes=self.settings.getInt('snooze_length'))
-      self.setAlarmTime(alarmTime)
-      self.snoozing = True
-      self.alarmTimeout = None
-      self.fromEvent = False
+        alarmTime = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
+        alarmTime += datetime.timedelta(minutes=self.settings.getInt('snooze_length'))
+        self.setAlarmTime(alarmTime)
+        self.snoozing = True
+        self.alarmTimeout = None
+        self.fromEvent = False
 
-   def soundAlarm(self):
-      log.info("Alarm triggered")
-      self.media.soundAlarm()
-      timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
-      timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
-      self.alarmTimeout = timeout
+    def soundAlarm(self):
+        log.info("Alarm triggered")
+        self.media.soundAlarm()
+        timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
+        timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
+        self.alarmTimeout = timeout
 
-   # Only to be called if we're stopping this alarm cycle - see silenceAlarm() for shutting off the player
-   def stopAlarm(self):
-      log.info("Stopping alarm")
-      self.silenceAlarm()
+    # Only to be called if we're stopping this alarm cycle - see silenceAlarm() for shutting off the player
+    def stopAlarm(self):
+        log.info("Stopping alarm")
+        self.silenceAlarm()
 
-      self.clearAlarm()
+        self.clearAlarm()
 
-      if self.settings.getInt('weather_on_alarm')==1:
-         log.debug("Playing weather information")
+        if self.settings.getInt('weather_on_alarm') == 1:
+            log.debug("Playing weather information")
 
-         now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
+            now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
 
-         weather = ""
-         try:
-            weather = self.weatherFetcher.getWeather().speech()
-         except Exception:
-            log.exception("Failed to get weather information")
+            weather = ""
+            try:
+                weather = self.weatherFetcher.getWeather().speech()
+            except Exception:
+                log.exception("Failed to get weather information")
 
-         day = now.strftime("%d").lstrip("0")
-         day += suffix(now.day)
+            day = now.strftime("%d").lstrip("0")
+            day += suffix(now.day)
 
-         hour = now.strftime("%I").lstrip("0")
+            hour = now.strftime("%I").lstrip("0")
 
-         salutation = "morning" if now.strftime("%p")=="AM" else "afternoon" if int(hour) < 18 else "evening"
+            salutation = "morning" if now.strftime("%p") == "AM" else "afternoon" if int(hour) < 18 else "evening"
 
-         # Today is Monday 31st of October, the time is 9 56 AM
-         speech = "Good %s Joel. Today is %s %s %s, the time is %s %s %s. " % (salutation, now.strftime("%A"), day, now.strftime("%B"), hour, now.strftime("%M"), now.strftime("%p"))
-         speech += weather
+            # Today is Monday 31st of October, the time is 9 56 AM
+            speech = "Good %s Joel. Today is %s %s %s, the time is %s %s %s. " % (
+            salutation, now.strftime("%A"), day, now.strftime("%B"), hour, now.strftime("%M"), now.strftime("%p"))
+            speech += weather
 
-         self.media.playSpeech(speech)
+            self.media.playSpeech(speech)
 
-      # Send a notification to HomeControl (OpenHAB) that we're now awake
-      try:
-         log.debug("Sending wake notification to HomeControl")
-         urllib2.urlopen("http://homecontrol:9090/CMD?isSleeping=OFF").read()
-      except Exception:
-         log.exception("Failed to send wake state to HomeControl")
-      
+        # Send a notification to HomeControl (OpenHAB) that we're now awake
+        try:
+            log.debug("Sending wake notification to HomeControl")
+            urllib2.urlopen("http://homecontrol:9090/CMD?isSleeping=OFF").read()
+        except Exception:
+            log.exception("Failed to send wake state to HomeControl")
 
-      # Automatically set up our next alarm.
-      self.autoSetAlarm()
 
-   # Stop whatever is playing
-   def silenceAlarm(self):
-      log.info("Silencing alarm")
-      self.media.stopPlayer()
+        # Automatically set up our next alarm.
+        self.autoSetAlarm()
 
-   # Called by InputWorker on press of the cancel button
-   def cancel(self):
-      if self.isAlarmSounding():
-         # Lets snooze for a while
-         self.snooze()
-         return
+    # Stop whatever is playing
+    def silenceAlarm(self):
+        log.info("Silencing alarm")
+        self.media.stopPlayer()
 
-      if self.isSnoozing():
-         # Stop the alarm!
-         self.stopAlarm()
-         return
+    # Called by InputWorker on press of the cancel button
+    def cancel(self):
+        if self.isAlarmSounding():
+            # Lets snooze for a while
+            self.snooze()
+            return
 
-      if self.alarmInSeconds() < self.settings.getInt('preempt_cancel'):
-         # We're in the allowable window for pre-empting a cancel alarm, and we're not in the menu
-         log.info("Pre-empt cancel triggered")
-         self.stopAlarm()
-         return
+        if self.isSnoozing():
+            # Stop the alarm!
+            self.stopAlarm()
+            return
 
-   def autoSetAlarm(self):
-      if self.settings.getInt('holiday_mode')==1:
-         log.debug("Holiday mode enabled, won't auto-set alarm as requested")
-         return
+        if self.alarmInSeconds() < self.settings.getInt('preempt_cancel'):
+            # We're in the allowable window for pre-empting a cancel alarm, and we're not in the menu
+            log.info("Pre-empt cancel triggered")
+            self.stopAlarm()
+            return
 
-      log.debug("Automatically setting next alarm")
-      try:
-         event = self.alarmGatherer.getNextEventTime() # The time of the next event on our calendar.
-         default = self.alarmGatherer.getDefaultAlarmTime()
+    def autoSetAlarm(self):
+        if self.settings.getInt('holiday_mode') == 1:
+            log.debug("Holiday mode enabled, won't auto-set alarm as requested")
+            return
 
-         diff = datetime.timedelta(minutes=self.settings.getInt('wakeup_time')) # How long before event do we want alarm
-         event -= diff
+        log.debug("Automatically setting next alarm")
+        try:
+            event = self.alarmGatherer.getNextEventTime()  # The time of the next event on our calendar.
+            default = self.alarmGatherer.getDefaultAlarmTime()
 
-         # Adjust for travel time
-         self.travelTime = self.fetchTravelTime()
-         travelDelta = datetime.timedelta(minutes=self.travelTime)
-         event -= travelDelta
-         
-         if event > default: # Is the event time calculated greater than our default wake time
-            log.debug("Calculated wake time of %s is after our default of %s, reverting to default",event,default)
-            event = default
-            self.fromEvent = False
-         else:
-            self.fromEvent = True
+            diff = datetime.timedelta(
+                minutes=self.settings.getInt('wakeup_time'))  # How long before event do we want alarm
+            event -= diff
 
-         self.setAlarmTime(event)
-         self.settings.set('manual_alarm','') # We've just auto-set an alarm, so clear any manual ones
+            # Adjust for travel time
+            self.travelTime = self.fetchTravelTime()
+            travelDelta = datetime.timedelta(minutes=self.travelTime)
+            event -= travelDelta
 
-         # Read out the time we've just set
-         hour = event.strftime("%I").lstrip("0")
-         readTime = "%s %s %s" % (hour, event.strftime("%M"), event.strftime("%p"))
-         self.media.playVoice('Automatic alarm has been set for %s' % (readTime))
-
-      except Exception as e:
-         log.exception("Could not automatically set alarm")
-         self.media.playVoice('Error setting alarm')
-         self.nextAlarm = None
-
-   # Find out where our next event is, and then calculate travel time to there
-   def fetchTravelTime(self, update=False):
-      destination = self.alarmGatherer.getNextEventLocation(includeToday=update)
-      if(destination is None):
-         destination = self.settings.get('location_work')
-      travelTime = self.travel.getTravelTime(destination)
-
-      return travelTime
-
-   def travelAdjustAlarm(self):
-      log.info("Adjusting alarm for current travel time")
-      newTravelTime = self.fetchTravelTime(update=True)
-      travelDiff = newTravelTime - self.travelTime
-      log.debug("Old travel time: %s, new travel time: %s, diff: %s" % (self.travelTime, newTravelTime, travelDiff))
-      
-      adjustDelta = datetime.timedelta(minutes=travelDiff)
-      newTime = self.nextAlarm - adjustDelta
-      self.setAlarmTime(newTime)
-      self.travelCalculated = True
-
-   def manualSetAlarm(self,alarmTime):
-      log.info("Manually setting next alarm to %s",alarmTime)
-      self.fromEvent = False
-      self.settings.set('manual_alarm',calendar.timegm(alarmTime.utctimetuple()))
-      self.setAlarmTime(alarmTime)
-      self.media.playVoice('Manual alarm has been set')
-
-   def setAlarmTime(self,alarmTime):
-      self.nextAlarm = alarmTime
-      log.info("Alarm set for %s", alarmTime)
-
-   def clearAlarm(self):
-      self.snoozing = False
-      self.nextAlarm = None
-      self.alarmTimeout = None
-      self.settings.set('manual_alarm','') # If we've just stopped an alarm, we can't have a manual one set yet
-      self.travelTime = 0
-      self.travelCalculated = False
-      self.fromEvent = False
-
-   # Number of seconds until alarm is triggered
-   def alarmInSeconds(self):
-      now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
-      if self.nextAlarm is None:
-         return -1
-
-      if self.isSnoozing() or self.isAlarmSounding():
-         return 0
-
-      diff = self.nextAlarm - now
-      return diff.seconds
-
-   # Return a line of text describing the alarm state
-   def getMenuLine(self):
-      now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
-      message = ""
-
-      if self.nextAlarm is not None:
-         diff = self.nextAlarm - now
-         if diff.days < 1:
-            if self.snoozing:
-               message+="Snoozing"
+            if event > default:  # Is the event time calculated greater than our default wake time
+                log.debug("Calculated wake time of %s is after our default of %s, reverting to default", event, default)
+                event = default
+                self.fromEvent = False
             else:
-               message+="Alarm"
-            
-            if diff.seconds < (2 * 60 * 60): # 2 hours
-               if self.snoozing:
-                  message+=" for "
-               else:
-                  message+=" in "
-               message+="%s min" % ((diff.seconds//60)+1)
-               if diff.seconds//60 != 0:
-                  message+="s"
-            else:
-               if self.snoozing:
-                  message+=" until "
-               else:
-                  message+=" at "
-               message+=self.nextAlarm.strftime("%H:%M")   
+                self.fromEvent = True
 
-      return message
+            self.setAlarmTime(event)
+            self.settings.set('manual_alarm', '')  # We've just auto-set an alarm, so clear any manual ones
 
-   def run(self):
-      while(not self.stopping):
-          now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
+            # Read out the time we've just set
+            hour = event.strftime("%I").lstrip("0")
+            readTime = "%s %s %s" % (hour, event.strftime("%M"), event.strftime("%p"))
+            self.media.playVoice('Automatic alarm has been set for %s' % (readTime))
 
-          #log.info("now: %s", now)
-          #log.info("nextAlarm: %s", self.nextAlarm)
+        except Exception as e:
+            log.exception("Could not automatically set alarm")
+            self.media.playVoice('Error setting alarm')
+            self.nextAlarm = None
 
-          if(self.nextAlarm is not None and self.fromEvent and self.alarmInSeconds() < 3600 and not self.travelCalculated):
-             # We're inside 1hr of an event alarm being triggered, and we've not taken into account the current traffic situation
-             self.travelAdjustAlarm()
+    # Find out where our next event is, and then calculate travel time to there
+    def fetchTravelTime(self, update=False):
+        destination = self.alarmGatherer.getNextEventLocation(includeToday=update)
+        if (destination is None):
+            destination = self.settings.get('location_work')
+        travelTime = self.travel.getTravelTime(destination)
 
-          if(self.nextAlarm is not None and self.nextAlarm < now and not self.media.playerActive()):
-             self.soundAlarm()
+        return travelTime
 
-          if(self.alarmTimeout is not None and self.alarmTimeout < now):
-             log.info("Alarm timeout reached, stopping alarm")
-             self.stopAlarm()
+    def travelAdjustAlarm(self):
+        log.info("Adjusting alarm for current travel time")
+        newTravelTime = self.fetchTravelTime(update=True)
+        travelDiff = newTravelTime - self.travelTime
+        log.debug("Old travel time: %s, new travel time: %s, diff: %s" % (self.travelTime, newTravelTime, travelDiff))
 
-          time.sleep(1)
+        adjustDelta = datetime.timedelta(minutes=travelDiff)
+        newTime = self.nextAlarm - adjustDelta
+        self.setAlarmTime(newTime)
+        self.travelCalculated = True
+
+    def manualSetAlarm(self, alarmTime):
+        log.info("Manually setting next alarm to %s", alarmTime)
+        self.fromEvent = False
+        self.settings.set('manual_alarm', calendar.timegm(alarmTime.utctimetuple()))
+        self.setAlarmTime(alarmTime)
+        self.media.playVoice('Manual alarm has been set')
+
+    def setAlarmTime(self, alarmTime):
+        self.nextAlarm = alarmTime
+        log.info("Alarm set for %s", alarmTime)
+
+    def clearAlarm(self):
+        self.snoozing = False
+        self.nextAlarm = None
+        self.alarmTimeout = None
+        self.settings.set('manual_alarm', '')  # If we've just stopped an alarm, we can't have a manual one set yet
+        self.travelTime = 0
+        self.travelCalculated = False
+        self.fromEvent = False
+
+    # Number of seconds until alarm is triggered
+    def alarmInSeconds(self):
+        now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
+        if self.nextAlarm is None:
+            return -1
+
+        if self.isSnoozing() or self.isAlarmSounding():
+            return 0
+
+        diff = self.nextAlarm - now
+        return diff.seconds
+
+    # Return a line of text describing the alarm state
+    def getMenuLine(self):
+        now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
+        message = ""
+
+        if self.nextAlarm is not None:
+            diff = self.nextAlarm - now
+            if diff.days < 1:
+                if self.snoozing:
+                    message += "Snoozing"
+                else:
+                    message += "Alarm"
+
+                if diff.seconds < (2 * 60 * 60):  # 2 hours
+                    if self.snoozing:
+                        message += " for "
+                    else:
+                        message += " in "
+                    message += "%s min" % ((diff.seconds // 60) + 1)
+                    if diff.seconds // 60 != 0:
+                        message += "s"
+                else:
+                    if self.snoozing:
+                        message += " until "
+                    else:
+                        message += " at "
+                    message += self.nextAlarm.strftime("%H:%M")
+
+        return message
+
+    def run(self):
+        while (not self.stopping):
+            now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
+
+            # log.info("now: %s", now)
+            #log.info("nextAlarm: %s", self.nextAlarm)
+
+            if (
+                            self.nextAlarm is not None and self.fromEvent and self.alarmInSeconds() < 3600 and not self.travelCalculated):
+                # We're inside 1hr of an event alarm being triggered, and we've not taken into account the current traffic situation
+                self.travelAdjustAlarm()
+
+            if (self.nextAlarm is not None and self.nextAlarm < now and not self.media.playerActive()):
+                self.soundAlarm()
+
+            if (self.alarmTimeout is not None and self.alarmTimeout < now):
+                log.info("Alarm timeout reached, stopping alarm")
+                self.stopAlarm()
+
+            time.sleep(1)
