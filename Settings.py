@@ -396,7 +396,8 @@ class Settings:
             self.setVolume(val)
 
         self.settings[key]["value"] = val
-        json.dump(self.settings, self.jsonFile)
+        with open(self.JSON_NAME, 'w+') as self.jsonFile:
+            json.dump(self.settings, self.jsonFile, sort_keys=True, indent=4, separators=(',', ': '))
 
 
     def setVolume(self, val):
@@ -412,4 +413,6 @@ if __name__ == '__main__':
     print "Showing all current settings"
     mySettings = Settings()
     mySettings.setup()
-    print mySettings.settings.items()
+    print mySettings.get('timezone')
+    print mySettings.set('volume','80')
+    #print mySettings.settings.items()
