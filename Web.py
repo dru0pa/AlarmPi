@@ -5,7 +5,6 @@ import datetime
 import pytz
 import threading
 import logging
-import operator
 from Settings import Settings
 
 urls = (

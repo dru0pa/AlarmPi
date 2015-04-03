@@ -73,14 +73,13 @@ class Settings:
         # Check to see if our JSON file exists, if not then create and populate it
         with open(self.JSON_NAME, 'w+') as self.jsonFile:
             try:
-                self.settings = json.load(self.jsonFile)
+                jsonString = json.load(self.jsonFile)
+                self.settings = sorted(jsonString.iteritems(), key=lambda (x, y): y['formOrder'])
                 # log.debug("settings: %s" % json.dumps(self.settings))
             except ValueError as e:
                 log.error("ValueError: %s " % e.message)
                 self.firstRun()
 
-        sorted_x = sorted(self.settings.iteritems(), key=lambda (x, y): y['formOrder'])
-        log.debug("sorted: %s" % sorted_x)
         # Set the volume on this machine to what we think it should be
         self.setVolume(self.getInt('volume'))
 
@@ -368,7 +367,7 @@ class Settings:
         with open(self.JSON_NAME, 'w+') as self.jsonFile:
             json.dump(defaults, self.jsonFile, indent=4, separators=(',', ': '))
 
-        self.settings = defaults
+        self.settings = sorted(defaults.iteritems(), key=lambda (x, y): y['formOrder'])
 
 
     def getDb(self, key):
