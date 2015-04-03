@@ -48,7 +48,7 @@ class LcdThread(threading.Thread):
         #self.weather.getWeather()  # So we populate the cache straight away
         self.weather = weather
 
-        self.menu = MenuControl.MenuControl(alarmThread, shutdownCallback)
+        self.menu = MenuControl.MenuControl(alarmThread, settings, shutdownCallback)
         self.menu.setDaemon(True)
 
         self.lcd = LCDControl()

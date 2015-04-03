@@ -97,7 +97,7 @@ class AlarmPi:
         alarm.start()
 
         log.debug("Starting web application")
-        web = WebApplication(alarm)
+        web = WebApplication(alarm, settings)
         web.setDaemon(True)
         web.start()
 
