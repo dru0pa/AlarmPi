@@ -66,7 +66,7 @@ class AlarmPi:
         use_lcd = settings.getInt('use_lcd')
         if use_lcd == 1:
             log.debug("Loading LCD")
-            lcd = LcdThread.LcdThread(alarm, self.stop)
+            lcd = LcdThread.LcdThread(alarm, settings, weather, self.stop)
             lcd.setDaemon(True)
             lcd.start()
 
