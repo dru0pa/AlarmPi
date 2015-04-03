@@ -51,7 +51,7 @@ class AlarmPi:
       clock.setDaemon(True)
 
       log.debug("Loading alarm control")
-      alarm = AlarmThread.AlarmThread()
+      alarm = AlarmThread.AlarmThread(settings)
       alarm.setDaemon(True)
 
       use_lcd = settings.getInt('use_lcd')

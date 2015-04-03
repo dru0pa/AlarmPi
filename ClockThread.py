@@ -9,11 +9,12 @@ from Adafruit_7Segment import SevenSegment
 
 class ClockThread(threading.Thread):
 
-   def __init__(self):
+   def __init__(self, settings):
       threading.Thread.__init__(self)
       self.segment = SevenSegment(address=0x70)
       self.stopping=False
-      self.settings = Settings.Settings()
+      #self.settings = Settings.Settings()
+      self.settings = settings
       self.colon = 0
 
    def stop(self):
