@@ -99,7 +99,7 @@ class Settings:
     def firstRun(self):
         log.warn("Running first-time JSON set-up")
 
-        true_false = [1, 2]
+        true_false = [("1", "true"),("2", "false")]
 
         defaults = {
             "snooze_length": {
@@ -131,7 +131,7 @@ class Settings:
                 "key": "holiday_mode",
                 "value": "0",
                 "description": "Is Holiday Mode Enabled (no-alarm)",
-                "formType": "radio",
+                "formType": "dropdown",
                 "visibility": "standard",
                 "formRegexp": "",
                 "formRegexpMessage": "",
@@ -191,7 +191,7 @@ class Settings:
                 "key": "weather_on_alarm",
                 "value": 1,
                 "description": "Speak weather on alarm cancel",
-                "formType": "radio",
+                "formType": "dropdown",
                 "visibility": "standard",
                 "formRegexp": "",
                 "formRegexpMessage": "",
@@ -268,12 +268,12 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": range(0, 16)
+                "formDropdownValues": str(range(0, 16))
             },
             "max_brightness": {
                 "formOrder": 41,
                 "key": "max_brightness",
-                "value": "15",
+                "value": 15,
                 "description": "Maximum Brightness (0-15)",
                 "formType": "dropdown",
                 "visibility": "standard",
@@ -299,7 +299,7 @@ class Settings:
                 "key": "use_lcd",
                 "value": "0",
                 "description": "Use LCD or not",
-                "formType": "radio",
+                "formType": "dropdown",
                 "visibility": "standard",
                 "formRegexp": "",
                 "formRegexpMessage": "",
@@ -311,7 +311,7 @@ class Settings:
                 "key": "sfx_enabled",
                 "value": "1",
                 "description": "Are sound affects enabled",
-                "formType": "radio",
+                "formType": "dropdown",
                 "visibility": "advanced",
                 "formRegexp": "",
                 "formRegexpMessage": "",
