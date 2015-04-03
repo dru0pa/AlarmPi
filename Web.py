@@ -90,7 +90,7 @@ class set:
                 dynamicForm.append(
                     form.Textbox(dict["key"], form.notnull, form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
                                  value=dict["value"]))
-        return dynamicForm
+        return form.Form(dynamicForm)
 
     def getForm(self):
         return form.Form(
@@ -151,7 +151,7 @@ class set:
         )
 
     def GET(self):
-        form = self.getDynamicForm()
+        form = self.getDynamicForm()()
         return render.settings(form)
 
     def POST(self):
