@@ -297,7 +297,7 @@ class Settings:
             "use_lcd": {
                 "formOrder": 43,
                 "key": "use_lcd",
-                "value": 1,
+                "value": 0,
                 "description": "Use LCD or not",
                 "formType": "dropdown",
                 "visibility": "standard",
