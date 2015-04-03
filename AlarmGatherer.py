@@ -119,6 +119,7 @@ class AlarmGatherer:
 if __name__ == '__main__':
    print "Running credential check"
    settings = Settings.Settings()
+   settings.setup()
    a = AlarmGatherer(settings)
    try:
       if not a.checkCredentials():
