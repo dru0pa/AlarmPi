@@ -45,14 +45,14 @@ class Settings:
                     "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
                     "XFM": "http://media-ice.musicradio.com/XFM.m3u",
                     "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
-        STATIONS = [("BBC Radio 1","http://www.radiofeeds.co.uk/bbcradio1.pls"),
-                    ("BBC Radio 2", "http://www.radiofeeds.co.uk/bbcradio2.pls"),
-                    ("Capital FM", "http://ms1.capitalinteractive.co.uk/fm_high"),
-                    ("Kerrang Radio", "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u"),
-                    ("Magic 105.4", "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u"),
-                    ("Smooth Radio", "http://media-ice.musicradio.com/SmoothUK.m3u"),
-                    ("XFM", "http://media-ice.musicradio.com/XFM.m3u"),
-                    ("BBC Radio London", "http://www.radiofeeds.co.uk/bbclondon.pls")]
+        STATIONS = [("http://www.radiofeeds.co.uk/bbcradio1.pls", "BBC Radio 1"),
+                    ("http://www.radiofeeds.co.uk/bbcradio2.pls", "BBC Radio 2"),
+                    ("http://ms1.capitalinteractive.co.uk/fm_high", "Capital FM"),
+                    ("http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u", "Kerrang Radio"),
+                    ("http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u", "Magic 105.4"),
+                    ("http://media-ice.musicradio.com/SmoothUK.m3u", "Smooth Radio"),
+                    ("http://media-ice.musicradio.com/XFM.m3u", "XFM"),
+                    ("http://www.radiofeeds.co.uk/bbclondon.pls", "BBC Radio London")]
         for station in STATIONS_DICT.keys():
             stations += station
         return STATIONS
@@ -94,6 +94,8 @@ class Settings:
     def firstRun(self):
         log.warn("Running first-time JSON set-up")
 
+        true_false = ["true", "false"]
+
         defaults = {
             "snooze_length": {
                 "formOrder": 1,
@@ -129,7 +131,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": "true, false"
+                "formDropdownValues": true_false
             },
             "default_wake": {
                 "formOrder": 4,
@@ -189,7 +191,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": "true, false"
+                "formDropdownValues": true_false
             },
             "weather_location": {
                 "formOrder": 21,
@@ -297,7 +299,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": "true, false"
+                "formDropdownValues": true_false
             },
             "sfx_enabled": {
                 "formOrder": 44,
@@ -309,7 +311,7 @@ class Settings:
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": "true, false"
+                "formDropdownValues": true_false
             },
             "volume": {
                 "formOrder": 45,
