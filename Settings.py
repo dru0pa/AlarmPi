@@ -80,8 +80,8 @@ class Settings:
                 log.error("ValueError: %s " % e.message)
                 self.firstRun()
 
-        sorted = sorted(self.settings.items(), key=operator.itemgetter(1)["formOrder"])
-        log.debub("sorted: %s" % sorted)
+        sorted_x = sorted(self.settings.items(), key=operator.itemgetter(1)["formOrder"])
+        log.debub("sorted: %s" % sorted_x)
         # Set the volume on this machine to what we think it should be
         self.setVolume(self.getInt('volume'))
 
