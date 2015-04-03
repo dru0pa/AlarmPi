@@ -34,7 +34,7 @@ def formatDate(dateObj):
 #
 
 class LcdThread(threading.Thread):
-    def __init__(self, alarmThread, settings, weather, shutdownCallback):
+    def __init__(self, alarmThread, settings, weather, media, shutdownCallback):
         threading.Thread.__init__(self)
         self.alarmThread = alarmThread
         self.stopping = False
@@ -48,7 +48,7 @@ class LcdThread(threading.Thread):
         #self.weather.getWeather()  # So we populate the cache straight away
         self.weather = weather
 
-        self.menu = MenuControl.MenuControl(alarmThread, settings, shutdownCallback)
+        self.menu = MenuControl.MenuControl(alarmThread, settings, media, shutdownCallback)
         self.menu.setDaemon(True)
 
         self.lcd = LCDControl()

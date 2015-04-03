@@ -18,14 +18,15 @@ menuItems = ["Volume", "Station", "Auto-set Alarm", "Manual Alarm", "Holiday Mod
 
 
 class MenuControl(threading.Thread):
-    def __init__(self, alarmThread, settings, shutdownCallback):
+    def __init__(self, alarmThread, settings, media, shutdownCallback):
         threading.Thread.__init__(self)
 
         self.shutdownCallback = shutdownCallback
         self.alarmThread = alarmThread
         #self.settings = Settings.Settings()
         self.settings = settings
-        self.media = MediaPlayer.MediaPlayer()
+        #self.media = MediaPlayer.MediaPlayer(settings)
+        self.media = media
 
         self.menuPointer = None
         self.menuTimeout = 0
