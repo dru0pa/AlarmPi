@@ -361,6 +361,18 @@ class Settings:
                 "formRegexpMessage": "Must be a digit",
                 "formNullable": "notnull",
                 "formDropdownValues": ""
+            },
+            "placeholder": {
+                "formOrder": 999,
+                "key": "placeholder",
+                "value": "",
+                "description": "here just to support dynamic form generation",
+                "formType": "hidden",
+                "visibility": "invisible",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "",
+                "formDropdownValues": ""
             }
         }
 
