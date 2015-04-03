@@ -95,9 +95,13 @@ class set:
             if dict["formType"] == 'textbox':
                 dynamic_form.add_input(form.Textbox(dict["key"], form.notnull, form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
                                  value=dict["value"]))
-                #dynamicForm.append(
-                #    form.Textbox(dict["key"], form.notnull, form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
-                #                 value=dict["value"]))
+            elif dict["formType"] == 'radio':
+                dynamic_form.add_input(form.Radio(dict["key"], args=dict["formDropdownValues"], description=dict["description"],
+                                 value=dict["value"]))
+            elif dict["formType"] == 'dropdown':
+                dynamic_form.add_input(form.Dropdown(dict["key"], args=dict["formDropdownValues"], description=dict["description"],
+                                 value=dict["value"]))
+
         return dynamic_form
 
     def getForm(self):
