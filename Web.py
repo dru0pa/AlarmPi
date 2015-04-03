@@ -182,7 +182,7 @@ class set:
 
         for formName in form._get_d():
             if form[formName].value != settings.get(formName):
-                changes.append("Set %s to %s" % formName, form[formName].value)
+                changes.append("Set %s to %s", formName, form[formName].value)
         text = "Configuring settings:<p><ul><li>%s</li></ul>" % ("</li><li>".join(changes))
         for c in changes:
             log.debug(c)
