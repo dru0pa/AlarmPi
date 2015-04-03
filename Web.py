@@ -89,7 +89,7 @@ class reset:
 
 class set:
     def getDynamicForm(self):
-        dynamic_form = DynamicForm(form.Textbox('placeholder'))
+        dynamic_form = DynamicForm(form.Hidden('placeholder'))
         #dynamicForm = []
         for setting, dict in settings.settings.iteritems():
             if dict["formType"] == 'textbox':
