@@ -5,6 +5,7 @@ import datetime
 import pytz
 import threading
 import logging
+import operator
 from Settings import Settings
 
 urls = (
@@ -259,7 +260,7 @@ class WebApplication(threading.Thread):
         threading.Thread.__init__(self)
         alarm = alarmThread
         global settings
-        settings = mySettings
+        settings = sorted(mySettings.items(), key=operator.itemgetter(1)["formOrder"])
 
 
     def run(self):
