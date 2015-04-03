@@ -93,9 +93,13 @@ class set:
 
         #for setting, dict in settings.settings.iteritems():
         for setting, dict in sorted(settings.settings.iteritems(), key=lambda (x, y): y['formOrder']):
+            if dict["formNullable"] == 'notnull':
+                nullArg = "form.notnull"
+            else:
+                nullArg = ()
             if dict["formType"] == 'textbox':
-                dynamic_form.add_input(form.Textbox(dict["key"], form.notnull, form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
-                                 value=dict["value"]))
+                dynamic_form.add_input(form.Textbox(dict["key"], form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
+                                 value=dict["value"], *nullArg))
             elif dict["formType"] == 'radio':
                 dynamic_form.add_input(form.Radio(dict["key"], args=dict["formDropdownValues"], description=dict["description"],
                                  value=dict["value"]))
