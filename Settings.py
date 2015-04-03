@@ -17,6 +17,7 @@ stream.setFormatter(formatter)
 
 log.addHandler(stream)
 
+
 class Settings:
     # Database connection details
     DB_NAME = 'settings.db'
@@ -36,7 +37,7 @@ class Settings:
     def getStations(self):
         stations = ''
         # Radio stations we can play through mplayer
-        STATIONS = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
+        STATIONS_DICT = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
                     "BBC Radio 2": "http://www.radiofeeds.co.uk/bbcradio2.pls",
                     "Capital FM": "http://ms1.capitalinteractive.co.uk/fm_high",
                     "Kerrang Radio": "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u",
@@ -44,6 +45,14 @@ class Settings:
                     "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
                     "XFM": "http://media-ice.musicradio.com/XFM.m3u",
                     "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
+        STATIONS = [("BBC Radio 1","http://www.radiofeeds.co.uk/bbcradio1.pls"),
+                    ("BBC Radio 2", "http://www.radiofeeds.co.uk/bbcradio2.pls"),
+                    ("Capital FM", "http://ms1.capitalinteractive.co.uk/fm_high"),
+                    ("Kerrang Radio", "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u"),
+                    ("Magic 105.4", "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u"),
+                    ("Smooth Radio", "http://media-ice.musicradio.com/SmoothUK.m3u"),
+                    ("XFM", "http://media-ice.musicradio.com/XFM.m3u"),
+                    ("BBC Radio London", "http://www.radiofeeds.co.uk/bbclondon.pls")]
         for station in STATIONS.keys():
             stations += station
         return stations
@@ -65,7 +74,7 @@ class Settings:
         with open(self.JSON_NAME, 'w+') as self.jsonFile:
             try:
                 self.settings = json.load(self.jsonFile)
-                #log.debug("settings: %s" % json.dumps(self.settings))
+                # log.debug("settings: %s" % json.dumps(self.settings))
             except ValueError as e:
                 log.error("ValueError: %s " % e.message)
                 self.firstRun()
@@ -408,7 +417,7 @@ class Settings:
 
 
         # def __del__(self):
-        #self.conn.close()
+        # self.conn.close()
 
 
 if __name__ == '__main__':
@@ -416,5 +425,5 @@ if __name__ == '__main__':
     mySettings = Settings()
     mySettings.setup()
     print mySettings.get('location_home')
-    mySettings.set('volume','80')
+    mySettings.set('volume', '80')
     print mySettings.settings.items()
