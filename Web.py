@@ -260,7 +260,7 @@ class WebApplication(threading.Thread):
         threading.Thread.__init__(self)
         alarm = alarmThread
         global settings
-        settings = sorted(mySettings.settings.items(), key=operator.itemgetter(1)["formOrder"])
+        settings = mySettings
 
 
     def run(self):

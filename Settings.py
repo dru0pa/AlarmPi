@@ -5,6 +5,7 @@ import logging
 import json
 import pytz
 import sys
+import operator
 
 log = logging.getLogger('root')
 log.setLevel(logging.DEBUG)
@@ -79,6 +80,8 @@ class Settings:
                 log.error("ValueError: %s " % e.message)
                 self.firstRun()
 
+        sorted = sorted(self.settings.items(), key=operator.itemgetter(1)["formOrder"])
+        log.debub("sorted: %s" % sorted)
         # Set the volume on this machine to what we think it should be
         self.setVolume(self.getInt('volume'))
 
