@@ -429,7 +429,7 @@ class Settings:
         log.info("setting {0} to {1}".format(key, val))
         with open(JSON_NAME, 'w') as f:
             json.dump(self.settings, f, sort_keys=True, indent=4, separators=(',', ': '))
-
+            f.close()
 
     def setVolume(self, val):
         subprocess.Popen("%s %s" % (self.VOL_CMD, val), stdout=subprocess.PIPE, shell=True)
