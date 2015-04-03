@@ -261,7 +261,7 @@ class Settings:
             "min_brightness": {
                 "formOrder": 40,
                 "key": "min_brightness",
-                "value": "0",
+                "value": "4",
                 "description": "Minimum Brightness (0-15)",
                 "formType": "dropdown",
                 "visibility": "standard",
