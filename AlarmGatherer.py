@@ -126,7 +126,7 @@ if __name__ == '__main__':
    except:
       print "Credentials not correct, please generate new code"
       a.generateAuth()
-      a = AlarmGatherer()
+      a = AlarmGatherer(settings)
 
    print a.getNextEventTime()
    print a.getNextEventLocation()
