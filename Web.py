@@ -85,11 +85,11 @@ class reset:
 class set:
     def getDynamicForm(self):
         dynamicForm = []
-        for form in settings.DEFAULTS:
-            if form[3] == 'textbox':
+        for setting, dict in settings:
+            if settings[setting][dict]["formType"] == 'textbox':
                 dynamicForm.append(
-                    form.Textbox(form[0], form.notnull, form.regexp(form[5], form[6]), description=form[2],
-                                 value=form[1]))
+                    form.Textbox(settings[setting][dict]["key"], form.notnull, form.regexp(settings[setting][dict]["formRegexp"], settings[setting][dict]["formRegexpMessage"]), description=settings[setting][dict]["description"],
+                                 value=settings[setting][dict]["value"]))
         return dynamicForm
 
     def getForm(self):
