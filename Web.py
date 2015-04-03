@@ -173,7 +173,7 @@ class set:
         return render.settings(form)
 
     def POST(self):
-        form = self.getDynamicForm()()
+        form = self.getDynamicForm()
         if not form.validates():
             return render.settings(form)
 
