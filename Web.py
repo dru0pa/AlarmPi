@@ -90,8 +90,9 @@ class reset:
 class set:
     def getDynamicForm(self):
         dynamic_form = DynamicForm(form.Hidden('placeholder'))
-        #dynamicForm = []
-        for setting, dict in settings.settings.iteritems():
+
+        #for setting, dict in settings.settings.iteritems():
+        for setting, dict in sorted(settings.settings.iteritems(), key=lambda (x, y): y['formOrder']):
             if dict["formType"] == 'textbox':
                 dynamic_form.add_input(form.Textbox(dict["key"], form.notnull, form.regexp(dict["formRegexp"], dict["formRegexpMessage"]), description=dict["description"],
                                  value=dict["value"]))
