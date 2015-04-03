@@ -29,7 +29,6 @@ class Settings:
 
     def __init__(self):
         # self.conn = sqlite3.connect(self.DB_NAME, check_same_thread=False)
-        self.jsonFile = None
         # self.c = self.conn.cursor()
         self.settings = None
 
@@ -71,11 +70,11 @@ class Settings:
     def setup(self):
         # This method called once from alarmpi main class
         # Check to see if our JSON file exists, if not then create and populate it
-        with open(self.JSON_NAME, 'w+') as self.jsonFile:
+        with open(self.JSON_NAME, 'w+') as f:
             try:
-                self.settings = json.load(self.jsonFile)
+                self.settings = json.load(f)
                 #self.settings = sorted(jsonString.iteritems(), key=lambda (x, y): y['formOrder'])
-                # log.debug("settings: %s" % json.dumps(self.settings))
+                log.debug("settings: %s" % json.dumps(self.settings))
             except ValueError as e:
                 log.error("ValueError: %s " % e.message)
                 self.firstRun()
@@ -422,8 +421,8 @@ class Settings:
             self.setVolume(val)
 
         self.settings[key]["value"] = val
-        with open(self.JSON_NAME, 'w+') as self.jsonFile:
-            json.dump(self.settings, self.jsonFile, sort_keys=True, indent=4, separators=(',', ': '))
+        with open(self.JSON_NAME, 'w+') as f:
+            json.dump(self.settings, f, sort_keys=True, indent=4, separators=(',', ': '))
 
 
     def setVolume(self, val):
