@@ -317,7 +317,7 @@ class Settings:
             "calendar": {
                 "formOrder": 999,
                 "key": "calendar",
-                "value": "CalendarCredentials.CALENDAR",
+                "value": CalendarCredentials.CALENDAR,
                 "description": "Calendar to gather events from",
                 "formType": "textbox",
                 "visibility": "invisible",

@@ -72,7 +72,7 @@ class AlarmGatherer:
             # 10am is late enough that a night shift from today won't be caught, but a morning shift
             # from tomorrow will be caught
 
-        log.debug("time.isoformat %s: " % (time.isoformat()))
+        log.debug("time.isoformat: %s " % (time.isoformat()))
 
         result = self.service.events().list(
             calendarId=self.settings.get('calendar'),
