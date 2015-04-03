@@ -30,7 +30,7 @@ class Settings:
         # self.conn = sqlite3.connect(self.DB_NAME, check_same_thread=False)
         self.jsonFile = None
         # self.c = self.conn.cursor()
-        self.settings = []
+        self.settings = None
 
 
     def getStations(self):
@@ -62,7 +62,7 @@ class Settings:
     def setup(self):
         # This method called once from alarmpi main class
         # Check to see if our JSON file exists, if not then create and populate it
-        with open(self.JSON_NAME) as self.jsonFile:
+        with open(self.JSON_NAME, 'w+') as self.jsonFile:
             try:
                 self.settings = json.load(self.jsonFile)
                 #log.debug("settings: %s" % json.dumps(self.settings))
@@ -355,6 +355,8 @@ class Settings:
         with open(self.JSON_NAME, 'w+') as self.jsonFile:
             json.dump(defaults, self.jsonFile, sort_keys=True, indent=4, separators=(',', ': '))
 
+        self.settings = defaults
+
 
     def getDb(self, key):
         self.c.execute('SELECT * FROM ' + self.TABLE_NAME + ' WHERE name=?', (key,))
@@ -414,5 +416,5 @@ if __name__ == '__main__':
     mySettings = Settings()
     mySettings.setup()
     print mySettings.get('timezone')
-    print mySettings.set('volume','80')
-    #print mySettings.settings.items()
+    mySettings.set('volume','80')
+    print mySettings.settings.items()
