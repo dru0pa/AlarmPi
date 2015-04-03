@@ -189,7 +189,7 @@ class Settings:
             "weather_on_alarm": {
                 "formOrder": 20,
                 "key": "weather_on_alarm",
-                "value": 1,
+                "value": "1",
                 "description": "Speak weather on alarm cancel",
                 "formType": "dropdown",
                 "visibility": "standard",
@@ -273,14 +273,14 @@ class Settings:
             "max_brightness": {
                 "formOrder": 41,
                 "key": "max_brightness",
-                "value": 15,
+                "value": "15",
                 "description": "Maximum Brightness (0-15)",
                 "formType": "dropdown",
                 "visibility": "standard",
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": range(0, 16)
+                "formDropdownValues": str(range(0, 16))
             },
             "brightness_timeout": {
                 "formOrder": 42,

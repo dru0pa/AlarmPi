@@ -102,7 +102,7 @@ class set:
                                  value=dict["value"])) # , *nullArg
             elif dict["formType"] == 'radio':
                 dynamic_form.add_input(form.Radio(dict["key"], args=dict["formDropdownValues"], description=dict["description"],
-                                 value=str(dict["value"])))
+                                 value=dict["value"]))
             elif dict["formType"] == 'dropdown':
                 dynamic_form.add_input(form.Dropdown(dict["key"], args=dict["formDropdownValues"], description=dict["description"],
                                  value=dict["value"]))
