@@ -151,7 +151,7 @@ class set:
         )
 
     def GET(self):
-        form = self.getDynamicForm()()
+        form = self.getDynamicForm()
         return render.settings(form)
 
     def POST(self):
