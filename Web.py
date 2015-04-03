@@ -168,6 +168,7 @@ class set:
         )
 
     def GET(self):
+        form = None
         form = self.getDynamicForm()
         #form2 = self.getForm()
         return render.settings(form)
