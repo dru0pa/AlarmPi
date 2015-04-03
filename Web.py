@@ -152,7 +152,8 @@ class set:
 
     def GET(self):
         form = self.getDynamicForm()
-        return render.settings(form)
+        form2 = self.getForm()
+        return render.settings(form2)
 
     def POST(self):
         form = self.getDynamicForm()()
