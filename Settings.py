@@ -415,6 +415,6 @@ if __name__ == '__main__':
     print "Showing all current settings"
     mySettings = Settings()
     mySettings.setup()
-    print mySettings.get('timezone')
+    print mySettings.get('location_home')
     mySettings.set('volume','80')
     print mySettings.settings.items()
