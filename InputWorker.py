@@ -10,8 +10,8 @@ import LedControl
 class InputWorker(threading.Thread):
     def __init__(
             self,
-            settings,
             inputReceiver,
+            settings,
             rotor_a_pin=5,
             rotor_b_pin=4,
             select_pin=6,

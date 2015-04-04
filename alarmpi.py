@@ -56,7 +56,7 @@ class AlarmPi:
         weather = WeatherFetcher(settings)
 
         log.debug("Initializing inputs")
-        inputWorker = InputWorker(settings)
+        inputWorker = InputWorker(self, settings)
         inputWorker.start()
 
         log.debug("Loading alarm control")
