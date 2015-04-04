@@ -21,8 +21,9 @@ class InputWorker(threading.Thread):
     ):
         threading.Thread.__init__(self)
 
-        use_lcd = settings.getInt('use_lcd')
-        if use_lcd == 1:
+        self.settings = settings
+
+        if self.settings.getInt('use_lcd') == 1:
 
             self.encoder = gaugette.rotary_encoder.RotaryEncoder(rotor_a_pin, rotor_b_pin)
             self.select = gaugette.switch.Switch(select_pin)
@@ -41,20 +42,22 @@ class InputWorker(threading.Thread):
 
     def run(self):
         while True:
-            # First, check if the rotary encoder has been cycled
-            delta = self.encoder.get_cycles()
-            if delta > 0:
-                self.receiver.scroll(1)
-            elif delta < 0:
-                self.receiver.scroll(-1)
 
-            # Next, check for our select button
-            if self.select.get_state():
-                if not self.select_state:
-                    self.receiver.select()
-                    self.select_state = True
-            else:
-                self.select_state = False
+            if self.settings.getInt('use_lcd') == 1:
+                # First, check if the rotary encoder has been cycled
+                delta = self.encoder.get_cycles()
+                if delta > 0:
+                    self.receiver.scroll(1)
+                elif delta < 0:
+                    self.receiver.scroll(-1)
+
+                # Next, check for our select button
+                if self.select.get_state():
+                    if not self.select_state:
+                        self.receiver.select()
+                        self.select_state = True
+                else:
+                    self.select_state = False
 
             # Finally, check for our cancel button
             if self.cancel.get_state():
