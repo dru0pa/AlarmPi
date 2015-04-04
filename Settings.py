@@ -99,7 +99,7 @@ class Settings:
     def firstRun(self):
         log.warn("Running first-time JSON set-up")
 
-        true_false = [(1, "true"),(0, "false")]
+        true_false = [("1", "true"),("0", "false")]
 
         defaults = {
             "snooze_length": {
@@ -129,7 +129,7 @@ class Settings:
             "holiday_mode": {
                 "formOrder": 3,
                 "key": "holiday_mode",
-                "value": 0,
+                "value": "0",
                 "description": "Is Holiday Mode Enabled (no-alarm)",
                 "formType": "dropdown",
                 "visibility": "standard",
@@ -189,7 +189,7 @@ class Settings:
             "weather_on_alarm": {
                 "formOrder": 20,
                 "key": "weather_on_alarm",
-                "value": 1,
+                "value": "1",
                 "description": "Speak weather on alarm cancel",
                 "formType": "dropdown",
                 "visibility": "standard",
@@ -261,26 +261,26 @@ class Settings:
             "min_brightness": {
                 "formOrder": 40,
                 "key": "min_brightness",
-                "value": 1,
+                "value": "1",
                 "description": "Minimum Brightness (0-15)",
                 "formType": "dropdown",
                 "visibility": "standard",
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": range(0, 16)
+                "formDropdownValues": [str(i) for i in range(0, 16)]
             },
             "max_brightness": {
                 "formOrder": 41,
                 "key": "max_brightness",
-                "value": 15,
+                "value": "15",
                 "description": "Maximum Brightness (0-15)",
                 "formType": "dropdown",
                 "visibility": "standard",
                 "formRegexp": "",
                 "formRegexpMessage": "",
                 "formNullable": "notnull",
-                "formDropdownValues": range(0, 16)
+                "formDropdownValues": [str(i) for i in range(0, 16)]
             },
             "brightness_timeout": {
                 "formOrder": 42,
@@ -297,7 +297,7 @@ class Settings:
             "use_lcd": {
                 "formOrder": 43,
                 "key": "use_lcd",
-                "value": 0,
+                "value": "0",
                 "description": "Use LCD or not",
                 "formType": "dropdown",
                 "visibility": "standard",
@@ -309,7 +309,7 @@ class Settings:
             "sfx_enabled": {
                 "formOrder": 44,
                 "key": "sfx_enabled",
-                "value": 1,
+                "value": "1",
                 "description": "Are sound affects enabled",
                 "formType": "dropdown",
                 "visibility": "advanced",
