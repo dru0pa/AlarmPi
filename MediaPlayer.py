@@ -41,15 +41,12 @@ class MediaPlayer:
             time.sleep(2)
             self.playMedia(PANIC_ALARM, 0)
 
-    def playStation(self, station=-1):
-        if station == -1:
-            station = self.settings.getInt('station')
+    def playStation(self):
+        station = self.settings.get('station')
 
-        station = Settings.STATIONS[station]
-
-        log.info("Playing station %s", station['name'])
+        log.info("Playing station %s", station)
         self.player = Player()
-        self.player.loadlist(station['url'])
+        self.player.loadlist(station)
         self.player.loop = 0
 
     def playMedia(self, file, loop=-1):
