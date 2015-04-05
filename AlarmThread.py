@@ -22,7 +22,7 @@ def suffix(d):
 
 
 class AlarmThread(threading.Thread):
-    def __init__(self, settings, media, weather):
+    def __init__(self, settings, media, weather, wink):
         threading.Thread.__init__(self)
         self.stopping = False
         self.nextAlarm = None
@@ -36,6 +36,7 @@ class AlarmThread(threading.Thread):
         self.alarmGatherer = AlarmGatherer.AlarmGatherer(settings)
         #self.weatherFetcher = WeatherFetcher()
         self.weatherFetcher = weather
+        self.wink = wink
 
         #self.rotor = InputWorker(self)
         #self.rotor.start()
@@ -66,6 +67,7 @@ class AlarmThread(threading.Thread):
     def snooze(self):
         log.info("Snoozing alarm for %s minutes", self.settings.getInt('snooze_length'))
         self.silenceAlarm()
+        self.wink.activate(self.settings.get('wink_group_id'),bool(),0)
 
         alarmTime = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
         alarmTime += datetime.timedelta(minutes=self.settings.getInt('snooze_length'))
@@ -77,6 +79,7 @@ class AlarmThread(threading.Thread):
     def soundAlarm(self):
         log.info("Alarm triggered")
         self.media.soundAlarm()
+        self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.5)
         timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
         timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
         self.alarmTimeout = timeout
