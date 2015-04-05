@@ -151,7 +151,7 @@ if __name__ == '__main__':
     settings = Settings.Settings()
     settings.setup()
     spotify = Spotify()
-    spotify.do_login()
+    spotify.login()
     spotify.get_playlists()
 
     #Commander().cmdloop()

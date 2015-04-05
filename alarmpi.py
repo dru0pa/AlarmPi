@@ -52,7 +52,7 @@ class AlarmPi:
 
         log.debug("Loading Spotify")
         spotify = Spotify.Spotify(settings)
-        spotify.do_login()
+        spotify.login()
         log.info(spotify.get_playlists())
 
         log.debug("Loading clock")
