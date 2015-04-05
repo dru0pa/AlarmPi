@@ -1,9 +1,9 @@
 from urllib2 import Request, urlopen
+#import simplejson as json
 import json
-import re
 
 api_server = "https://winkapi.quirky.com"
-#api_server = "https://private-0d714-wink.apiary-mock.com"
+api_server = "https://private-0d714-wink.apiary-mock.com"
 
 values = json.dumps({
     "client_id": "9575057b69283d441c17f3618d15d93d",
@@ -23,6 +23,7 @@ print json.dumps(oauth2, sort_keys=True, indent=4, separators=(',', ': '))
 # response_body = urlopen(request).read()
 # light_bulbs = json.loads(response_body)
 # print json.dumps(light_bulbs, sort_keys=True, indent=4, separators=(',', ': '))
+
 #
 # headers = {"Authorization": "Bearer {0}".format(oauth2["data"]["access_token"])}
 # request = Request("{0}/users/me/wink_devices".format(api_server), headers=headers)
@@ -73,20 +74,51 @@ print json.dumps(oauth2, sort_keys=True, indent=4, separators=(',', ': '))
 #     "pagination": {}
 # }
 
-false = "false"
-
+# false = "false"
 # activate_group = {
 #     "desired_state": {
 #         "powered":false
 #     }
 # }
 
-activate_group = '{"desired_state": {"powered":true}}'
+# activate_group = '{"desired_state": {"powered":true}}'
+#
+# headers = {"Authorization": "Bearer {0}".format(oauth2["data"]["access_token"])}
+# request = Request("{0}/groups/2895682/activate".format(api_server), data=activate_group, headers=headers)
+# response_body = urlopen(request).read()
+# print response_body
+# activate_group_results = json.loads(response_body)
+# print json.dumps(activate_group_results, sort_keys=True, indent=4, separators=(',', ': '))
 
-headers = {"Authorization": "Bearer {0}".format(oauth2["data"]["access_token"])}
-request = Request("{0}/groups/2895682/activate".format(api_server), data=activate_group, headers=headers)
+#activate_bulb = '{"desired_state": {"powered":true,"brightness":100}}'
+
+
+#
+activate_bulb = json.dumps({
+    "name":"Living Room Lamp",
+    "desired_state": {
+        "powered":bool(),
+        "brightness":0
+    }
+})
+
+activate_bulb = json.dumps({
+    "name":"My Device"
+}, sort_keys=True, indent=4, separators=(',', ': '))
+
+print activate_bulb
+headers = {"Content-Type": "application/json", "Authorization": "Bearer {0}".format(oauth2["data"]["access_token"])}
+request = Request("{0}/light_bulbs/466989".format(api_server), data=activate_bulb, headers=headers)
+request.get_method = lambda: 'PUT'
 response_body = urlopen(request).read()
-print response_body
 activate_group_results = json.loads(response_body)
 print json.dumps(activate_group_results, sort_keys=True, indent=4, separators=(',', ': '))
+
+
+# Get list of all Groups
+# headers = {"Authorization": "Bearer {0}".format(oauth2["data"]["access_token"])}
+# request = Request("{0}/users/me/groups".format(api_server), headers=headers)
+# response_body = urlopen(request).read()
+# activate_group_results = json.loads(response_body)
+# print json.dumps(activate_group_results, sort_keys=True, indent=4, separators=(',', ': '))
 
