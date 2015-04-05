@@ -313,6 +313,18 @@ class Settings:
                 "formNullable": "",
                 "formDropdownValues": ""
             },
+            "spotify_uri": {
+                "formOrder": 50,
+                "key": "spotify_uri",
+                "value": "spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus",
+                "description": "Spotify URI for a Playlist, Album, or Song. This will be played as your alarm.",
+                "formType": "textbox",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "",
+                "formDropdownValues": ""
+            },
             "calendar": {
                 "formOrder": 999,
                 "key": "calendar",

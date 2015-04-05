@@ -5,12 +5,25 @@ import logging
 import threading
 import platform
 import Settings
+import sys
 
 log = logging.getLogger('root')
 
+log.setLevel(logging.DEBUG)
+
+stream = logging.StreamHandler(sys.stdout)
+stream.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+stream.setFormatter(formatter)
+
+log.addHandler(stream)
+
+logging.basicConfig(level=logging.INFO)
+
 class Spotify:
 
-    def __init__(self, settings):
+    def __init__(self):
 
         self.logged_in = threading.Event()
         self.logged_out = threading.Event()
@@ -38,7 +51,10 @@ class Spotify:
 
         self.config = spotify.Config()
         self.config.user_agent = 'Alarm Clock'
-        self.settings = settings
+        #self.settings = settings
+
+        self.event_loop = spotify.EventLoop(self.session)
+        self.event_loop.start()
 
     def on_connection_state_changed(self, session):
         if session.connection.state is spotify.ConnectionState.LOGGED_IN:
@@ -51,11 +67,12 @@ class Spotify:
     def on_end_of_track(self, session):
         self.session.player.play(False)
 
-    def login(self):
-        self.session.login(self.settings.get("spotify_user"), self.settings.get("spotify_pass"), remember_me=True)
+    def login(self, username, password):
+        #username=self.settings.get("spotify_user"), password=self.settings.get("spotify_pass")
+        self.session.login(username,password, remember_me=True)
         self.logged_in.wait()
 
-    def relogin(self, line):
+    def relogin(self):
         "relogin -- login as the previous logged in user"
         try:
             self.session.relogin()
@@ -63,16 +80,16 @@ class Spotify:
         except spotify.Error as e:
             log.error(e)
 
-    def forget_me(self, line):
+    def forget_me(self):
         "forget_me -- forget the previous logged in user"
         self.session.forget_me()
 
-    def logout(self, line):
+    def logout(self):
         "logout"
         self.session.logout()
         self.logged_out.wait()
 
-    def whoami(self, line):
+    def whoami(self):
         "whoami"
         if self.logged_in.is_set():
             log.info(
@@ -101,15 +118,15 @@ class Spotify:
         log.info('Playing track')
         self.session.player.play()
 
-    def pause(self, line):
+    def pause(self):
         log.info('Pausing track')
         self.session.player.play(False)
 
-    def resume(self, line):
+    def resume(self):
         log.info('Resuming track')
         self.session.player.play()
 
-    def stop(self, line):
+    def stop(self):
         log.info('Stopping track')
         self.session.player.play(False)
         self.session.player.unload()
@@ -145,17 +162,33 @@ class Spotify:
                 '[%s] %s - %s', track.link, track.artists[0].name, track.name)
 
     def get_playlists(self):
+        log.debug("Number of playlists: {0}".format(len(self.session.playlist_container)))
         for playlist in self.session.playlist_container:
-            playlist_uri = playlist.load()
-            log.info("Name: {0} URI: {1}".format(playlist.name, playlist_uri))
+            try:
+                playlist_uri = playlist.load()
+                log.info("Name: {0} URI: {1}".format(playlist.name, playlist_uri))
+            except AttributeError as e:
+                log.info("Oops, encountered a folder of platlists.  Not sure howto handle, so moving on: {0}".format(e.args))
+
+    def play_playlist(self, uri):
+        playlist = self.session.get_playlist(uri)
+        playlist.load()
+        for track in playlist.tracks:
+            log.info("Fetching {0} from playlist and sending to player".format(track.name))
+            self.play_uri(str(track.link))
+
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
-    settings = Settings.Settings()
-    settings.setup()
-    spotify = Spotify()
-    spotify.login()
-    spotify.get_playlists()
+    #logging.basicConfig(level=logging.INFO)
+    # settings = Settings.Settings()
+    # settings.setup()
+    mySpotify = Spotify()
+    mySpotify.login("joel_roberts","p@ssw0rd")
+    #mySpotify.get_playlists()
+    #mySpotify.play_playlist('spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2')
+    mySpotify.play_uri("spotify:track:14CsUVcoKztExH6aSgfrfb")
+    sys.sleep(1000)
+    mySpotify.logout()
 
     #Commander().cmdloop()
