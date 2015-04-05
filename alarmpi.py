@@ -46,14 +46,16 @@ class AlarmPi:
         settings = Settings.Settings()
         settings.setup()
 
-        log.debug("Loading media")
-        media = MediaPlayer.MediaPlayer(settings)
-        # media.playVoice('Starting up')
+        # log.debug("Loading media")
+        # media = MediaPlayer.MediaPlayer(settings)
+        # # media.playVoice('Starting up')
 
         log.debug("Loading Spotify")
         spotify = Spotify.Spotify(settings)
         spotify.login()
         log.info(spotify.get_playlists())
+
+        return
 
         log.debug("Loading clock")
         clock = ClockThread.ClockThread(settings)
