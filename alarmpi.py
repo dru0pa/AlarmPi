@@ -62,6 +62,7 @@ class AlarmPi:
             wink = Wink.Wink()
 
         log.debug("Loading alarm control")
+
         alarm = AlarmThread.AlarmThread(settings, media, weather, wink)
         alarm.setDaemon(True)
 
