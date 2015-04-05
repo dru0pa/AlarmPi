@@ -67,8 +67,9 @@ class AlarmThread(threading.Thread):
     def snooze(self):
         message = "Snoozing alarm for {0} minutes".format(self.settings.getInt('snooze_length'))
         log.info(message)
-        self.media.playSpeech(message)
+
         self.silenceAlarm()
+        self.media.playSpeech(message)
         self.wink.activate(self.settings.get('wink_group_id'),bool(),0)
 
         alarmTime = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
@@ -80,7 +81,7 @@ class AlarmThread(threading.Thread):
 
     def soundAlarm(self):
         log.info("Alarm triggered")
-        self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.5)
+        self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
         self.media.soundAlarm()
         timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
         timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
@@ -91,6 +92,8 @@ class AlarmThread(threading.Thread):
         message = "Cancelling alarm"
         log.info(message)
         self.media.playSpeech(message)
+
+        self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
 
         self.silenceAlarm()
 
