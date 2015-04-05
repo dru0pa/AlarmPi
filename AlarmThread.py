@@ -78,8 +78,8 @@ class AlarmThread(threading.Thread):
 
     def soundAlarm(self):
         log.info("Alarm triggered")
-        self.media.soundAlarm()
         self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.5)
+        self.media.soundAlarm()
         timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
         timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
         self.alarmTimeout = timeout
