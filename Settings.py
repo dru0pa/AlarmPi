@@ -330,6 +330,30 @@ class Settings:
                 "formNullable": "notnull",
                 "formDropdownValues": ""
             },
+            "use_wink": {
+                "formOrder": 46,
+                "key": "use_wink",
+                "value": "85",
+                "description": "Use Wink",
+                "formType": "dropdown",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "notnull",
+                "formDropdownValues": true_false
+            },
+            "wink_group_id": {
+                "formOrder": 47,
+                "key": "wink_group_id",
+                "value": "85",
+                "description": "Wink Group ID to manipulate",
+                "formType": "textbox",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "",
+                "formDropdownValues": ""
+            },
             "calendar": {
                 "formOrder": 999,
                 "key": "calendar",
