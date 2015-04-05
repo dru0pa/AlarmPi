@@ -3,7 +3,7 @@ import json
 import re
 
 api_server = "https://winkapi.quirky.com"
-api_server = "https://private-0d714-wink.apiary-mock.com"
+#api_server = "https://private-0d714-wink.apiary-mock.com"
 
 values = json.dumps({
     "client_id": "9575057b69283d441c17f3618d15d93d",
