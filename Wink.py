@@ -81,7 +81,7 @@ false = "false"
 #     }
 # }
 
-activate_group = '{"desired_state": {"powered":false}}'
+activate_group = '{"desired_state": {"powered":true}}'
 
 headers = {"Authorization": "Bearer {0}".format(oauth2["data"]["access_token"])}
 request = Request("{0}/groups/2895682/activate".format(api_server), data=activate_group, headers=headers)
