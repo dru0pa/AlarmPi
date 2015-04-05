@@ -1,5 +1,6 @@
 from urllib2 import Request, urlopen
 import json
+import re
 
 api_server = "https://winkapi.quirky.com"
 #api_server = "https://private-0d714-wink.apiary-mock.com"
@@ -74,11 +75,11 @@ print json.dumps(oauth2, sort_keys=True, indent=4, separators=(',', ': '))
 
 false = "false"
 
-activate_group = {
+activate_group = re.escape({
     "desired_state": {
         "powered":false
     }
-}
+})
 
 headers = {"Authorization": "Bearer {0}".format(oauth2["data"]["access_token"])}
 request = Request("{0}/groups/2895682/activate".format(api_server), data=activate_group, headers=headers)
