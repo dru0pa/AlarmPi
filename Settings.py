@@ -448,7 +448,7 @@ class Settings:
             if self.defaults[key]["value"] is None:
                 raise Exception('Could not find setting %s' % (key))
             else:
-                self.set(key, self.defaults[key]["value"])
+                self.setNewKey(key, self.defaults[key])
                 self.get(key)
         return r
 
@@ -479,6 +479,14 @@ class Settings:
 
         self.settings[key]["value"] = val
         log.info("setting {0} to {1}".format(key, val))
+        with open(JSON_NAME, 'w') as f:
+            json.dump(self.settings, f, indent=4, separators=(',', ': '))
+            f.close()
+
+    def setNewKey(self, key, dict):
+
+        self.settings[key]["value"] = dict
+        log.info("setting {0} to {1}".format(key, dict))
         with open(JSON_NAME, 'w') as f:
             json.dump(self.settings, f, indent=4, separators=(',', ': '))
             f.close()
