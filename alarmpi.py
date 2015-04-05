@@ -3,7 +3,7 @@
 import logging
 import sys
 import pytz
-import wink
+import Wink
 import dateutil.parser
 
 log = logging.getLogger('root')
@@ -56,18 +56,18 @@ class AlarmPi:
         log.debug("Loading weather")
         weather = WeatherFetcher(settings)
 
-        log.debug("Initializing inputs")
-        inputWorker = InputWorker(self, settings)
-        inputWorker.start()
-
         use_wink = settings.getInt('use_wink')
         if use_wink == 1:
             log.debug("Initializing Wink")
-            lcd = wink.Wink()
+            wink = Wink.Wink()
 
         log.debug("Loading alarm control")
         alarm = AlarmThread.AlarmThread(settings, media, weather, wink)
         alarm.setDaemon(True)
+
+        log.debug("Initializing inputs")
+        inputWorker = InputWorker(alarm, settings)
+        inputWorker.start()
 
         use_lcd = settings.getInt('use_lcd')
         if use_lcd == 1:

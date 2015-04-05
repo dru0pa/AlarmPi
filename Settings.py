@@ -345,7 +345,7 @@ class Settings:
             "wink_group_id": {
                 "formOrder": 47,
                 "key": "wink_group_id",
-                "value": "2901669",
+                "value": "2901700",
                 "description": "Wink Group ID to manipulate",
                 "formType": "textbox",
                 "visibility": "standard",
