@@ -34,74 +34,9 @@ class Settings:
         # self.c = self.conn.cursor()
         self.settings = None
 
-
-    def getStations(self):
-        stations = ''
-        # Radio stations we can play through mplayer
-        STATIONS_DICT = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
-                    "BBC Radio 2": "http://www.radiofeeds.co.uk/bbcradio2.pls",
-                    "Capital FM": "http://ms1.capitalinteractive.co.uk/fm_high",
-                    "Kerrang Radio": "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u",
-                    "Magic 105.4": "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u",
-                    "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
-                    "XFM": "http://media-ice.musicradio.com/XFM.m3u",
-                    "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
-        STATIONS = [("http://www.radiofeeds.co.uk/bbcradio1.pls", "BBC Radio 1"),
-                    ("http://www.radiofeeds.co.uk/bbcradio2.pls", "BBC Radio 2"),
-                    ("http://ms1.capitalinteractive.co.uk/fm_high", "Capital FM"),
-                    ("http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u", "Kerrang Radio"),
-                    ("http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u", "Magic 105.4"),
-                    ("http://media-ice.musicradio.com/SmoothUK.m3u", "Smooth Radio"),
-                    ("http://media-ice.musicradio.com/XFM.m3u", "XFM"),
-                    ("http://www.radiofeeds.co.uk/bbclondon.pls", "BBC Radio London")]
-        for station in STATIONS_DICT.keys():
-            stations += station
-        return STATIONS
-
-
-    def setupDb(self):
-        # This method called once from alarmpi main class
-        # Check to see if our table exists, if not then create and populate it
-        r = self.c.execute('SELECT COUNT(*) FROM sqlite_master WHERE type="table" AND name=?;', (self.TABLE_NAME,))
-        if self.c.fetchone()[0] == 0:
-            self.firstRun()
-        # Set the volume on this machine to what we think it should be
-        self.setVolume(self.getInt('volume'))
-
-
-    def setup(self):
-        # This method called once from alarmpi main class
-        # Check to see if our JSON file exists, if not then create and populate it
-        try:
-            with open(JSON_NAME, 'r') as f:
-                try:
-                    self.settings = json.load(f)
-                    #log.debug("settings: %s" % json.dumps(self.settings))
-                except ValueError as e:
-                    log.error("ValueError: {0}".format(e.args))
-                    self.firstRun()
-        except IOError as io:
-            log.error("IOError: {0}".format(io.args))
-            self.firstRun()
-
-        # Set the volume on this machine to what we think it should be
-        self.setVolume(self.getInt('volume'))
-
-
-    def firstRunDb(self):
-        log.warn("Running first-time SQLite set-up")
-        self.c.execute(
-            'CREATE TABLE ' + self.TABLE_NAME + ' (name text, value text, desc text, form_type text, form_visibility text, form_validation text, form_validation_message text)')
-        self.c.executemany('INSERT INTO ' + self.TABLE_NAME + ' VALUES (?,?,?,?,?,?,?)', self.DEFAULTS)
-        self.conn.commit()
-
-
-    def firstRun(self):
-        log.warn("Running first-time JSON set-up")
-
         true_false = [("1", "true"),("0", "false")]
 
-        defaults = {
+        self.defaults = {
             "snooze_length": {
                 "formOrder": 1,
                 "key": "snooze_length",
@@ -428,10 +363,75 @@ class Settings:
             }
         }
 
-        with open(JSON_NAME, 'w+') as self.jsonFile:
-            json.dump(defaults, self.jsonFile, indent=4, separators=(',', ': '))
 
-        self.settings = defaults
+    def getStations(self):
+        stations = ''
+        # Radio stations we can play through mplayer
+        STATIONS_DICT = {"BBC Radio 1": "http://www.radiofeeds.co.uk/bbcradio1.pls",
+                    "BBC Radio 2": "http://www.radiofeeds.co.uk/bbcradio2.pls",
+                    "Capital FM": "http://ms1.capitalinteractive.co.uk/fm_high",
+                    "Kerrang Radio": "http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u",
+                    "Magic 105.4": "http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u",
+                    "Smooth Radio": "http://media-ice.musicradio.com/SmoothUK.m3u",
+                    "XFM": "http://media-ice.musicradio.com/XFM.m3u",
+                    "BBC Radio London": "http://www.radiofeeds.co.uk/bbclondon.pls"}
+        STATIONS = [("http://www.radiofeeds.co.uk/bbcradio1.pls", "BBC Radio 1"),
+                    ("http://www.radiofeeds.co.uk/bbcradio2.pls", "BBC Radio 2"),
+                    ("http://ms1.capitalinteractive.co.uk/fm_high", "Capital FM"),
+                    ("http://tx.whatson.com/icecast.php?i=kerrang.aac.m3u", "Kerrang Radio"),
+                    ("http://tx.whatson.com/icecast.php?i=magic1054.aac.m3u", "Magic 105.4"),
+                    ("http://media-ice.musicradio.com/SmoothUK.m3u", "Smooth Radio"),
+                    ("http://media-ice.musicradio.com/XFM.m3u", "XFM"),
+                    ("http://www.radiofeeds.co.uk/bbclondon.pls", "BBC Radio London")]
+        for station in STATIONS_DICT.keys():
+            stations += station
+        return STATIONS
+
+
+    def setupDb(self):
+        # This method called once from alarmpi main class
+        # Check to see if our table exists, if not then create and populate it
+        r = self.c.execute('SELECT COUNT(*) FROM sqlite_master WHERE type="table" AND name=?;', (self.TABLE_NAME,))
+        if self.c.fetchone()[0] == 0:
+            self.firstRun()
+        # Set the volume on this machine to what we think it should be
+        self.setVolume(self.getInt('volume'))
+
+
+    def setup(self):
+        # This method called once from alarmpi main class
+        # Check to see if our JSON file exists, if not then create and populate it
+        try:
+            with open(JSON_NAME, 'r') as f:
+                try:
+                    self.settings = json.load(f)
+                    #log.debug("settings: %s" % json.dumps(self.settings))
+                except ValueError as e:
+                    log.error("ValueError: {0}".format(e.args))
+                    self.firstRun()
+        except IOError as io:
+            log.error("IOError: {0}".format(io.args))
+            self.firstRun()
+
+        # Set the volume on this machine to what we think it should be
+        self.setVolume(self.getInt('volume'))
+
+
+    def firstRunDb(self):
+        log.warn("Running first-time SQLite set-up")
+        self.c.execute(
+            'CREATE TABLE ' + self.TABLE_NAME + ' (name text, value text, desc text, form_type text, form_visibility text, form_validation text, form_validation_message text)')
+        self.c.executemany('INSERT INTO ' + self.TABLE_NAME + ' VALUES (?,?,?,?,?,?,?)', self.DEFAULTS)
+        self.conn.commit()
+
+
+    def firstRun(self):
+        log.warn("Running first-time JSON set-up")
+
+        with open(JSON_NAME, 'w+') as self.jsonFile:
+            json.dump(self.defaults, self.jsonFile, indent=4, separators=(',', ': '))
+
+        self.settings = self.defaults
 
 
     def getDb(self, key):
@@ -445,7 +445,11 @@ class Settings:
     def get(self, key):
         r = self.settings[key]["value"]
         if r is None:
-            raise Exception('Could not find setting %s' % (key))
+            if self.defaults[key]["value"] is None:
+                raise Exception('Could not find setting %s' % (key))
+            else:
+                self.set(key, self.defaults[key]["value"])
+                self.get(key)
         return r
 
 
