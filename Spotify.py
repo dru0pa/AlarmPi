@@ -23,10 +23,14 @@ class Spotify:
         self.session.on(
             spotify.SessionEvent.END_OF_TRACK, self.on_end_of_track)
 
+        myPlatform = platform.system()
+
         try:
-            if platform.system() == 'Linux':
+            if myPlatform == 'Linux':
+                log.info("{0} platform detected; using ALSA".format(myPlatform))
                 self.audio_driver = spotify.AlsaSink(self.session)
             else:
+                log.info("{0} platform detected; using PortAudio".format(myPlatform))
                 self.audio_driver = spotify.PortAudioSink(self.session)
         except ImportError:
             log.warning(
