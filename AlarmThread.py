@@ -65,7 +65,9 @@ class AlarmThread(threading.Thread):
         return self.nextAlarm
 
     def snooze(self):
-        log.info("Snoozing alarm for %s minutes", self.settings.getInt('snooze_length'))
+        message = "Snoozing alarm for {0} minutes".format(self.settings.getInt('snooze_length'))
+        log.info(message)
+        self.media.playSpeech(message)
         self.silenceAlarm()
         self.wink.activate(self.settings.get('wink_group_id'),bool(),0)
 
@@ -86,7 +88,10 @@ class AlarmThread(threading.Thread):
 
     # Only to be called if we're stopping this alarm cycle - see silenceAlarm() for shutting off the player
     def stopAlarm(self):
-        log.info("Stopping alarm")
+        message = "Cancelling alarm"
+        log.info(message)
+        self.media.playSpeech(message)
+
         self.silenceAlarm()
 
         self.clearAlarm()
