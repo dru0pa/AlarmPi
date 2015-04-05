@@ -354,6 +354,30 @@ class Settings:
                 "formNullable": "",
                 "formDropdownValues": ""
             },
+            "spotify_user": {
+                "formOrder": 48,
+                "key": "spotify_user",
+                "value": "joel_roberts",
+                "description": "Spotify Username",
+                "formType": "textbox",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "",
+                "formDropdownValues": ""
+            },
+            "spotify_pass": {
+                "formOrder": 49,
+                "key": "spotify_user",
+                "value": "p@ssw0rd",
+                "description": "Spotify Password",
+                "formType": "textbox",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "",
+                "formDropdownValues": ""
+            },
             "calendar": {
                 "formOrder": 999,
                 "key": "calendar",
@@ -405,7 +429,7 @@ class Settings:
         }
 
         with open(JSON_NAME, 'w+') as self.jsonFile:
-            json.dump(defaults, self.jsonFile, sort_keys=True, indent=4, separators=(',', ': '))
+            json.dump(defaults, self.jsonFile, indent=4, separators=(',', ': '))
 
         self.settings = defaults
 
@@ -452,7 +476,7 @@ class Settings:
         self.settings[key]["value"] = val
         log.info("setting {0} to {1}".format(key, val))
         with open(JSON_NAME, 'w') as f:
-            json.dump(self.settings, f, sort_keys=True, indent=4, separators=(',', ': '))
+            json.dump(self.settings, f, indent=4, separators=(',', ': '))
             f.close()
 
     def setVolume(self, val):
@@ -470,7 +494,7 @@ if __name__ == '__main__':
     mySettings.setup()
     #print mySettings.get('location_home')
     mySettings.set('max_brightness', '10')
-    #print json.dumps(mySettings.settings, sort_keys=True, indent=4, separators=(',', ': '))
+    #print json.dumps(mySettings.settings, indent=4, separators=(',', ': '))
 
     try:
         with open(JSON_NAME, 'r') as f:
@@ -481,5 +505,5 @@ if __name__ == '__main__':
     except IOError as io:
         log.error("IOError: {0}".format(io.args))
 
-    print json.dumps(json_string, sort_keys=True, indent=4, separators=(',', ': '))
+    print json.dumps(json_string, indent=4, separators=(',', ': '))
 

@@ -26,6 +26,7 @@ import LcdThread
 import BrightnessThread
 import Settings
 import MediaPlayer
+import Spotify
 from InputWorker import InputWorker
 from Weather import WeatherFetcher
 from Web import WebApplication
@@ -48,6 +49,10 @@ class AlarmPi:
         log.debug("Loading media")
         media = MediaPlayer.MediaPlayer(settings)
         # media.playVoice('Starting up')
+
+        log.debug("Loading Spotify")
+        spotify = Spotify.Spotify(settings)
+        spotify.do_login()
 
         log.debug("Loading clock")
         clock = ClockThread.ClockThread(settings)
