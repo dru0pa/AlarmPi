@@ -16,11 +16,11 @@ class Wink:
                 "brightness":brightness
             }
         })
-
+        log.info("Setting Wink group_id {0} to state {1} and brightness {2}".format(group_id,state,brightness))
         self.w.activate_group(group_id,activate_group)
 
 
 if __name__ == '__main__':
     winker = Wink()
     #print json.dumps(winker.w.get_groups(), indent=4, separators=(',', ': '))
-    print json.dumps(winker.activate("2901669",bool(1),0.1), indent=4, separators=(',', ': '))
+    json.dumps(winker.activate("2901669",bool(1),0.1), indent=4, separators=(',', ': '))
