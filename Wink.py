@@ -86,6 +86,7 @@ activate_group = '{"desired_state": {"powered":false}}'
 headers = {"Authorization": "Bearer {0}".format(oauth2["data"]["access_token"])}
 request = Request("{0}/groups/2895682/activate".format(api_server), data=activate_group, headers=headers)
 response_body = urlopen(request).read()
+print response_body
 activate_group_results = json.loads(response_body)
 print json.dumps(activate_group_results, sort_keys=True, indent=4, separators=(',', ': '))
 
