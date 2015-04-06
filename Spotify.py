@@ -9,7 +9,7 @@ import sys
 
 log = logging.getLogger('root')
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 class Spotify:
 
