@@ -167,7 +167,7 @@ class Spotify:
         for track in playlist.tracks:
             log.info("Fetching {0} from playlist and sending to player".format(track.name))
             self.play_uri(str(track.link))
-            while not self.on_end_of_track.wait(0.1):
+            while not self.end_of_track.wait(0.1):
                 pass
 
 
