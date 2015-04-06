@@ -129,7 +129,11 @@ class Spotify(threading.Thread):
             log.warning(e)
             return
         log.info('Loading track into player')
-        self.session.player.load(track)
+        try:
+            self.session.player.load(track)
+        except spotify.error.LibError as e:
+            log.error("Exception: {0}".format(e.args))
+            return
         log.info('Playing track')
         self.session.player.play()
 
