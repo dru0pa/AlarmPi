@@ -469,6 +469,7 @@ class Settings:
     def get(self, key):
         try:
             r = self.settings[key]["value"]
+            return r
         except KeyError as e:
             try:
                 self.setNewKey(key, self.defaults[key])
@@ -476,7 +477,7 @@ class Settings:
             except KeyError as f:
                 log.error("Could not find setting {0}".format(key))
 
-        return r
+
 
 
     def getInt(self, key):
