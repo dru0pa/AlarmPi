@@ -22,10 +22,9 @@ log.addHandler(stream)
 
 logging.basicConfig(level=logging.INFO)
 
-class Spotify:
-
+class Spotify(threading.Thread):
     def __init__(self):
-
+        threading.Thread.__init__(self)
         self.end_of_track = threading.Event()
         self.logged_in = threading.Event()
         self.logged_out = threading.Event()
