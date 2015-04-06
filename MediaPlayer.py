@@ -1,19 +1,16 @@
 import time
 from mplayer import Player
-import Settings
 import subprocess
 import logging
 import Spotify
 
 log = logging.getLogger('root')
 
-PANIC_ALARM = '/usr/share/scratch/Media/Sounds/Music Loops/GuitarChords2.mp3'
-FX_DIRECTORY = '/root/sounds/'
-
+PANIC_ALARM = './sounds/GuitarChords2.mp3'
+FX_DIRECTORY = './sounds/'
 
 class MediaPlayer:
     def __init__(self, settings):
-        #self.settings = Settings.Settings()
         self.settings = settings
         self.player = False
         self.effect = False
@@ -26,19 +23,18 @@ class MediaPlayer:
             self.spotify.login(settings.get("spotify_user"), settings.get("spotify_pass"))
 
     def playerActive(self):
+        log.debug("playerActive: {0}".format(self.player != False))
         return self.player != False
 
     def soundAlarm(self):
-        log.info("Playing alarm")
+        log.info("soundAlarm: Playing alarm")
 
         if self.alarm_media == 'Spotify':
             self.playSpotify()
-
         else:
-
             self.playStation()
-            log.debug("Alarm process opened")
 
+            log.debug("Verifying Radio is playing")
             # Wait a few seconds and see if the mplayer instance is still running
             time.sleep(self.settings.getInt('radio_delay'))
 
@@ -50,15 +46,19 @@ class MediaPlayer:
             num = int(processes.stdout.read())
 
             if num < 2 and self.player is not False:
-                log.error("Could not find mplayer instance, playing panic alarm")
+                log.error("Radio fail: Could not find mplayer instance, playing panic alarm")
                 self.stopPlayer()
                 time.sleep(2)
                 self.playMedia(PANIC_ALARM, 0)
+            else:
+                log.debug("Radio success")
 
     def playSpotify(self):
-        self.spotify.play_playlist('spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2')
+        log.debug("playSpotify: ")
+        self.spotify.play_playlist(self.settings.get("spotify_uri"))
 
     def playStation(self):
+        log.debug("playStation: ")
         station = self.settings.get('station')
 
         log.info("Playing station %s", station)
@@ -67,13 +67,14 @@ class MediaPlayer:
         self.player.loop = 0
 
     def playMedia(self, file, loop=-1):
-        log.info("Playing file %s", file)
+        log.info("playMedia: Playing file %s", file)
         self.player = Player()
         self.player.loadfile(file)
         self.player.loop = loop
 
     # Play some speech. None-blocking equivalent of playSpeech, which also pays attention to sfx_enabled setting
     def playVoice(self, text):
+        log.debug("playVoice (non-blocking): {0}".format(text))
         if self.settings.get('sfx_enabled') == 0:
             # We've got sound effects disabled, so skip
             log.info("Sound effects disabled, not playing voice")
@@ -83,11 +84,14 @@ class MediaPlayer:
 
     # Play some speech. Warning: Blocks until we're done speaking
     def playSpeech(self, text):
-        log.info("Playing speech: '%s'" % (text))
-        play = subprocess.Popen('../speech/googletts "%s"' % (text), shell=True)
-        play.wait()
+        log.debug("playSpeech (blocking): {0}".format(text))
+        if self.settings.get('sfx_enabled') == 0:
+            log.info("Playing speech: '%s'" % (text))
+            play = subprocess.Popen('../speech/googletts "%s"' % (text), shell=True)
+            play.wait()
 
     def stopPlayer(self):
+        log.debug("stopPlayer: ")
         if self.player:
             self.player.quit()
             self.player = False

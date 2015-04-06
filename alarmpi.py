@@ -61,10 +61,10 @@ class AlarmPi:
             log.debug("Initializing Wink")
             wink = Wink.Wink()
         else:
+            log.debug("Not using Wink")
             wink = None
 
-        log.debug("Loading alarm control")
-
+        log.debug("Loading alarm thread")
         alarm = AlarmThread.AlarmThread(settings, media, weather, wink)
         alarm.setDaemon(True)
 
@@ -78,12 +78,15 @@ class AlarmPi:
             lcd = LcdThread.LcdThread(alarm, settings, weather, media, self.stop)
             lcd.setDaemon(True)
             lcd.start()
+        else:
+            log.debug("Not using LCD")
 
         log.debug("Loading brightness control")
         bright = BrightnessThread.BrightnessThread(settings)
         bright.setDaemon(True)
         bright.registerControlObject(clock.segment.disp)
         if use_lcd == 1:
+            log.debug("Loading brightness control for LCD")
             bright.registerControlObject(lcd)
         bright.start()
 
@@ -91,11 +94,11 @@ class AlarmPi:
         # If there's a manual alarm time set in the database, then load it
         manual = settings.getInt('manual_alarm')
         if manual == 0 or manual is None:
+            log.debug("Settings manual alarm")
             alarm.autoSetAlarm()
         else:
             alarmTime = datetime.datetime.fromtimestamp(manual, pytz.timezone(settings.get('timezone')))
             log.info("Loaded previously set manual alarm time of %s", alarmTime)
-
             alarm.manualSetAlarm(alarmTime)
 
         log.debug("Starting clock")
@@ -110,6 +113,7 @@ class AlarmPi:
         web.start()
 
         # Main loop where we just spin until we receive a shutdown request
+        log.debug("Loop until KeyboardInterrupt or SystemExit")
         try:
             while (self.stopping is False):
                 time.sleep(1)

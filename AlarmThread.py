@@ -5,21 +5,15 @@ import datetime
 import pytz
 import calendar
 import threading
-import Settings
 import AlarmGatherer
-import MediaPlayer
 import logging
 import urllib2
-from Weather import WeatherFetcher
 from TravelCalculator import TravelCalculator
-from InputWorker import InputWorker
 
 log = logging.getLogger('root')
 
-
 def suffix(d):
     return 'th' if 11 <= d <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(d % 10, 'th')
-
 
 class AlarmThread(threading.Thread):
     def __init__(self, settings, media, weather, wink):
@@ -29,27 +23,22 @@ class AlarmThread(threading.Thread):
         self.alarmTimeout = None
         self.snoozing = False
 
-        # self.settings = Settings.Settings()
         self.settings = settings
-        #self.media = MediaPlayer.MediaPlayer()
         self.alarm_media = settings.get("alarm_media")
         self.media = media
-        self.alarmGatherer = AlarmGatherer.AlarmGatherer(settings)
-        #self.weatherFetcher = WeatherFetcher()
-        self.weatherFetcher = weather
 
+        log.debug("Loading AlarmGatherer")
+        self.alarmGatherer = AlarmGatherer.AlarmGatherer(settings)
+
+        self.weatherFetcher = weather
         self.use_wink = self.settings.getInt("use_wink")
         self.wink = wink
-
-        #self.rotor = InputWorker(self)
-        #self.rotor.start()
-
         self.fromEvent = False  # False if auto or manual, True if from an event
 
+        log.debug("Loading Travel Calculator")
         self.travel = TravelCalculator(self.settings.get('location_home'))
         self.travelTime = 0  # The travel time we last fetched
         self.travelCalculated = False  # Have we re-calculated travel for this alarm cycle?
-
 
     def stop(self):
         log.info("Stopping alarm thread")
@@ -59,23 +48,29 @@ class AlarmThread(threading.Thread):
         self.stopping = True
 
     def isAlarmSounding(self):
-        return (self.media.playerActive() and self.nextAlarm is not None and self.nextAlarm < datetime.datetime.now(
+        sounding = (self.media.playerActive() and self.nextAlarm is not None and self.nextAlarm < datetime.datetime.now(
             pytz.timezone(self.settings.get('timezone'))))
+        log.debug("isAlarmSounding: {0}".format(sounding))
+        return sounding
 
     def isSnoozing(self):
+        log.debug("isSnoozing: {0}".format(self.snoozing))
         return self.snoozing
 
     def getNextAlarm(self):
+        log.debug("getNextAlarm: {0}".format(self.nextAlarm))
         return self.nextAlarm
 
     def snooze(self):
         message = "Snoozing alarm for {0} minutes".format(self.settings.getInt('snooze_length'))
         log.info(message)
+        log.debug("snooze: {0}".format(self.settings.getInt('snooze_length')))
 
         self.silenceAlarm()
         #self.media.playSpeech(message)
         #self.silenceAlarm()
         if self.use_wink == 1:
+            log.debug("turning off Wink")
             self.wink.activate(self.settings.get('wink_group_id'),bool(),0)
 
         alarmTime = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
@@ -86,8 +81,9 @@ class AlarmThread(threading.Thread):
         self.fromEvent = False
 
     def soundAlarm(self):
-        log.info("Alarm triggered")
+        log.debug("soundAlarm")
         if self.use_wink == 1:
+            log.debug("turning on Wink")
             self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
         self.media.soundAlarm()
         timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
@@ -96,12 +92,11 @@ class AlarmThread(threading.Thread):
 
     # Only to be called if we're stopping this alarm cycle - see silenceAlarm() for shutting off the player
     def stopAlarm(self):
-        message = "Cancelling alarm"
-        log.info(message)
-        self.media.playSpeech(message)
+        log.debug("stopAlarm")
         self.silenceAlarm()
 
         if self.use_wink == 1:
+            log.debug("turning on Wink")
             self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
 
         self.clearAlarm()
@@ -132,11 +127,11 @@ class AlarmThread(threading.Thread):
             self.media.playSpeech(speech)
 
         # Send a notification to HomeControl (OpenHAB) that we're now awake
-        try:
-            log.debug("Sending wake notification to HomeControl")
-            urllib2.urlopen("http://homecontrol:9090/CMD?isSleeping=OFF").read()
-        except Exception:
-            log.exception("Failed to send wake state to HomeControl")
+        # try:
+        #     log.debug("Sending wake notification to HomeControl")
+        #     urllib2.urlopen("http://homecontrol:9090/CMD?isSleeping=OFF").read()
+        # except Exception:
+        #     log.exception("Failed to send wake state to HomeControl")
 
 
         # Automatically set up our next alarm.
@@ -144,7 +139,7 @@ class AlarmThread(threading.Thread):
 
     # Stop whatever is playing
     def silenceAlarm(self):
-        log.info("Silencing alarm")
+        log.debug("silenceAlarm")
         if self.alarm_media == 'Spotify':
             self.media.spotify.pause()
         else:
@@ -152,6 +147,7 @@ class AlarmThread(threading.Thread):
 
     # Called by InputWorker on press of the cancel button
     def cancel(self):
+        log.debug("cancel: Cancel button pressed")
         if self.isAlarmSounding():
             # Lets snooze for a while
             self.snooze()
@@ -164,17 +160,20 @@ class AlarmThread(threading.Thread):
 
         if self.alarmInSeconds() < self.settings.getInt('preempt_cancel'):
             # We're in the allowable window for pre-empting a cancel alarm, and we're not in the menu
-            log.info("Pre-empt cancel triggered")
+            log.info("Preempt cancel triggered")
             self.stopAlarm()
             return
 
     def autoSetAlarm(self):
+        log.debug("autoSetAlarm")
         if self.settings.getInt('holiday_mode') == 1:
             log.debug("Holiday mode enabled, won't auto-set alarm as requested")
             return
 
         log.debug("Automatically setting next alarm")
+        log.debug("entering very large try: clause")
         try:
+
             event = self.alarmGatherer.getNextEventTime()  # The time of the next event on our calendar.
             default = self.alarmGatherer.getDefaultAlarmTime()
 
@@ -209,6 +208,7 @@ class AlarmThread(threading.Thread):
 
     # Find out where our next event is, and then calculate travel time to there
     def fetchTravelTime(self, update=False):
+        log.debug("fetchTravelTime: {0}".format(update))
         destination = self.alarmGatherer.getNextEventLocation(includeToday=update)
         if (destination is None):
             destination = self.settings.get('location_work')
@@ -217,7 +217,7 @@ class AlarmThread(threading.Thread):
         return travelTime
 
     def travelAdjustAlarm(self):
-        log.info("Adjusting alarm for current travel time")
+        log.info("travelAdjustAlarm: Adjusting alarm for current travel time")
         newTravelTime = self.fetchTravelTime(update=True)
         travelDiff = newTravelTime - self.travelTime
         log.debug("Old travel time: %s, new travel time: %s, diff: %s" % (self.travelTime, newTravelTime, travelDiff))
@@ -228,17 +228,19 @@ class AlarmThread(threading.Thread):
         self.travelCalculated = True
 
     def manualSetAlarm(self, alarmTime):
-        log.info("Manually setting next alarm to %s", alarmTime)
+        log.info("manualSetAlarm: Manually setting next alarm to %s", alarmTime)
         self.fromEvent = False
         self.settings.set('manual_alarm', calendar.timegm(alarmTime.utctimetuple()))
         self.setAlarmTime(alarmTime)
         self.media.playVoice('Manual alarm has been set')
 
     def setAlarmTime(self, alarmTime):
+        log.debug("setAlarmTime: {0}".format(alarmTime))
         self.nextAlarm = alarmTime
         log.info("Alarm set for %s", alarmTime)
 
     def clearAlarm(self):
+        log.debug("clearAlarm")
         self.snoozing = False
         self.nextAlarm = None
         self.alarmTimeout = None
@@ -257,6 +259,7 @@ class AlarmThread(threading.Thread):
             return 0
 
         diff = self.nextAlarm - now
+        log.debug("alarmInSeconds: {0}".format(diff.seconds))
         return diff.seconds
 
     # Return a line of text describing the alarm state
@@ -287,9 +290,11 @@ class AlarmThread(threading.Thread):
                         message += " at "
                     message += self.nextAlarm.strftime("%H:%M")
 
+        log.debug("getMenuLine: {0}".format(message))
         return message
 
     def run(self):
+        log.debug("starting alarm thread loop")
         while (not self.stopping):
             now = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
 
