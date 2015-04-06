@@ -15,6 +15,7 @@ class Spotify:
 
     def __init__(self):
 
+        self.end_of_track = threading.Event()
         self.logged_in = threading.Event()
         self.logged_out = threading.Event()
         self.logged_out.set()
@@ -54,7 +55,8 @@ class Spotify:
             self.logged_out.set()
 
     def on_end_of_track(self, session):
-        self.session.player.play(False)
+        #self.session.player.play(False)
+        self.end_of_track.set()
 
     def login(self, username, password):
         #username=self.settings.get("spotify_user"), password=self.settings.get("spotify_pass")
@@ -162,10 +164,12 @@ class Spotify:
     def play_playlist(self, uri):
         playlist = self.session.get_playlist(uri)
         playlist.load()
-        # for track in playlist.tracks:
-        #     log.info("Fetching {0} from playlist and sending to player".format(track.name))
-        #     self.play_uri(str(track.link))
-        self.play_uri(str(playlist.tracks[0].link))
+        for track in playlist.tracks:
+            log.info("Fetching {0} from playlist and sending to player".format(track.name))
+            self.play_uri(str(track.link))
+            while not self.on_end_of_track.wait(0.1):
+                pass
+
 
 
 
