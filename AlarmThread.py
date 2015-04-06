@@ -71,8 +71,8 @@ class AlarmThread(threading.Thread):
         log.info(message)
 
         self.silenceAlarm()
-        self.media.playSpeech(message)
-        self.silenceAlarm()
+        #self.media.playSpeech(message)
+        #self.silenceAlarm()
         if self.use_wink == 1:
             self.wink.activate(self.settings.get('wink_group_id'),bool(),0)
 

@@ -30,12 +30,14 @@ class MediaPlayer:
 
     def soundAlarm(self):
         log.info("Playing alarm")
-        self.playStation()
-        log.debug("Alarm process opened")
 
         if self.alarm_media == 'Spotify':
             self.playSpotify()
+
         else:
+
+            self.playStation()
+            log.debug("Alarm process opened")
 
             # Wait a few seconds and see if the mplayer instance is still running
             time.sleep(self.settings.getInt('radio_delay'))
