@@ -205,8 +205,8 @@ if __name__ == '__main__':
     mySpotify = Spotify()
     mySpotify.login("joel_roberts","p@ssw0rd")
     #mySpotify.get_playlists()
-    #mySpotify.play_playlist('spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2')
-    mySpotify.play_uri("spotify:track:14CsUVcoKztExH6aSgfrfb")
+    mySpotify.play_playlist('spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2')
+    #mySpotify.play_uri("spotify:track:14CsUVcoKztExH6aSgfrfb")
     mySpotify.logout()
 
     #Commander().cmdloop()
