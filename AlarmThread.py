@@ -32,6 +32,7 @@ class AlarmThread(threading.Thread):
         # self.settings = Settings.Settings()
         self.settings = settings
         #self.media = MediaPlayer.MediaPlayer()
+        self.alarm_media = settings.get("alarm_media")
         self.media = media
         self.alarmGatherer = AlarmGatherer.AlarmGatherer(settings)
         #self.weatherFetcher = WeatherFetcher()
@@ -54,6 +55,7 @@ class AlarmThread(threading.Thread):
         log.info("Stopping alarm thread")
         if (self.media.playerActive()):
             self.stopAlarm()
+        self.media.spotify.logout()
         self.stopping = True
 
     def isAlarmSounding(self):
@@ -143,7 +145,10 @@ class AlarmThread(threading.Thread):
     # Stop whatever is playing
     def silenceAlarm(self):
         log.info("Silencing alarm")
-        self.media.stopPlayer()
+        if self.alarm_media == 'Spotify':
+            self.media.spotify.pause()
+        else:
+            self.media.stopPlayer()
 
     # Called by InputWorker on press of the cancel button
     def cancel(self):

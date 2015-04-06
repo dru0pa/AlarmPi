@@ -162,9 +162,10 @@ class Spotify:
     def play_playlist(self, uri):
         playlist = self.session.get_playlist(uri)
         playlist.load()
-        for track in playlist.tracks:
-            log.info("Fetching {0} from playlist and sending to player".format(track.name))
-            self.play_uri(str(track.link))
+        # for track in playlist.tracks:
+        #     log.info("Fetching {0} from playlist and sending to player".format(track.name))
+        #     self.play_uri(str(track.link))
+        self.play_uri(str(playlist.tracks[0].link))
 
 
 
