@@ -35,9 +35,8 @@ class Spotify:
             else:
                 log.info("{0} platform detected; using PortAudio".format(myPlatform))
                 self.audio_driver = spotify.PortAudioSink(self.session)
-        except ImportError:
-            log.warning(
-                'No audio sink found; audio playback unavailable.')
+        except ImportError as e:
+            log.warning('No audio sink found; audio playback unavailable. Exception: {0}'.format(e.args))
 
         self.config = spotify.Config()
         self.config.user_agent = 'Alarm Clock'
