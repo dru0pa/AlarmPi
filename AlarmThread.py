@@ -36,6 +36,8 @@ class AlarmThread(threading.Thread):
         self.alarmGatherer = AlarmGatherer.AlarmGatherer(settings)
         #self.weatherFetcher = WeatherFetcher()
         self.weatherFetcher = weather
+
+        self.use_wink = self.settings.getInt("use_wink")
         self.wink = wink
 
         #self.rotor = InputWorker(self)
@@ -70,7 +72,8 @@ class AlarmThread(threading.Thread):
 
         self.silenceAlarm()
         self.media.playSpeech(message)
-        self.wink.activate(self.settings.get('wink_group_id'),bool(),0)
+        if self.use_wink == 1:
+            self.wink.activate(self.settings.get('wink_group_id'),bool(),0)
 
         alarmTime = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
         alarmTime += datetime.timedelta(minutes=self.settings.getInt('snooze_length'))
@@ -81,7 +84,8 @@ class AlarmThread(threading.Thread):
 
     def soundAlarm(self):
         log.info("Alarm triggered")
-        self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
+        if self.use_wink == 1:
+            self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
         self.media.soundAlarm()
         timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
         timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
@@ -93,7 +97,8 @@ class AlarmThread(threading.Thread):
         log.info(message)
         self.media.playSpeech(message)
 
-        self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
+        if self.use_wink == 1:
+            self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
 
         self.silenceAlarm()
 

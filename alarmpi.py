@@ -60,6 +60,8 @@ class AlarmPi:
         if use_wink == 1:
             log.debug("Initializing Wink")
             wink = Wink.Wink()
+        else:
+            wink = None
 
         log.debug("Loading alarm control")
 
