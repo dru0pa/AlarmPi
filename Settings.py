@@ -471,8 +471,7 @@ class Settings:
             r = self.settings[key]["value"]
         except KeyError as e:
             try:
-                r = self.defaults[key]["value"]
-                self.setNewKey(key, r)
+                self.setNewKey(key, self.defaults[key])
                 self.get(key)
             except KeyError as f:
                 log.error("Could not find setting {0}".format(key))
