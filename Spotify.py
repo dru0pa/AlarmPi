@@ -6,6 +6,7 @@ import threading
 import platform
 import Settings
 import sys
+import random
 
 log = logging.getLogger('root')
 
@@ -188,12 +189,12 @@ class Spotify:
     def play_playlist(self, uri):
         log.debug("play_playlist: {0}".format(uri))
         playlist = self.session.get_playlist(uri)
-        playlist.load(10)
+        playlist.load()
         log.debug("{0} tracks loaded".format(len(playlist.tracks)))
-        return
-        for track in playlist.tracks:
-            log.info("Fetching {0} from playlist and sending to player".format(track.name))
-            self.play_uri(str(track.link))
+
+        for i in random.shuffle(range(1,len(playlist.tracks) + 1)):
+            log.info("Fetching {0} from playlist and sending to player".format(playlist.track[i].name))
+            self.play_uri(str(playlist.track[i].link))
             while not self.end_of_track.wait(0.1):
                 pass
 
