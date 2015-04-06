@@ -41,10 +41,10 @@ class Spotify:
         except ImportError as e:
             log.warning('No audio sink found; audio playback unavailable. Exception: {0}'.format(e.args))
 
-        log.debug("spotify.Config()")
-        self.config = spotify.Config()
-        self.config.user_agent = 'Alarm Clock'
-        #self.settings = settings
+        # log.debug("spotify.Config()")
+        # self.config = spotify.Config()
+        # self.config.user_agent = 'Alarm Clock'
+        # #self.settings = settings
 
         log.debug("Spotify event loop")
         self.event_loop = spotify.EventLoop(self.session)
