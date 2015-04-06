@@ -188,7 +188,7 @@ class Spotify:
     def play_playlist(self, uri):
         log.debug("play_playlist: {0}".format(uri))
         playlist = self.session.get_playlist(uri)
-        playlist.load()
+        playlist.load(10)
         log.debug("{0} tracks loaded".format(len(playlist.tracks)))
         return
         for track in playlist.tracks:
