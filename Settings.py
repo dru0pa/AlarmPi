@@ -325,6 +325,18 @@ class Settings:
                 "formNullable": "",
                 "formDropdownValues": ""
             },
+            "alarm_media": {
+                "formOrder": 51,
+                "key": "alarm_media",
+                "value": "Spotify",
+                "description": "Wake up to Internet Radio or Spotify",
+                "formType": "radio",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "",
+                "formDropdownValues": ["Spotify","Radio"]
+            },
             "calendar": {
                 "formOrder": 999,
                 "key": "calendar",

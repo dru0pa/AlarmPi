@@ -3,6 +3,7 @@ from mplayer import Player
 import Settings
 import subprocess
 import logging
+import Spotify
 
 log = logging.getLogger('root')
 
@@ -17,6 +18,13 @@ class MediaPlayer:
         self.player = False
         self.effect = False
 
+        self.alarm_media = settings.get("alarm_media")
+
+        if self.alarm_media == 'Spotify':
+            log.debug("Loading Spotify")
+            self.spotify = Spotify.Spotify()
+            self.spotify.login(settings.get("spotify_user"), settings.get("spotify_pass"))
+
     def playerActive(self):
         return self.player != False
 
@@ -25,21 +33,28 @@ class MediaPlayer:
         self.playStation()
         log.debug("Alarm process opened")
 
-        # Wait a few seconds and see if the mplayer instance is still running
-        time.sleep(self.settings.getInt('radio_delay'))
+        if self.alarm_media == 'Spotify':
+            self.playSpotify()
+        else:
 
-        # Fetch the number of mplayer processes running
-        processes = subprocess.Popen('ps aux | grep mplayer | egrep -v "grep" | wc -l',
-                                     stdout=subprocess.PIPE,
-                                     shell=True
-                                     )
-        num = int(processes.stdout.read())
+            # Wait a few seconds and see if the mplayer instance is still running
+            time.sleep(self.settings.getInt('radio_delay'))
 
-        if num < 2 and self.player is not False:
-            log.error("Could not find mplayer instance, playing panic alarm")
-            self.stopPlayer()
-            time.sleep(2)
-            self.playMedia(PANIC_ALARM, 0)
+            # Fetch the number of mplayer processes running
+            processes = subprocess.Popen('ps aux | grep mplayer | egrep -v "grep" | wc -l',
+                                         stdout=subprocess.PIPE,
+                                         shell=True
+                                         )
+            num = int(processes.stdout.read())
+
+            if num < 2 and self.player is not False:
+                log.error("Could not find mplayer instance, playing panic alarm")
+                self.stopPlayer()
+                time.sleep(2)
+                self.playMedia(PANIC_ALARM, 0)
+
+    def playSpotify(self):
+        self.spotify.play_playlist('spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2')
 
     def playStation(self):
         station = self.settings.get('station')
