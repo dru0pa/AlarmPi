@@ -268,7 +268,7 @@ class Settings:
             "use_wink": {
                 "formOrder": 46,
                 "key": "use_wink",
-                "value": "85",
+                "value": "1",
                 "description": "Use Wink",
                 "formType": "dropdown",
                 "visibility": "standard",
@@ -316,7 +316,7 @@ class Settings:
             "spotify_uri": {
                 "formOrder": 50,
                 "key": "spotify_uri",
-                "value": "spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus",
+                "value": "spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2",
                 "description": "Spotify URI for a Playlist, Album, or Song. This will be played as your alarm.",
                 "formType": "textbox",
                 "visibility": "standard",
