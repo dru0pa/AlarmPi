@@ -467,13 +467,16 @@ class Settings:
 
 
     def get(self, key):
-        r = self.settings[key]["value"]
-        if r is None:
-            if self.defaults[key]["value"] is None:
-                raise Exception('Could not find setting %s' % (key))
-            else:
-                self.setNewKey(key, self.defaults[key])
+        try:
+            r = self.settings[key]["value"]
+        except KeyError as e:
+            try:
+                r = self.defaults[key]["value"]
+                self.setNewKey(key, r)
                 self.get(key)
+            except KeyError as f:
+                log.error("Could not find setting {0}".format(key))
+
         return r
 
 
