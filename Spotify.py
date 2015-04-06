@@ -192,7 +192,7 @@ class Spotify:
         playlist.load()
         log.debug("{0} tracks loaded".format(len(playlist.tracks)))
 
-        for i in random.shuffle(range(1,len(playlist.tracks) + 1)):
+        for i in sorted(range(1, len(playlist.tracks) + 1), key=lambda k: random.random()):
             log.info("Fetching {0} from playlist and sending to player".format(playlist.track[i].name))
             self.play_uri(str(playlist.track[i].link))
             while not self.end_of_track.wait(0.1):
