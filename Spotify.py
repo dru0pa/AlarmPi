@@ -10,17 +10,17 @@ import random
 
 log = logging.getLogger('root')
 
-log.setLevel(logging.DEBUG)
-
-stream = logging.StreamHandler(sys.stdout)
-stream.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
-stream.setFormatter(formatter)
-
-log.addHandler(stream)
-
-logging.basicConfig(level=logging.INFO)
+# log.setLevel(logging.DEBUG)
+#
+# stream = logging.StreamHandler(sys.stdout)
+# stream.setLevel(logging.DEBUG)
+#
+# formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+# stream.setFormatter(formatter)
+#
+# log.addHandler(stream)
+#
+# logging.basicConfig(level=logging.INFO)
 
 class Spotify(threading.Thread):
     def __init__(self):
