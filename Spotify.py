@@ -20,6 +20,7 @@ class Spotify:
         self.logged_out = threading.Event()
         self.logged_out.set()
 
+        log.debug("Spawning spotify.Session()")
         self.session = spotify.Session()
         self.session.on(
             spotify.SessionEvent.CONNECTION_STATE_UPDATED,
@@ -29,6 +30,7 @@ class Spotify:
 
         myPlatform = platform.system()
 
+        log.debug("Detecting platform")
         try:
             if myPlatform == 'Linux':
                 log.info("{0} platform detected; using ALSA".format(myPlatform))
@@ -39,31 +41,39 @@ class Spotify:
         except ImportError as e:
             log.warning('No audio sink found; audio playback unavailable. Exception: {0}'.format(e.args))
 
+        log.debug("spotify.Config()")
         self.config = spotify.Config()
         self.config.user_agent = 'Alarm Clock'
         #self.settings = settings
 
+        log.debug("Spotify event loop")
         self.event_loop = spotify.EventLoop(self.session)
         self.event_loop.start()
 
     def on_connection_state_changed(self, session):
+        log.debug("on_connection_state_changed: ")
         if session.connection.state is spotify.ConnectionState.LOGGED_IN:
+            log.debug("LOGGED_IN")
             self.logged_in.set()
             self.logged_out.clear()
         elif session.connection.state is spotify.ConnectionState.LOGGED_OUT:
+            log.debug("LOGGED_OUT")
             self.logged_in.clear()
             self.logged_out.set()
 
     def on_end_of_track(self, session):
+        log.debug("on_end_of_track: ")
         #self.session.player.play(False)
         self.end_of_track.set()
 
     def login(self, username, password):
+        log.debug("login")
         #username=self.settings.get("spotify_user"), password=self.settings.get("spotify_pass")
         self.session.login(username,password, remember_me=True)
         self.logged_in.wait()
 
     def relogin(self):
+        log.debug("relogin")
         "relogin -- login as the previous logged in user"
         try:
             self.session.relogin()
@@ -72,15 +82,18 @@ class Spotify:
             log.error(e)
 
     def forget_me(self):
+        log.debug("forget_me")
         "forget_me -- forget the previous logged in user"
         self.session.forget_me()
 
     def logout(self):
+        log.debug("logout")
         "logout"
         self.session.logout()
         self.logged_out.wait()
 
     def whoami(self):
+        log.debug("whoami")
         "whoami"
         if self.logged_in.is_set():
             log.info(
@@ -94,6 +107,7 @@ class Spotify:
                 self.session.remembered_user)
 
     def play_uri(self, line):
+        log.debug("play_uri: {0}".format(line))
         "play <spotify track uri>"
         if not self.logged_in.is_set():
             log.warning('You must be logged in to play')
@@ -162,6 +176,7 @@ class Spotify:
                 log.info("Oops, encountered a folder of platlists.  Not sure howto handle, so moving on: {0}".format(e.args))
 
     def play_playlist(self, uri):
+        log.debug("play_playlist: {0}".format(uri))
         playlist = self.session.get_playlist(uri)
         playlist.load()
         for track in playlist.tracks:
