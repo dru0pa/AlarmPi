@@ -9,7 +9,7 @@ import sys
 
 log = logging.getLogger('root')
 
-#logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 class Spotify:
 
@@ -178,7 +178,6 @@ if __name__ == '__main__':
     #mySpotify.get_playlists()
     #mySpotify.play_playlist('spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2')
     mySpotify.play_uri("spotify:track:14CsUVcoKztExH6aSgfrfb")
-    sys.sleep(1000)
     mySpotify.logout()
 
     #Commander().cmdloop()
