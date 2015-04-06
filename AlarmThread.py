@@ -97,11 +97,10 @@ class AlarmThread(threading.Thread):
         message = "Cancelling alarm"
         log.info(message)
         self.media.playSpeech(message)
+        self.silenceAlarm()
 
         if self.use_wink == 1:
             self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
-
-        self.silenceAlarm()
 
         self.clearAlarm()
 
