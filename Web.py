@@ -1,22 +1,20 @@
 import web
 from web import form
-import time
 import datetime
 import pytz
 import threading
 import logging
-from Settings import Settings
 
 urls = (
     '/', 'index',
     '/settings', 'set',
     '/reset', 'reset',
     '/api', 'api',
+    '/debug', 'debug',
 )
 
 render = web.template.render('web/', cache=False, base='layout')
 
-#settings = Settings()
 settings = None
 alarm = None
 
@@ -258,6 +256,28 @@ class set:
 class api:
     def GET(self):
         return "API not yet implemented"
+
+
+class debug:
+    def GET(self):
+        my_form = form.Form(
+            form.Button("press cancel"),
+        )
+        return render.debug(my_form)
+
+    def POST(self):
+        my_form = form.Form(
+            form.Button("press cancel"),
+        )
+        userData = web.input()
+        if not my_form.validates():
+            return render.formtest(my_form)
+        else:
+            if userData.btn == "cancel":
+                alarm.cancel()
+
+        raise web.seeother('/')
+
 
 
 class WebApplication(threading.Thread):

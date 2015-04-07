@@ -352,7 +352,7 @@ class Settings:
             "manual_alarm": {
                 "formOrder": 999,
                 "key": "manual_alarm",
-                "value": "1100",
+                "value": "",
                 "description": "Manual alarm time",
                 "formType": "textbox",
                 "visibility": "invisible",
