@@ -17,7 +17,7 @@ log = logging.getLogger('root')
 #
 # log.addHandler(stream)
 #
-logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.INFO)
 
 LOOP_TIME = float(0.1)
 
