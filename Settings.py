@@ -303,8 +303,8 @@ class Settings:
             },
             "spotify_pass": {
                 "formOrder": 49,
-                "key": "spotify_user",
-                "value": "joel_roberts",
+                "key": "spotify_pass",
+                "value": "p@ssw0rd",
                 "description": "Spotify Password",
                 "formType": "textbox",
                 "visibility": "standard",
