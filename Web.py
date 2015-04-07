@@ -4,6 +4,7 @@ import datetime
 import pytz
 import threading
 import logging
+import json
 
 urls = (
     '/', 'index',
@@ -256,6 +257,10 @@ class set:
 class api:
     def GET(self):
         return "API not yet implemented"
+    def POST(self):
+        data = web.data()
+        json_data = json.loads(data)
+        alarm.media.playVoice(json_data["data"]["speech_text"])
 
 
 class debug:
