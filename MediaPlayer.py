@@ -60,7 +60,7 @@ class MediaPlayer:
 
     def playSpotify(self):
         log.debug("playSpotify: ")
-        self.spotify = Spotify.SpotifyController()
+        self.spotify = SpotifyController()
         #self.spotify.play_playlist(self.settings.get("spotify_uri"))
         #self.spotify.run()
 
