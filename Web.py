@@ -278,7 +278,7 @@ class debug:
         if not my_form.validates():
             return render.formtest(my_form)
         else:
-            if userData.btn == "cancel":
+            if str(userData) == "press cancel":
                 alarm.cancel()
 
         raise web.seeother('/')
