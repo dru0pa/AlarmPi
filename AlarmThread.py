@@ -44,7 +44,8 @@ class AlarmThread(threading.Thread):
         log.info("Stopping alarm thread")
         if (self.media.playerActive()):
             self.stopAlarm()
-        self.media.spotify.logout()
+        if self.alarm_media == 'Spotify':
+            self.media.spotify.stop()
         self.stopping = True
 
     def isAlarmSounding(self):
@@ -141,7 +142,7 @@ class AlarmThread(threading.Thread):
     def silenceAlarm(self):
         log.debug("silenceAlarm")
         if self.alarm_media == 'Spotify':
-            self.media.spotify.pause()
+            self.media.spotify.stop()
         else:
             self.media.stopPlayer()
 

@@ -59,7 +59,8 @@ class MediaPlayer:
 
     def playSpotify(self):
         log.debug("playSpotify: ")
-        self.spotify.play_playlist(self.settings.get("spotify_uri"))
+        #self.spotify.play_playlist(self.settings.get("spotify_uri"))
+        self.spotify.run()
 
     def playStation(self):
         log.debug("playStation: ")
