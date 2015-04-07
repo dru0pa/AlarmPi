@@ -31,7 +31,11 @@ class MediaPlayer:
 
     def playerActive(self):
         # log.debug("playerActive: {0}".format(self.player != False))
-        return self.player != False
+        if self.player != False or self.spotify != False:
+            return True
+        else
+            return False
+        # return self.player != False
 
     def soundAlarm(self):
         log.info("soundAlarm: Playing alarm")
