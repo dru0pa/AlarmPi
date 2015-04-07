@@ -2,7 +2,7 @@ import time
 from mplayer import Player
 import subprocess
 import logging
-from Spotify import SpotifyContoller
+import SpotifyContoller
 
 log = logging.getLogger('root')
 
@@ -18,9 +18,11 @@ class MediaPlayer:
 
         self.alarm_media = settings.get("alarm_media")
 
-        # if self.alarm_media == 'Spotify':
-        #     log.debug("Loading Spotify")
-        #     self.spotify = Spotify.SpotifyController()
+        if self.alarm_media == 'Spotify':
+            log.debug("Loading Spotify")
+            self.spotify = SpotifyContoller.SpotifyController()
+            self.spotify.setDaemon(True)
+            self.spotify.start()
         #     #self.spotify.setDaemon(True)
         #     # log.debug("Spotify event loop")
         #     # self.spotify.event_loop = self.spotify.EventLoop(self.session)
@@ -60,8 +62,8 @@ class MediaPlayer:
 
     def playSpotify(self):
         log.debug("playSpotify: ")
-        self.spotify = SpotifyController()
-        #self.spotify.play_playlist(self.settings.get("spotify_uri"))
+        #self.spotify = SpotifyThread()
+        self.spotify.play_playlist(self.settings.get("spotify_uri"))
         #self.spotify.run()
 
     def playStation(self):

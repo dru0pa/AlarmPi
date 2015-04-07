@@ -23,25 +23,6 @@ log = logging.getLogger('root')
 #
 #logging.basicConfig(level=logging.DEBUG)
 
-LOOP_TIME = float(0.1)
-
-class SpotifyContoller(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.stopping = False
-
-    def stop(self):
-        self.stopping = True
-
-    def run(self):
-        while (not self.stopping):
-            time.sleep(LOOP_TIME)
-            _spotify = Spotify()
-            _spotify.login("joel_roberts","p@ssw0rd")
-
-            #mySpotify.get_playlists()
-            _spotify.play_playlist('spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus')
-
 
 class Spotify:
     def __init__(self):
