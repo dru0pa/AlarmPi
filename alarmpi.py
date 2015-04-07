@@ -131,6 +131,8 @@ class AlarmPi:
         if use_lcd == 1:
             lcd.stop()
         bright.stop()
+        media.stop()
+
 
         log.info("Shutdown complete, now exiting")
 
