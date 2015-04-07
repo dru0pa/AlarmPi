@@ -20,7 +20,7 @@ class MediaPlayer:
 
         if self.alarm_media == 'Spotify':
             log.debug("Loading Spotify")
-            self.spotify = SpotifyContoller.SpotifyController()
+            self.spotify = SpotifyThread.SpotifyThread()
             self.spotify.setDaemon(True)
             self.spotify.start()
         #     #self.spotify.setDaemon(True)
