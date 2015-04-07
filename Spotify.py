@@ -20,7 +20,7 @@ log = logging.getLogger('root')
 #
 # log.addHandler(stream)
 #
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 class Spotify:
     def __init__(self):
