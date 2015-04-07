@@ -268,7 +268,7 @@ class debug:
         my_form = form.Form(
             form.Button("press cancel"),
         )
-        return render.debug(my_form)
+        return render.settings(my_form)
 
     def POST(self):
         my_form = form.Form(
