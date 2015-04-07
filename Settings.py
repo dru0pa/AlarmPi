@@ -304,7 +304,7 @@ class Settings:
             "spotify_pass": {
                 "formOrder": 49,
                 "key": "spotify_user",
-                "value": "p@ssw0rd",
+                "value": "joel_roberts",
                 "description": "Spotify Password",
                 "formType": "textbox",
                 "visibility": "standard",
