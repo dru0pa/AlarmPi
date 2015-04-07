@@ -20,11 +20,10 @@ log = logging.getLogger('root')
 #
 # log.addHandler(stream)
 #
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
-class Spotify(threading.Thread):
+class Spotify:
     def __init__(self):
-        threading.Thread.__init__(self)
         self.end_of_track = threading.Event()
         self.logged_in = threading.Event()
         self.logged_out = threading.Event()
@@ -200,20 +199,6 @@ class Spotify(threading.Thread):
             log.debug("index: {0}".format(i))
             log.info("Fetching {0} from playlist and sending to player".format(playlist.tracks[i].name))
             self.play_uri(str(playlist.tracks[i].link))
-            # while not self.end_of_track.wait(0.1):
-            #     pass
-
-    def run(self):
-        uri='spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus'
-        log.debug("play_playlist: {0}".format(uri))
-        playlist = self.session.get_playlist(uri)
-        playlist.load()
-        log.debug("{0} tracks loaded".format(len(playlist.tracks)))
-
-        for i in sorted(range(len(playlist.tracks)), key=lambda k: random.random()):
-            log.debug("index: {0}".format(i))
-            log.info("Fetching {0} from playlist and sending to player".format(playlist.tracks[i].name))
-            self.play_uri(str(playlist.tracks[i].link))
             self.end_of_track.wait()
 
 
@@ -224,11 +209,9 @@ if __name__ == '__main__':
     # settings = Settings.Settings()
     # settings.setup()
     mySpotify = Spotify()
-    mySpotify.setDaemon(True)
     mySpotify.login("joel_roberts","p@ssw0rd")
-    mySpotify.start()
     #mySpotify.get_playlists()
-    #mySpotify.play_playlist('spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus')
+    mySpotify.play_playlist('spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus')
     #mySpotify.join()
 
     #mySpotify.play_playlist('spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2')
