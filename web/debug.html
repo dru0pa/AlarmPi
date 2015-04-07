@@ -1,0 +1,10 @@
+$def with (form,alarmThread)
+
+<h2>$alarmThread.getMenuLine()</h2>
+<hr>
+<h2>debug</h2>
+<form name="main" method="post">
+$if not form.valid: <p class="error">Form wasn't valid</p>
+$:form.render()
+<input type="submit" />
+</form>

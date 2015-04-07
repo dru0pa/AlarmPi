@@ -14,3 +14,7 @@ CLIENT_ID='624744008049-l7qcto2n8af6o8rqfmins5v4i1hhnvgc.apps.googleusercontent.
 CLIENT_SECRET='3HpfJoVTQQZLMeIMAWAzDO3d'
 DEVELOPER_KEY='AIzaSyCBN2YwwSOBNvQ2N5qLStozPkXKq3nDgRg'
 CALENDAR='9eudpgvpeuj53fngk49cq4k81k@group.calendar.google.com'
+CLIENT_ID='624744008049-l7qcto2n8af6o8rqfmins5v4i1hhnvgc.apps.googleusercontent.com'
+CLIENT_SECRET='3HpfJoVTQQZLMeIMAWAzDO3d'
+DEVELOPER_KEY='AIzaSyCBN2YwwSOBNvQ2N5qLStozPkXKq3nDgRg'
+CALENDAR='9eudpgvpeuj53fngk49cq4k81k@group.calendar.google.com'
