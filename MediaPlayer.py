@@ -23,7 +23,7 @@ class MediaPlayer:
             self.spotify.login(settings.get("spotify_user"), settings.get("spotify_pass"))
 
     def playerActive(self):
-        log.debug("playerActive: {0}".format(self.player != False))
+        # log.debug("playerActive: {0}".format(self.player != False))
         return self.player != False
 
     def soundAlarm(self):

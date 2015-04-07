@@ -50,11 +50,11 @@ class AlarmThread(threading.Thread):
     def isAlarmSounding(self):
         sounding = (self.media.playerActive() and self.nextAlarm is not None and self.nextAlarm < datetime.datetime.now(
             pytz.timezone(self.settings.get('timezone'))))
-        log.debug("isAlarmSounding: {0}".format(sounding))
+        # log.debug("isAlarmSounding: {0}".format(sounding))
         return sounding
 
     def isSnoozing(self):
-        log.debug("isSnoozing: {0}".format(self.snoozing))
+        # log.debug("isSnoozing: {0}".format(self.snoozing))
         return self.snoozing
 
     def getNextAlarm(self):
@@ -259,7 +259,7 @@ class AlarmThread(threading.Thread):
             return 0
 
         diff = self.nextAlarm - now
-        log.debug("alarmInSeconds: {0}".format(diff.seconds))
+        # log.debug("alarmInSeconds: {0}".format(diff.seconds))
         return diff.seconds
 
     # Return a line of text describing the alarm state
