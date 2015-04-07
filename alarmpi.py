@@ -93,6 +93,7 @@ class AlarmPi:
 
         # If there's a manual alarm time set in the database, then load it
         manual = settings.getInt('manual_alarm')
+        log.debug("manual_alarm: {0}".format(manual))
         if manual == 0 or manual is None:
             log.debug("Settings manual alarm")
             alarm.autoSetAlarm()
