@@ -22,16 +22,17 @@ log = logging.getLogger('root')
 #
 logging.basicConfig(level=logging.INFO)
 
-class Spotify(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
+class Spotify(spotify.EventLoop):
+    def __init__(self, session):
+        threading.Thread.__init__(self, session)
         self.end_of_track = threading.Event()
         self.logged_in = threading.Event()
         self.logged_out = threading.Event()
         self.logged_out.set()
+        self.session = session
 
-        log.debug("Spawning spotify.Session()")
-        self.session = spotify.Session()
+        # log.debug("Spawning spotify.Session()")
+        # self.session = spotify.Session()
         self.session.on(
             spotify.SessionEvent.CONNECTION_STATE_UPDATED,
             self.on_connection_state_changed)
@@ -56,9 +57,9 @@ class Spotify(threading.Thread):
         # self.config.user_agent = 'Alarm Clock'
         # #self.settings = settings
 
-        log.debug("Spotify event loop")
-        self.event_loop = spotify.EventLoop(self.session)
-        self.event_loop.start()
+        # log.debug("Spotify event loop")
+        # self.event_loop = spotify.EventLoop(self.session)
+        # self.event_loop.start()
 
     def on_connection_state_changed(self, session):
         log.debug("on_connection_state_changed: ")
@@ -224,7 +225,8 @@ if __name__ == '__main__':
     #logging.basicConfig(level=logging.INFO)
     # settings = Settings.Settings()
     # settings.setup()
-    mySpotify = Spotify()
+    mySpotifySession = spotify.session()
+    mySpotify = Spotify(mySpotifySession)
     mySpotify.login("joel_roberts","p@ssw0rd")
     mySpotify.start()
 
