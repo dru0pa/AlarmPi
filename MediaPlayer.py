@@ -33,7 +33,7 @@ class MediaPlayer:
         # log.debug("playerActive: {0}".format(self.player != False))
         if self.player != False or self.spotify != False:
             return True
-        else
+        else:
             return False
         # return self.player != False
 
