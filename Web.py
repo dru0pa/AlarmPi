@@ -266,22 +266,22 @@ class api:
 class debug:
     def GET(self):
         my_form = form.Form(
-            form.Button("press cancel"),
+            form.Button("cancel"),
         )
         return render.settings(my_form)
 
     def POST(self):
         my_form = form.Form(
-            form.Button("press cancel"),
+            form.Button("cancel"),
         )
         userData = web.input()
         if not my_form.validates():
             return render.formtest(my_form)
         else:
-            if str(userData) == "press cancel":
+            if userData.cancel == "cancel":
                 alarm.cancel()
 
-        raise web.seeother('/')
+        raise web.seeother('/debug')
 
 
 
