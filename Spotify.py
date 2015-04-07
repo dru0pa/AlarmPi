@@ -20,10 +20,11 @@ log = logging.getLogger('root')
 #
 # log.addHandler(stream)
 #
-# logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
-class Spotify:
+class Spotify(threading.Thread):
     def __init__(self):
+        threading.Thread.__init__(self)
         self.end_of_track = threading.Event()
         self.logged_in = threading.Event()
         self.logged_out = threading.Event()
@@ -65,10 +66,12 @@ class Spotify:
             log.debug("LOGGED_IN")
             self.logged_in.set()
             self.logged_out.clear()
+            self.event_loop.stop()
         elif session.connection.state is spotify.ConnectionState.LOGGED_OUT:
             log.debug("LOGGED_OUT")
             self.logged_in.clear()
             self.logged_out.set()
+            self.event_loop.start()
 
     def on_end_of_track(self, session):
         log.debug("on_end_of_track: ")
@@ -79,14 +82,14 @@ class Spotify:
         log.debug("login")
         #username=self.settings.get("spotify_user"), password=self.settings.get("spotify_pass")
         self.session.login(username,password, remember_me=True)
-        self.logged_in.wait()
+        self.logged_in.wait(15)
 
     def relogin(self):
         log.debug("relogin")
         "relogin -- login as the previous logged in user"
         try:
             self.session.relogin()
-            self.logged_in.wait()
+            self.logged_in.wait(15)
         except spotify.Error as e:
             log.error(e)
 
@@ -99,7 +102,7 @@ class Spotify:
         log.debug("logout")
         "logout"
         self.session.logout()
-        self.logged_out.wait()
+        self.logged_out.wait(15)
 
     def whoami(self):
         log.debug("whoami")
@@ -201,6 +204,19 @@ class Spotify:
             self.play_uri(str(playlist.tracks[i].link))
             self.end_of_track.wait()
 
+    def run(self):
+        uri = 'spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus'
+        log.debug("play_playlist: {0}".format(uri))
+        playlist = self.session.get_playlist(uri)
+        playlist.load()
+        log.debug("{0} tracks loaded".format(len(playlist.tracks)))
+
+        for i in sorted(range(len(playlist.tracks)), key=lambda k: random.random()):
+            log.debug("index: {0}".format(i))
+            log.info("Fetching {0} from playlist and sending to player".format(playlist.tracks[i].name))
+            self.play_uri(str(playlist.tracks[i].link))
+            self.end_of_track.wait()
+
 
 
 
@@ -210,8 +226,10 @@ if __name__ == '__main__':
     # settings.setup()
     mySpotify = Spotify()
     mySpotify.login("joel_roberts","p@ssw0rd")
+    mySpotify.start()
+
     #mySpotify.get_playlists()
-    mySpotify.play_playlist('spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus')
+    #mySpotify.play_playlist('spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus')
     #mySpotify.join()
 
     #mySpotify.play_playlist('spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2')

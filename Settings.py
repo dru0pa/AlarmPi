@@ -316,7 +316,7 @@ class Settings:
             "spotify_uri": {
                 "formOrder": 50,
                 "key": "spotify_uri",
-                "value": "spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2",
+                "value": "spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus",
                 "description": "Spotify URI for a Playlist, Album, or Song. This will be played as your alarm.",
                 "formType": "textbox",
                 "visibility": "standard",

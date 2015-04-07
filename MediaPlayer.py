@@ -20,6 +20,10 @@ class MediaPlayer:
         if self.alarm_media == 'Spotify':
             log.debug("Loading Spotify")
             self.spotify = Spotify.Spotify()
+            self.spotify.setDaemon(True)
+            # log.debug("Spotify event loop")
+            # self.spotify.event_loop = self.spotify.EventLoop(self.session)
+            # self.spotify.event_loop.start()
             self.spotify.login(settings.get("spotify_user"), settings.get("spotify_pass"))
 
     def playerActive(self):
