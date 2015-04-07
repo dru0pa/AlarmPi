@@ -2,7 +2,7 @@ import time
 from mplayer import Player
 import subprocess
 import logging
-import Spotify
+from Spotify import SpotifyContoller
 
 log = logging.getLogger('root')
 
