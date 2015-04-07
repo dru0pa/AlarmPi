@@ -7,6 +7,7 @@ import platform
 import Settings
 import sys
 import random
+import time
 
 log = logging.getLogger('root')
 
@@ -20,19 +21,38 @@ log = logging.getLogger('root')
 #
 # log.addHandler(stream)
 #
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
-class Spotify(spotify.EventLoop):
-    def __init__(self, session):
-        threading.Thread.__init__(self, session)
+LOOP_TIME = float(0.1)
+
+class SpotifyContoller(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.stopping = False
+
+    def stop(self):
+        self.stopping = True
+
+    def run(self):
+        while (not self.stopping):
+            time.sleep(LOOP_TIME)
+            _spotify = Spotify()
+            _spotify.login("joel_roberts","p@ssw0rd")
+
+            #mySpotify.get_playlists()
+            _spotify.play_playlist('spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus')
+
+
+class Spotify:
+    def __init__(self):
         self.end_of_track = threading.Event()
         self.logged_in = threading.Event()
         self.logged_out = threading.Event()
         self.logged_out.set()
-        self.session = session
+        #self.session = session
 
-        # log.debug("Spawning spotify.Session()")
-        # self.session = spotify.Session()
+        log.debug("Spawning spotify.Session()")
+        self.session = spotify.Session()
         self.session.on(
             spotify.SessionEvent.CONNECTION_STATE_UPDATED,
             self.on_connection_state_changed)
@@ -57,9 +77,9 @@ class Spotify(spotify.EventLoop):
         # self.config.user_agent = 'Alarm Clock'
         # #self.settings = settings
 
-        # log.debug("Spotify event loop")
-        # self.event_loop = spotify.EventLoop(self.session)
-        # self.event_loop.start()
+        log.debug("Spotify event loop")
+        self.event_loop = spotify.EventLoop(self.session)
+        self.event_loop.start()
 
     def on_connection_state_changed(self, session):
         log.debug("on_connection_state_changed: ")
@@ -206,7 +226,8 @@ class Spotify(spotify.EventLoop):
             self.end_of_track.wait()
 
     def run(self):
-        uri = 'spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus'
+        self.login('joel_roberts','p@ssw0rd')
+        uri = 'spotify:user:spotify:playlist:2PXdUld4Ueio2pHcB6sM8j'
         log.debug("play_playlist: {0}".format(uri))
         playlist = self.session.get_playlist(uri)
         playlist.load()
@@ -225,10 +246,10 @@ if __name__ == '__main__':
     #logging.basicConfig(level=logging.INFO)
     # settings = Settings.Settings()
     # settings.setup()
-    mySpotifySession = spotify.session()
-    mySpotify = Spotify(mySpotifySession)
-    mySpotify.login("joel_roberts","p@ssw0rd")
+    #mySpotifySession = spotify.Session()
+    mySpotify = SpotifyContoller()
     mySpotify.start()
+    #mySpotify.login("joel_roberts","p@ssw0rd")
 
     #mySpotify.get_playlists()
     #mySpotify.play_playlist('spotify:user:spotify:playlist:0186RkeoJsHWEQy0ssDAus')
@@ -236,7 +257,7 @@ if __name__ == '__main__':
 
     #mySpotify.play_playlist('spotify:user:joel_roberts:playlist:1lDfZAjJG7TP5zNs0vNlL2')
     #mySpotify.play_uri("spotify:track:14CsUVcoKztExH6aSgfrfb")
-
+    mySpotify.join()
     mySpotify.logout()
 
     #Commander().cmdloop()

@@ -14,17 +14,18 @@ class MediaPlayer:
         self.settings = settings
         self.player = False
         self.effect = False
+        self.spotify = None
 
         self.alarm_media = settings.get("alarm_media")
 
-        if self.alarm_media == 'Spotify':
-            log.debug("Loading Spotify")
-            self.spotify = Spotify.Spotify()
-            self.spotify.setDaemon(True)
-            # log.debug("Spotify event loop")
-            # self.spotify.event_loop = self.spotify.EventLoop(self.session)
-            # self.spotify.event_loop.start()
-            self.spotify.login(settings.get("spotify_user"), settings.get("spotify_pass"))
+        # if self.alarm_media == 'Spotify':
+        #     log.debug("Loading Spotify")
+        #     self.spotify = Spotify.SpotifyController()
+        #     #self.spotify.setDaemon(True)
+        #     # log.debug("Spotify event loop")
+        #     # self.spotify.event_loop = self.spotify.EventLoop(self.session)
+        #     # self.spotify.event_loop.start()
+        #     #self.spotify.login(settings.get("spotify_user"), settings.get("spotify_pass"))
 
     def playerActive(self):
         # log.debug("playerActive: {0}".format(self.player != False))
@@ -59,8 +60,9 @@ class MediaPlayer:
 
     def playSpotify(self):
         log.debug("playSpotify: ")
+        self.spotify = Spotify.SpotifyController()
         #self.spotify.play_playlist(self.settings.get("spotify_uri"))
-        self.spotify.run()
+        #self.spotify.run()
 
     def playStation(self):
         log.debug("playStation: ")
