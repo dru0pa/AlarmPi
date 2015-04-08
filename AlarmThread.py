@@ -316,3 +316,4 @@ class AlarmThread(threading.Thread):
                 self.stopAlarm()
 
             time.sleep(1)
+        log.debug("ending alarm thread loop")
