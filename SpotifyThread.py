@@ -46,7 +46,7 @@ class SpotifyThread(threading.Thread):
         while (not self.stopping):
             time.sleep(LOOP_TIME)
 
-    def play(self):
+    def play2(self):
         log.debug("play")
         #self.spotify.get_playlists()
         #self.spotify.play_playlist(self.settings.get("spotify_uri"))
@@ -54,6 +54,12 @@ class SpotifyThread(threading.Thread):
         self.play_thread.start()
         log.debug(self.play_thread.is_alive())
         self.play_thread.join()
+        #return self.play_thread
+
+    def play(self):
+        log.debug("play")
+        tracks = self.spotify.get_tracks_from_playlist(self.settings.get("spotify_uri"))
+        self.spotify.play_uri(tracks.pop().link)
         #return self.play_thread
 
     def resume(self):

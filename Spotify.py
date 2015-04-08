@@ -35,6 +35,7 @@ class Spotify:
             self.on_connection_state_changed)
         self.session.on(
             spotify.SessionEvent.END_OF_TRACK, self.on_end_of_track)
+        self.tracks = []
 
         myPlatform = platform.system()
 
@@ -74,6 +75,7 @@ class Spotify:
         log.debug("on_end_of_track: ")
         #self.session.player.play(False)
         self.end_of_track.set()
+        self.play_uri(self.tracks.pop().link)
 
     def login(self, username, password):
         log.debug("login")
@@ -187,6 +189,18 @@ class Spotify:
                 log.info("Name: {0} URI: {1}".format(playlist.name, playlist_uri))
             except AttributeError as e:
                 log.info("Oops, encountered a folder of platlists.  Not sure howto handle, so moving on: {0}".format(e.args))
+
+    def get_tracks_from_playlist(self, uri):
+        log.debug("play_playlist: {0}".format(uri))
+        playlist = self.session.get_playlist(uri)
+        playlist.load()
+        log.debug("{0} tracks loaded".format(len(playlist.tracks)))
+
+        for i in sorted(range(len(playlist.tracks)), key=lambda k: random.random()):
+            log.debug("index: {0}".format(i))
+            log.info("Fetching {0} from playlist and sending to player".format(playlist.tracks[i].name))
+            self.tracks.append(playlist.tracks[i])
+        return self.tracks
 
     def play_playlist(self, uri):
         log.debug("play_playlist: {0}".format(uri))
