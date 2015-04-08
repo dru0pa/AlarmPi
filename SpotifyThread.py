@@ -42,15 +42,18 @@ class SpotifyThread(threading.Thread):
     def play(self):
         log.debug("play")
         #self.spotify.get_playlists()
-        self.spotify.play_playlist(self.settings.get("spotify_uri"))
+        #self.spotify.play_playlist(self.settings.get("spotify_uri"))
+        thr = threading.Thread(target=self.spotify.play_playlist, args=self.settings.get("spotify_uri"))
 
     def resume(self):
         log.debug("resume")
-        self.spotify.resume()
+        #self.spotify.resume()
+        thr = threading.Thread(target=self.spotify.resume())
 
     def pause(self):
         log.debug("pause")
-        self.spotify.pause()
+        #self.spotify.pause()
+        thr = threading.Thread(target=self.spotify.pause())
     #
     # def get_playlists(self):
     #     self.spotify.get_playlists()
