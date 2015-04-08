@@ -241,7 +241,6 @@ class AlarmThread(threading.Thread):
     def setAlarmTime(self, alarmTime):
         log.debug("setAlarmTime: {0}".format(alarmTime))
         self.nextAlarm = alarmTime
-        log.info("Alarm set for %s", alarmTime)
 
     def clearAlarm(self):
         log.debug("clearAlarm")
