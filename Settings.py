@@ -2,6 +2,7 @@ import sqlite3
 import subprocess
 import CalendarCredentials
 import logging
+#import simplejson as json
 import json
 import pytz
 import sys
@@ -443,6 +444,9 @@ class Settings:
     def firstRun(self):
         log.warn("Running first-time JSON set-up")
 
+        log.debug(json.dumps(self.defaults, indent=4))
+
+
         with open(JSON_NAME, 'w+') as self.jsonFile:
             json.dump(self.defaults, self.jsonFile, indent=4, separators=(',', ': '))
 
@@ -521,17 +525,17 @@ if __name__ == '__main__':
     mySettings = Settings()
     mySettings.setup()
     #print mySettings.get('location_home')
-    mySettings.set('max_brightness', '10')
-    #print json.dumps(mySettings.settings, indent=4, separators=(',', ': '))
-
-    try:
-        with open(JSON_NAME, 'r') as f:
-            try:
-                json_string =  json.load(f)
-            except ValueError as e:
-                log.error("ValueError: {0}".format(e.args))
-    except IOError as io:
-        log.error("IOError: {0}".format(io.args))
-
-    print json.dumps(json_string, indent=4, separators=(',', ': '))
+    # mySettings.set('max_brightness', '10')
+    # #print json.dumps(mySettings.settings, indent=4, separators=(',', ': '))
+    #
+    # try:
+    #     with open(JSON_NAME, 'r') as f:
+    #         try:
+    #             json_string =  json.load(f)
+    #         except ValueError as e:
+    #             log.error("ValueError: {0}".format(e.args))
+    # except IOError as io:
+    #     log.error("IOError: {0}".format(io.args))
+    #
+    # print json.dumps(json_string, indent=4, separators=(',', ': '))
 

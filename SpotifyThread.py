@@ -17,12 +17,13 @@ log = logging.getLogger('root')
 #
 # log.addHandler(stream)
 #
-#logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 LOOP_TIME = float(0.1)
 
 class SpotifyThread(threading.Thread):
     def __init__(self, settings):
+        log.debug("__init__")
         threading.Thread.__init__(self)
         self.stopping = False
         self.settings = settings
@@ -61,7 +62,16 @@ class SpotifyThread(threading.Thread):
 
 if __name__ == '__main__':
 
+    import Settings
+
+    settings = Settings.Settings()
+    settings.setup()
     mySpotify = SpotifyThread()
     mySpotify.start()
     mySpotify.play()
+    time.sleep(20)
+    mySpotify.pause()
+    time.sleep(10)
+    mySpotify.resume()
+    time.sleep(10)
     mySpotify.stop()
