@@ -81,16 +81,6 @@ class AlarmThread(threading.Thread):
         self.alarmTimeout = None
         self.fromEvent = False
 
-    def soundAlarm(self):
-        log.debug("soundAlarm")
-        if self.use_wink == 1:
-            log.debug("turning on Wink")
-            self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
-        self.media.soundAlarm(self.snoozing)
-        timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
-        timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
-        self.alarmTimeout = timeout
-
     # Only to be called if we're stopping this alarm cycle - see silenceAlarm() for shutting off the player
     def stopAlarm(self):
         log.debug("stopAlarm")
@@ -137,6 +127,16 @@ class AlarmThread(threading.Thread):
 
         # Automatically set up our next alarm.
         self.autoSetAlarm()
+
+    def soundAlarm(self):
+        log.debug("soundAlarm")
+        if self.use_wink == 1:
+            log.debug("turning on Wink")
+            self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
+        self.media.soundAlarm(self.snoozing)
+        timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
+        timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
+        self.alarmTimeout = timeout
 
     # Stop whatever is playing
     def silenceAlarm(self, snoozing=False):
