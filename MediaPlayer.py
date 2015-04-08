@@ -72,7 +72,8 @@ class MediaPlayer:
             self.spotify.resume()
         else:
             log.debug("play")
-            self.spotify.play()
+            play_thread = self.spotify.play()
+            play_thread.join()
         log.debug("leaving playSpotify: ")
 
     def playStation(self):
