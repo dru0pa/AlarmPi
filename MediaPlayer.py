@@ -37,11 +37,11 @@ class MediaPlayer:
             return False
         # return self.player != False
 
-    def soundAlarm(self):
+    def soundAlarm(self, snoozing=False):
         log.info("soundAlarm: Playing alarm")
 
         if self.alarm_media == 'Spotify':
-            self.playSpotify()
+            self.playSpotify(snoozing)
         else:
             self.playStation()
 
@@ -64,10 +64,13 @@ class MediaPlayer:
             else:
                 log.debug("Radio success")
 
-    def playSpotify(self):
+    def playSpotify(self, snoozing=False):
         log.debug("playSpotify: ")
         #self.spotify = SpotifyThread()
-        self.spotify.play()
+        if snoozing:
+            self.spotify.resume()
+        else:
+            self.spotify.play()
         #self.spotify.run()
 
     def playStation(self):

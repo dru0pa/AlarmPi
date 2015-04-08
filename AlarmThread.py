@@ -67,7 +67,8 @@ class AlarmThread(threading.Thread):
         log.info(message)
         log.debug("snooze: {0}".format(self.settings.getInt('snooze_length')))
 
-        self.silenceAlarm()
+        self.snoozing = True
+        self.silenceAlarm(self.snoozing)
         #self.media.playSpeech(message)
         #self.silenceAlarm()
         if self.use_wink == 1:
@@ -77,7 +78,6 @@ class AlarmThread(threading.Thread):
         alarmTime = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
         alarmTime += datetime.timedelta(minutes=self.settings.getInt('snooze_length'))
         self.setAlarmTime(alarmTime)
-        self.snoozing = True
         self.alarmTimeout = None
         self.fromEvent = False
 
@@ -86,7 +86,7 @@ class AlarmThread(threading.Thread):
         if self.use_wink == 1:
             log.debug("turning on Wink")
             self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
-        self.media.soundAlarm()
+        self.media.soundAlarm(self.snoozing)
         timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
         timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
         self.alarmTimeout = timeout
@@ -139,10 +139,13 @@ class AlarmThread(threading.Thread):
         self.autoSetAlarm()
 
     # Stop whatever is playing
-    def silenceAlarm(self):
+    def silenceAlarm(self, snoozing=False):
         log.debug("silenceAlarm")
         if self.alarm_media == 'Spotify':
-            self.media.spotify.stop()
+            if snoozing:
+                self.media.spotify.pause()
+            else:
+                self.media.spotify.stop()
         else:
             self.media.stopPlayer()
 
