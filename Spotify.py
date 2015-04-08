@@ -75,7 +75,7 @@ class Spotify:
         log.debug("on_end_of_track: ")
         #self.session.player.play(False)
         self.end_of_track.set()
-        self.play_uri(self.tracks.pop().link)
+        self.play_uri(str(self.tracks.pop().link))
 
     def login(self, username, password):
         log.debug("login")
