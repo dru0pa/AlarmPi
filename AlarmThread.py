@@ -143,7 +143,7 @@ class AlarmThread(threading.Thread):
         log.debug("silenceAlarm")
         if self.alarm_media == 'Spotify':
             if snoozing:
-                self.media.spotify.stop()
+                self.media.spotify.pause()
             else:
                 self.media.spotify.stop()
         else:
