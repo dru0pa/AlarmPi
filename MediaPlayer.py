@@ -68,10 +68,12 @@ class MediaPlayer:
         log.debug("playSpotify: ")
         #self.spotify = SpotifyThread()
         if snoozing:
+            log.debug("resuming")
             self.spotify.resume()
         else:
+            log.debug("play")
             self.spotify.play()
-        #self.spotify.run()
+        log.debug("leaving playSpotify: ")
 
     def playStation(self):
         log.debug("playStation: ")
