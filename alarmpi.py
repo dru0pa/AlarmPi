@@ -91,16 +91,15 @@ class AlarmPi:
         bright.start()
 
 
-        # If there's a manual alarm time set in the database, then load it
-        manual = settings.getInt('manual_alarm')
-        log.debug("manual_alarm: {0}".format(manual))
-        if manual == 0 or manual is None:
-            log.debug("Settings manual alarm")
-            alarm.autoSetAlarm()
-        else:
-            alarmTime = datetime.datetime.fromtimestamp(manual, pytz.timezone(settings.get('timezone')))
-            log.info("Loaded previously set manual alarm time of %s", alarmTime)
-            alarm.manualSetAlarm(alarmTime)
+        # # If there's a manual alarm time set in the database, then load it
+        # manual = settings.getInt('manual_alarm')
+        # log.debug("manual_alarm: {0}".format(manual))
+        # if manual == 0 or manual is None:
+        alarm.autoSetAlarm()
+        # else:
+        #     alarmTime = datetime.datetime.fromtimestamp(manual, pytz.timezone(settings.get('timezone')))
+        #     log.info("Loaded previously set manual alarm time of %s", alarmTime)
+        #     alarm.manualSetAlarm(alarmTime)
 
         log.debug("Starting clock")
         clock.start()
