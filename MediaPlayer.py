@@ -31,7 +31,7 @@ class MediaPlayer:
 
     def playerActive(self):
         # log.debug("playerActive: {0}".format(self.player != False))
-        if self.player != False or self.spotify.spotify.session.player != False:
+        if self.player != False or self.spotify.spotify.session.player.state != "playing":
             return True
         else:
             return False
