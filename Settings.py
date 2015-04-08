@@ -5,19 +5,20 @@ import logging
 #import simplejson as json
 import json
 import pytz
+import platform
 import sys
 from codecs import BOM_UTF8
 
 log = logging.getLogger('root')
-# log.setLevel(logging.DEBUG)
-#
-# stream = logging.StreamHandler(sys.stdout)
-# stream.setLevel(logging.DEBUG)
-#
-# formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
-# stream.setFormatter(formatter)
-#
-# log.addHandler(stream)
+log.setLevel(logging.DEBUG)
+
+stream = logging.StreamHandler(sys.stdout)
+stream.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+stream.setFormatter(formatter)
+
+log.addHandler(stream)
 
 # Database connection details
 DB_NAME = 'settings.db'
@@ -444,9 +445,8 @@ class Settings:
     def firstRun(self):
         log.warn("Running first-time JSON set-up")
 
-        log.debug(json.dumps(self.defaults, indent=4))
 
-
+        # some bug here on Mac only where "AttributeError: type object 'list' has no attribute '__nonzero__'"
         with open(JSON_NAME, 'w+') as self.jsonFile:
             json.dump(self.defaults, self.jsonFile, indent=4, separators=(',', ': '))
 

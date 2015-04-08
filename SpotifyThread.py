@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     settings = Settings.Settings()
     settings.setup()
-    mySpotify = SpotifyThread()
+    mySpotify = SpotifyThread(settings)
     mySpotify.start()
     mySpotify.play()
     time.sleep(20)
