@@ -48,8 +48,9 @@ class AlarmThread(threading.Thread):
         self.stopping = True
 
     def isAlarmSounding(self):
-        sounding = (self.media.playerActive() and self.nextAlarm is not None and self.nextAlarm < datetime.datetime.now(
-            pytz.timezone(self.settings.get('timezone'))))
+        #sounding = (self.media.playerActive() and self.nextAlarm is not None and self.nextAlarm < datetime.datetime.now(
+        #    pytz.timezone(self.settings.get('timezone'))))
+        sounding = (self.media.playerActive() and self.nextAlarm is not None)
         # log.debug("isAlarmSounding: {0}".format(sounding))
         return sounding
 
