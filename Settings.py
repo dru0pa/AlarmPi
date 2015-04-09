@@ -39,8 +39,19 @@ class Settings:
         true_false = [("1", "true"),("0", "false")]
 
         self.defaults = {
-            "snooze_length": {
+            "name": {
                 "formOrder": 1,
+                "key": "name",
+                "value": "Joel",
+                "description": "The name you would like greeting by",
+                "formType": "textbox",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "notnull",
+                "formDropdownValues": ""
+            },"snooze_length": {
+                "formOrder": 2,
                 "key": "snooze_length",
                 "value": "9",
                 "description": "Time (minutes) to Snooze",
@@ -52,7 +63,7 @@ class Settings:
                 "formDropdownValues": ""
             },
             "alarm_timeout": {
-                "formOrder": 2,
+                "formOrder": 3,
                 "key": "alarm_timeout",
                 "value": "120",
                 "description": "Time (minutes) to automatically cancel an alarm",
@@ -64,7 +75,7 @@ class Settings:
                 "formDropdownValues": ""
             },
             "holiday_mode": {
-                "formOrder": 3,
+                "formOrder": 4,
                 "key": "holiday_mode",
                 "value": "0",
                 "description": "Is Holiday Mode Enabled (no-alarm)",
@@ -76,7 +87,7 @@ class Settings:
                 "formDropdownValues": true_false
             },
             "default_wake": {
-                "formOrder": 4,
+                "formOrder": 5,
                 "key": "default_wake",
                 "value": "1100",
                 "description": "If the alarm is scheduled for later than this ignore and default to this",
@@ -88,7 +99,7 @@ class Settings:
                 "formDropdownValues": ""
             },
             "preempt_cancel": {
-                "formOrder": 5,
+                "formOrder": 6,
                 "key": "preempt_cancel",
                 "value": "600",
                 "description": "Time (seconds) before an alarm in which it can be cancelled",
@@ -100,7 +111,7 @@ class Settings:
                 "formDropdownValues": ""
             },
             "wakeup_time": {
-                "formOrder": 6,
+                "formOrder": 7,
                 "key": "wakeup_time",
                 "value": "0",
                 "description": "Time (minutes) before event to sound alarm",
@@ -112,7 +123,7 @@ class Settings:
                 "formDropdownValues": ""
             },
             "timezone": {
-                "formOrder": 7,
+                "formOrder": 8,
                 "key": "timezone",
                 "value": "US/Eastern",
                 "description": "Alarm Timezone",
