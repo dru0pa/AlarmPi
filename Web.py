@@ -41,7 +41,7 @@ class index:
             form.Textbox("time",
                          form.notnull,
                          form.regexp('[0-2][0-9][0-5][0-9]', 'Must be a 24hr time'),
-                         description="Set alarm time",
+                         description="Set alarm time (24hr time)",
                          value=alarmTime,
                          ),
         )

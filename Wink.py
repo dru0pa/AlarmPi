@@ -22,5 +22,5 @@ class Wink:
 
 if __name__ == '__main__':
     winker = Wink()
-    #print json.dumps(winker.w.get_groups(), indent=4, separators=(',', ': '))
-    json.dumps(winker.activate("2901669",bool(1),0.1), indent=4, separators=(',', ': '))
+    print json.dumps(winker.w.get_groups(), indent=4, separators=(',', ': '))
+    json.dumps(winker.activate("2901669",bool(),0), indent=4, separators=(',', ': '))
