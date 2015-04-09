@@ -7,7 +7,6 @@ import calendar
 import threading
 import AlarmGatherer
 import logging
-import urllib2
 from TravelCalculator import TravelCalculator
 
 log = logging.getLogger('root')
