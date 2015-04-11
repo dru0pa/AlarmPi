@@ -453,9 +453,8 @@ class Settings:
             return r
         except KeyError as e:
             try:
-                # self.setNewKey(key, self.defaults[key])
-                # return self.defaults[key]["value"]
-                self.set(key, self.defaults[key]["value"])
+                self.setNewKey(key, self.defaults[key])
+                return self.defaults[key]["value"]
             except KeyError as f:
                 log.error("Could not find setting {0}".format(key))
 
@@ -480,13 +479,13 @@ class Settings:
             json.dump(self.settings, f, indent=4, separators=(',', ': '))
             f.close()
 
-    # def setNewKey(self, key, dict):
-    #
-    #     self.settings[key]["value"] = dict
-    #     log.info("setting {0} to {1}".format(key, dict))
-    #     with open(JSON_NAME, 'w') as f:
-    #         json.dump(self.settings, f, indent=4, separators=(',', ': '))
-    #         f.close()
+    def setNewKey(self, key, dict):
+
+        self.settings[key]["value"] = dict
+        log.info("setting {0} to {1}".format(key, dict))
+        with open(JSON_NAME, 'w') as f:
+            json.dump(self.settings, f, indent=4, separators=(',', ': '))
+            f.close()
 
     def setVolume(self, val):
         subprocess.Popen("%s %s" % (self.VOL_CMD, val), stdout=subprocess.PIPE, shell=True)
