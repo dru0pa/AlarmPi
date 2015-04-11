@@ -198,6 +198,18 @@ class Settings:
                 "formNullable": "notnull",
                 "formDropdownValues": ""
             },
+            "use_luminosity_sensor": {
+                "formOrder": 39,
+                "key": "use_luminosity_sensor",
+                "value": "0",
+                "description": "Use luminosity sensor or not",
+                "formType": "dropdown",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "notnull",
+                "formDropdownValues": true_false
+            },
             "min_brightness": {
                 "formOrder": 40,
                 "key": "min_brightness",

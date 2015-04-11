@@ -81,14 +81,17 @@ class AlarmPi:
         else:
             log.debug("Not using LCD")
 
-        log.debug("Loading brightness control")
-        bright = BrightnessThread.BrightnessThread(settings)
-        bright.setDaemon(True)
-        bright.registerControlObject(clock.segment.disp)
-        if use_lcd == 1:
-            log.debug("Loading brightness control for LCD")
-            bright.registerControlObject(lcd)
-        bright.start()
+        if settings.getInt('use_luminosity_sensor') == 1:
+            log.debug("Loading brightness control")
+            bright = BrightnessThread.BrightnessThread(settings)
+            bright.setDaemon(True)
+            bright.registerControlObject(clock.segment.disp)
+            if use_lcd == 1:
+                log.debug("Loading brightness control for LCD")
+                bright.registerControlObject(lcd)
+            bright.start()
+        else:
+            log.debug("Not Luminosity Sensor")
 
 
         # # If there's a manual alarm time set in the database, then load it
