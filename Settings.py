@@ -481,7 +481,7 @@ class Settings:
 
     def setNewKey(self, key, dict):
 
-        self.settings[key]["value"] = dict
+        self.settings[key] = dict
         log.info("setting {0} to {1}".format(key, dict))
         with open(JSON_NAME, 'w') as f:
             json.dump(self.settings, f, indent=4, separators=(',', ': '))
