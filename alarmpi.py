@@ -45,13 +45,16 @@ class AlarmPi:
         settings = Settings.Settings()
         settings.setup()
 
-        log.debug("Loading media")
-        media = MediaPlayer.MediaPlayer(settings)
-        # media.playVoice('Starting up')
-
         log.debug("Loading clock")
         clock = ClockThread.ClockThread(settings)
         clock.setDaemon(True)
+
+        log.debug("Starting clock")
+        clock.start()
+
+        log.debug("Loading media")
+        media = MediaPlayer.MediaPlayer(settings)
+        # media.playVoice('Starting up')
 
         log.debug("Loading weather")
         weather = WeatherFetcher(settings)
@@ -103,9 +106,6 @@ class AlarmPi:
         #     alarmTime = datetime.datetime.fromtimestamp(manual, pytz.timezone(settings.get('timezone')))
         #     log.info("Loaded previously set manual alarm time of %s", alarmTime)
         #     alarm.manualSetAlarm(alarmTime)
-
-        log.debug("Starting clock")
-        clock.start()
 
         log.debug("Starting alarm control")
         alarm.start()

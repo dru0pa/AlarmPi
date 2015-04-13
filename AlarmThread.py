@@ -308,8 +308,14 @@ class AlarmThread(threading.Thread):
                 # We're inside 1hr of an event alarm being triggered, and we've not taken into account the current traffic situation
                 self.travelAdjustAlarm()
 
-            if (self.nextAlarm is not None and self.nextAlarm < now and not self.media.playerActive()):
-                self.soundAlarm()
+            #if (self.nextAlarm is not None and self.nextAlarm < now and not self.media.playerActive()):
+            if self.nextAlarm is not None:
+                log.debug("self.nextAlarm is not None")
+                if self.nextAlarm < now:
+                    log.debug("self.nextAlarm < now")
+                    if not self.media.playerActive():
+                        log.debug("not self.media.playerActive()")
+                        self.soundAlarm()
 
             if (self.alarmTimeout is not None and self.alarmTimeout < now):
                 log.info("Alarm timeout reached, stopping alarm")
