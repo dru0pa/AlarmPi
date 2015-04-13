@@ -68,7 +68,7 @@ class AlarmThread(threading.Thread):
         log.debug("snooze: {0}".format(self.settings.getInt('snooze_length')))
 
         self.snoozing = True
-        self.silenceAlarm(self.snoozing)
+
         #self.media.playSpeech(message)
         #self.silenceAlarm()
         if self.use_wink == 1:
@@ -80,6 +80,8 @@ class AlarmThread(threading.Thread):
         self.setAlarmTime(alarmTime)
         self.alarmTimeout = None
         self.fromEvent = False
+
+        self.silenceAlarm(self.snoozing)
 
     # Only to be called if we're stopping this alarm cycle - see silenceAlarm() for shutting off the player
     def stopAlarm(self):
@@ -315,9 +317,7 @@ class AlarmThread(threading.Thread):
                     log.debug("self.nextAlarm < now")
                     if not self.media.playerActive():
                         log.debug("not self.media.playerActive()")
-                        if not self.snoozing:
-                            log.debug("not self.snoozing")
-                            self.soundAlarm()
+                        self.soundAlarm()
 
             if (self.alarmTimeout is not None and self.alarmTimeout < now):
                 log.info("Alarm timeout reached, stopping alarm")
