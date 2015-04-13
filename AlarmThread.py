@@ -117,6 +117,7 @@ class AlarmThread(threading.Thread):
             salutation, self.settings.get("name"), now.strftime("%A"), day, now.strftime("%B"), hour, now.strftime("%M"), now.strftime("%p"))
             speech += weather
 
+            # blocking stopped working somewhere before revision 300
             self.media.playVoice(speech)
 
         # Send a notification to HomeControl (OpenHAB) that we're now awake
@@ -203,9 +204,9 @@ class AlarmThread(threading.Thread):
             self.settings.set('manual_alarm', '')  # We've just auto-set an alarm, so clear any manual ones
 
             # Read out the time we've just set
-            hour = event.strftime("%I").lstrip("0")
-            readTime = "%s %s %s" % (hour, event.strftime("%M"), event.strftime("%p"))
-            self.media.playVoice('Automatic alarm has been set for %s' % (readTime))
+            # hour = event.strftime("%I").lstrip("0")
+            # readTime = "%s %s %s" % (hour, event.strftime("%M"), event.strftime("%p"))
+            # self.media.playVoice('Automatic alarm has been set for %s' % (readTime))
 
         except Exception as e:
             log.exception("Could not automatically set alarm")
@@ -310,14 +311,14 @@ class AlarmThread(threading.Thread):
                 # We're inside 1hr of an event alarm being triggered, and we've not taken into account the current traffic situation
                 self.travelAdjustAlarm()
 
-            #if (self.nextAlarm is not None and self.nextAlarm < now and not self.media.playerActive()):
-            if self.nextAlarm is not None:
-                log.debug("self.nextAlarm is not None")
-                if self.nextAlarm < now:
-                    log.debug("self.nextAlarm < now")
-                    if not self.media.playerActive():
-                        log.debug("not self.media.playerActive()")
-                        self.soundAlarm()
+            if (self.nextAlarm is not None and self.nextAlarm < now and not self.media.playerActive()):
+            # if self.nextAlarm is not None:
+            #     log.debug("self.nextAlarm is not None")
+            #     if self.nextAlarm < now:
+            #         log.debug("self.nextAlarm < now")
+            #         if not self.media.playerActive():
+            #             log.debug("not self.media.playerActive()")
+                self.soundAlarm()
 
             if (self.alarmTimeout is not None and self.alarmTimeout < now):
                 log.info("Alarm timeout reached, stopping alarm")
