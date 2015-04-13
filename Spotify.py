@@ -209,7 +209,7 @@ class Spotify:
         log.debug("{0} tracks loaded".format(len(playlist.tracks)))
 
         for i in sorted(range(len(playlist.tracks)), key=lambda k: random.random()):
-            log.debug("index: {0}".format(i))
-            log.info("Fetching {0} from playlist and sending to player".format(playlist.tracks[i].name))
+            # log.debug("index: {0}".format(i))
+            # log.info("Fetching {0} from playlist and sending to player".format(playlist.tracks[i].name))
             self.play_uri(str(playlist.tracks[i].link))
             self.end_of_track.wait()
