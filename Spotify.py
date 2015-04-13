@@ -197,11 +197,12 @@ class Spotify:
         log.debug("{0} tracks loaded".format(len(playlist.tracks)))
 
         for i in sorted(range(len(playlist.tracks)), key=lambda k: random.random()):
-            log.debug("index: {0}".format(i))
-            log.info("Fetching {0} from playlist and sending to player".format(playlist.tracks[i].name))
+            # log.debug("index: {0}".format(i))
+            # log.info("Fetching {0} from playlist and sending to player".format(playlist.tracks[i].name))
             self.tracks.append(playlist.tracks[i])
         return self.tracks
 
+    # this is a blocking function - do not use
     def play_playlist(self, uri):
         log.debug("play_playlist: {0}".format(uri))
         playlist = self.session.get_playlist(uri)

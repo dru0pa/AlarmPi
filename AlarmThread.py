@@ -115,7 +115,7 @@ class AlarmThread(threading.Thread):
             salutation, self.settings.get("name"), now.strftime("%A"), day, now.strftime("%B"), hour, now.strftime("%M"), now.strftime("%p"))
             speech += weather
 
-            self.media.playSpeech(speech)
+            self.media.playVoice(speech)
 
         # Send a notification to HomeControl (OpenHAB) that we're now awake
         # try:
@@ -315,7 +315,9 @@ class AlarmThread(threading.Thread):
                     log.debug("self.nextAlarm < now")
                     if not self.media.playerActive():
                         log.debug("not self.media.playerActive()")
-                        self.soundAlarm()
+                        if not self.snoozing:
+                            log.debug("not self.snoozing")
+                            self.soundAlarm()
 
             if (self.alarmTimeout is not None and self.alarmTimeout < now):
                 log.info("Alarm timeout reached, stopping alarm")
