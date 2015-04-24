@@ -3,7 +3,7 @@
 import logging
 import sys
 import pytz
-import Wink
+
 import dateutil.parser
 
 log = logging.getLogger('root')
@@ -20,13 +20,13 @@ log.addHandler(stream)
 import time
 import datetime
 import threading
-import ClockThread
+
 import AlarmThread
-import LcdThread
-import BrightnessThread
+
+
 import Settings
 import MediaPlayer
-from InputWorker import InputWorker
+
 from Weather import WeatherFetcher
 from Web import WebApplication
 
@@ -45,12 +45,14 @@ class AlarmPi:
         settings = Settings.Settings()
         settings.setup()
 
-        log.debug("Loading clock")
-        clock = ClockThread.ClockThread(settings)
-        clock.setDaemon(True)
+        if sys.argv[0] != "dev":
+            log.debug("Loading clock")
+            import ClockThread
+            clock = ClockThread.ClockThread(settings)
+            clock.setDaemon(True)
 
-        log.debug("Starting clock")
-        clock.start()
+            log.debug("Starting clock")
+            clock.start()
 
         log.debug("Loading media")
         media = MediaPlayer.MediaPlayer(settings)
@@ -59,42 +61,50 @@ class AlarmPi:
         log.debug("Loading weather")
         weather = WeatherFetcher(settings)
 
-        use_wink = settings.getInt('use_wink')
-        if use_wink == 1:
-            log.debug("Initializing Wink")
-            wink = Wink.Wink()
-        else:
-            log.debug("Not using Wink")
-            wink = None
+        if sys.argv[0] != "dev":
+            use_wink = settings.getInt('use_wink')
+            if use_wink == 1:
+                import Wink
+                log.debug("Initializing Wink")
+                wink = Wink.Wink()
+            else:
+                log.debug("Not using Wink")
+                wink = None
 
         log.debug("Loading alarm thread")
         alarm = AlarmThread.AlarmThread(settings, media, weather, wink)
         alarm.setDaemon(True)
 
-        log.debug("Initializing inputs")
-        inputWorker = InputWorker(alarm, settings)
-        inputWorker.start()
+        if sys.argv[0] != "dev":
+            from InputWorker import InputWorker
+            log.debug("Initializing inputs")
+            inputWorker = InputWorker(alarm, settings)
+            inputWorker.start()
 
-        use_lcd = settings.getInt('use_lcd')
-        if use_lcd == 1:
-            log.debug("Loading LCD")
-            lcd = LcdThread.LcdThread(alarm, settings, weather, media, self.stop)
-            lcd.setDaemon(True)
-            lcd.start()
-        else:
-            log.debug("Not using LCD")
-
-        if settings.getInt('use_luminosity_sensor') == 1:
-            log.debug("Loading brightness control")
-            bright = BrightnessThread.BrightnessThread(settings)
-            bright.setDaemon(True)
-            bright.registerControlObject(clock.segment.disp)
+        if sys.argv[0] != "dev":
+            use_lcd = settings.getInt('use_lcd')
             if use_lcd == 1:
-                log.debug("Loading brightness control for LCD")
-                bright.registerControlObject(lcd)
-            bright.start()
-        else:
-            log.debug("Not Luminosity Sensor")
+                import LcdThread
+                log.debug("Loading LCD")
+                lcd = LcdThread.LcdThread(alarm, settings, weather, media, self.stop)
+                lcd.setDaemon(True)
+                lcd.start()
+            else:
+                log.debug("Not using LCD")
+
+        if sys.argv[0] == "dev":
+            if settings.getInt('use_luminosity_sensor') == 1:
+                log.debug("Loading brightness control")
+                import BrightnessThread
+                bright = BrightnessThread.BrightnessThread(settings)
+                bright.setDaemon(True)
+                bright.registerControlObject(clock.segment.disp)
+                if use_lcd == 1:
+                    log.debug("Loading brightness control for LCD")
+                    bright.registerControlObject(lcd)
+                bright.start()
+            else:
+                log.debug("Not Luminosity Sensor")
 
 
         # # If there's a manual alarm time set in the database, then load it

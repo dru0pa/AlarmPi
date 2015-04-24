@@ -4,6 +4,7 @@ import logging
 import threading
 import time
 import Spotify
+# import sys
 
 log = logging.getLogger('root')
 #
@@ -16,7 +17,7 @@ log = logging.getLogger('root')
 # stream.setFormatter(formatter)
 #
 # log.addHandler(stream)
-#
+
 #logging.basicConfig(level=logging.DEBUG)
 
 LOOP_TIME = float(0.1)
