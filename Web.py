@@ -298,7 +298,7 @@ class WebApplication(threading.Thread):
         log.debug("Starting up web server")
         self.app = web.application(urls, globals())
         self.app.internalerror = web.debugerror
-        web.httpserver.runsimple(self.app.wsgifunc(), ("0.0.0.0", 80))
+        web.httpserver.runsimple(self.app.wsgifunc(), ("0.0.0.0", settings.getInt('port_number')))
         log.debug("Web server has stopped")
 
     def stop(self):

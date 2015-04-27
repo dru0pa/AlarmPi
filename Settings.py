@@ -126,6 +126,18 @@ class Settings:
                 "formNullable": "notnull",
                 "formDropdownValues": pytz.common_timezones
             },
+            "port_number": {
+                "formOrder": 9,
+                "key": "port_number",
+                "value": "8080",
+                "description": "Port number on which to run the page you are now viewing",
+                "formType": "textbox",
+                "visibility": "standard",
+                "formRegexp": "\\d+",
+                "formRegexpMessage": "Must be a digit",
+                "formNullable": "notnull",
+                "formDropdownValues": ""
+            },
             "weather_on_alarm": {
                 "formOrder": 20,
                 "key": "weather_on_alarm",

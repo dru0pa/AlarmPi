@@ -21,6 +21,7 @@ class AlarmThread(threading.Thread):
         self.nextAlarm = None
         self.alarmTimeout = None
         self.snoozing = False
+        self.alarmMediaState = False
 
         self.settings = settings
         self.alarm_media = settings.get("alarm_media")
@@ -38,14 +39,6 @@ class AlarmThread(threading.Thread):
         self.travel = TravelCalculator(self.settings.get('location_home'))
         self.travelTime = 0  # The travel time we last fetched
         self.travelCalculated = False  # Have we re-calculated travel for this alarm cycle?
-
-    def stop(self):
-        log.info("Stopping alarm thread")
-        if (self.media.playerActive()):
-            self.stopAlarm()
-        if self.alarm_media == 'Spotify':
-            self.media.spotify.stop()
-        self.stopping = True
 
     def isAlarmSounding(self):
         #sounding = (self.media.playerActive() and self.nextAlarm is not None and self.nextAlarm < datetime.datetime.now(
@@ -87,6 +80,7 @@ class AlarmThread(threading.Thread):
     def stopAlarm(self):
         log.debug("stopAlarm")
         self.silenceAlarm()
+        self.alarmMediaState = False
 
         if self.use_wink == 1:
             log.debug("turning on Wink")
@@ -137,6 +131,7 @@ class AlarmThread(threading.Thread):
             log.debug("turning on Wink")
             self.wink.activate(self.settings.get('wink_group_id'),bool(1),0.25)
         self.media.soundAlarm(self.snoozing)
+        self.alarmMediaState = True
         timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
         timeout += datetime.timedelta(minutes=self.settings.getInt('alarm_timeout'))
         self.alarmTimeout = timeout
@@ -311,7 +306,7 @@ class AlarmThread(threading.Thread):
                 # We're inside 1hr of an event alarm being triggered, and we've not taken into account the current traffic situation
                 self.travelAdjustAlarm()
 
-            if (self.nextAlarm is not None and self.nextAlarm < now and not self.media.playerActive()):
+            if (self.nextAlarm is not None and self.nextAlarm < now and not self.alarmMediaState):
             # if self.nextAlarm is not None:
             #     log.debug("self.nextAlarm is not None")
             #     if self.nextAlarm < now:
@@ -326,3 +321,11 @@ class AlarmThread(threading.Thread):
 
             time.sleep(1)
         log.debug("ending alarm thread loop")
+
+    def stop(self):
+        log.info("Stopping alarm thread")
+        if (self.media.playerActive()):
+            self.stopAlarm()
+        if self.alarm_media == 'Spotify':
+            self.media.spotify.stop()
+        self.stopping = True
