@@ -57,11 +57,15 @@ class AlarmPi:
         wink = self.initWink(settings)
         alarm = self.initAlarm(settings, media, weather, wink)
         web = self.initWeb(settings, alarm)
-        if sys.argv[1] != "dev":
-            clock = self.initClock(settings)
-            self.initInput(settings, alarm)
-            lcd = self.initLCD(settings, weather, media, alarm)
-            bright = self.initBrightness(settings, clock, lcd)
+        try:
+            if sys.argv[1] != "dev":
+                log.info("Entering Dev Mode")
+                clock = self.initClock(settings)
+                self.initInput(settings, alarm)
+                lcd = self.initLCD(settings, weather, media, alarm)
+                bright = self.initBrightness(settings, clock, lcd)
+        except IndexError:
+            log.info("Entering Prod Mode")
 
 
 
