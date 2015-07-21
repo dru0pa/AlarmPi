@@ -23,6 +23,9 @@ stream.setFormatter(formatter)
 
 log.addHandler(stream)
 
+arg_names = ['mode']
+args = dict(zip(arg_names, sys.argv))
+
 class AlarmPi:
     def __init__(self):
         self.stopping = False
@@ -57,15 +60,14 @@ class AlarmPi:
         wink = self.initWink(settings)
         alarm = self.initAlarm(settings, media, weather, wink)
         web = self.initWeb(settings, alarm)
-        try:
-            if sys.argv[1] != "dev":
-                log.info("Entering Dev Mode")
+        if args["mode"] != "dev":
+                log.info("Entering Prod Mode")
                 clock = self.initClock(settings)
                 self.initInput(settings, alarm)
                 lcd = self.initLCD(settings, weather, media, alarm)
                 bright = self.initBrightness(settings, clock, lcd)
-        except IndexError:
-            log.info("Entering Prod Mode")
+        else:
+            log.info("Entering Dev Mode")
 
 
 
