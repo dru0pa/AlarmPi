@@ -23,7 +23,7 @@ stream.setFormatter(formatter)
 
 log.addHandler(stream)
 
-arg_names = ['mode']
+arg_names = ['command','mode']
 args = dict(zip(arg_names, sys.argv))
 
 class AlarmPi:
