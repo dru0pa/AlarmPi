@@ -93,7 +93,7 @@ class Weather:
     def setWindDirection(self, wdir):
         if wdir == 0:
             wdir = 360
-        self.wdir = wdir
+        self.wdir = int(wdir)
 
     def setPressure(self, pressure):
         self.pressure = int(pressure)
@@ -109,3 +109,7 @@ class Weather:
         #speech += "Q N H %s hectopascals" % (splitNumber(self.pressure))
 
         return speech
+        
+   def __str__(self):
+      return "Weather[temp=%s,wdir=%s,wspeed=%s,press=%s,cond='%s']" % (self.temp, self.wdir, self.wspeed, self.pressure, self.condition)
+
