@@ -110,6 +110,5 @@ class Weather:
 
         return speech
         
-   def __str__(self):
-      return "Weather[temp=%s,wdir=%s,wspeed=%s,press=%s,cond='%s']" % (self.temp, self.wdir, self.wspeed, self.pressure, self.condition)
-
+    def __str__(self):
+        return "Weather[temp=%s,wdir=%s,wspeed=%s,press=%s,cond='%s']" % (self.temp, self.wdir, self.wspeed, self.pressure, self.condition)
