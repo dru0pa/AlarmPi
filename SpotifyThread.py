@@ -4,21 +4,8 @@ import logging
 import threading
 import time
 import Spotify
-# import sys
 
 log = logging.getLogger('root')
-#
-# log.setLevel(logging.DEBUG)
-#
-# stream = logging.StreamHandler(sys.stdout)
-# stream.setLevel(logging.DEBUG)
-#
-# formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
-# stream.setFormatter(formatter)
-#
-# log.addHandler(stream)
-
-#logging.basicConfig(level=logging.DEBUG)
 
 LOOP_TIME = float(0.1)
 
@@ -80,6 +67,20 @@ class SpotifyThread(threading.Thread):
 
 
 if __name__ == '__main__':
+
+    import sys
+
+    log.setLevel(logging.DEBUG)
+
+    stream = logging.StreamHandler(sys.stdout)
+    stream.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+    stream.setFormatter(formatter)
+
+    log.addHandler(stream)
+
+    logging.basicConfig(level=logging.DEBUG)
 
     import Settings
 

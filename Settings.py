@@ -6,17 +6,8 @@ import pytz
 
 
 log = logging.getLogger('root')
-# log.setLevel(logging.DEBUG)
-#
-# stream = logging.StreamHandler(sys.stdout)
-# stream.setLevel(logging.DEBUG)
-#
-# formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
-# stream.setFormatter(formatter)
-#
-# log.addHandler(stream)
 
-# Database connection details
+# Settings details
 JSON_NAME = 'settings.json'
 
 
@@ -321,7 +312,7 @@ class Settings:
             "spotify_user": {
                 "formOrder": 48,
                 "key": "spotify_user",
-                "value": "joel_roberts",
+                "value": "",
                 "description": "Spotify Username",
                 "formType": "textbox",
                 "visibility": "standard",
@@ -333,7 +324,7 @@ class Settings:
             "spotify_pass": {
                 "formOrder": 49,
                 "key": "spotify_pass",
-                "value": "p@ssw0rd",
+                "value": "",
                 "description": "Spotify Password",
                 "formType": "textbox",
                 "visibility": "standard",
@@ -357,7 +348,7 @@ class Settings:
             "alarm_media": {
                 "formOrder": 51,
                 "key": "alarm_media",
-                "value": "Spotify",
+                "value": "Radio",
                 "description": "Wake up to Internet Radio or Spotify",
                 "formType": "radio",
                 "visibility": "standard",
@@ -504,6 +495,19 @@ class Settings:
         log.info("Volume adjusted to %s", val)
 
 if __name__ == '__main__':
+
+    import sys
+
+    log.setLevel(logging.DEBUG)
+
+    stream = logging.StreamHandler(sys.stdout)
+    stream.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+    stream.setFormatter(formatter)
+
+    log.addHandler(stream)
+
     mySettings = Settings()
     mySettings.setup()
 

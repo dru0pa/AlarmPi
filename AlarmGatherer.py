@@ -15,20 +15,7 @@ import CalendarCredentials  # File with variables CLIENT_ID, CLIENT_SECRET, DEVE
 
 log = logging.getLogger('root')
 
-# uncomment to run AlarmGatherer.py stand-alone
-# import sys
-# log.setLevel(logging.DEBUG)
-#
-# stream = logging.StreamHandler(sys.stdout)
-# stream.setLevel(logging.DEBUG)
-#
-# formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
-# stream.setFormatter(formatter)
-#
-#log.addHandler(stream)
-
 FLAGS = gflags.FLAGS
-
 
 class AlarmGatherer:
     def __init__(self, settings):
@@ -130,6 +117,18 @@ class AlarmGatherer:
 
 
 if __name__ == '__main__':
+    import sys
+
+    log.setLevel(logging.DEBUG)
+
+    stream = logging.StreamHandler(sys.stdout)
+    stream.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+    stream.setFormatter(formatter)
+
+    log.addHandler(stream)
+
     print "Running credential check"
     settings = Settings.Settings()
     settings.setup()

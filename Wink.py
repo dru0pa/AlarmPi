@@ -21,6 +21,20 @@ class Wink:
 
 
 if __name__ == '__main__':
+    import sys
+
+    log.setLevel(logging.DEBUG)
+
+    stream = logging.StreamHandler(sys.stdout)
+    stream.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)8s %(module)15s: %(message)s')
+    stream.setFormatter(formatter)
+
+    log.addHandler(stream)
+
+    logging.basicConfig(level=logging.DEBUG)
+
     winker = Wink()
     print json.dumps(winker.w.get_groups(), indent=4, separators=(',', ': '))
     json.dumps(winker.activate("2901669",bool(),0), indent=4, separators=(',', ': '))
