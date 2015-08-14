@@ -201,6 +201,30 @@ class Settings:
                 "formNullable": "notnull",
                 "formDropdownValues": ""
             },
+            "use_rotor": {
+                "formOrder": 37,
+                "key": "use_rotor",
+                "value": "0",
+                "description": "Use rotory knob or not",
+                "formType": "dropdown",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "notnull",
+                "formDropdownValues": true_false
+            },
+            "use_openhab": {
+                "formOrder": 38,
+                "key": "use_openhab",
+                "value": "0",
+                "description": "Use openhab or not",
+                "formType": "dropdown",
+                "visibility": "standard",
+                "formRegexp": "",
+                "formRegexpMessage": "",
+                "formNullable": "notnull",
+                "formDropdownValues": true_false
+            },
             "use_luminosity_sensor": {
                 "formOrder": 39,
                 "key": "use_luminosity_sensor",

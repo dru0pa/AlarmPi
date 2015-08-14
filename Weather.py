@@ -12,7 +12,6 @@ class WeatherFetcher:
     def __init__(self, settings):
         self.cacheTimeout = None
         self.cache = None
-        #self.settings = Settings.Settings()
         self.settings = settings
 
 
@@ -28,10 +27,12 @@ class WeatherFetcher:
 
             try:
                 log.debug("Making request to OpenWeatherMap")
-                response = requests.get('http://api.openweathermap.org/data/2.5/weather?q=%s' % (place), timeout=10)
+                response = requests.get('http://api.openweathermap.org/data/2.5/weather?q=%s' % (place), timeout=3)
                 log.debug("Completed request to OpenWeatherMap")
                 response = response.json()
                 log.debug("Parsed response")
+
+                attempt = response['main'] # So we get a KeyError thrown if the response isn't correct
             except:
                 log.exception("Error fetching weather")
                 if (self.cache is not None):
@@ -40,10 +41,13 @@ class WeatherFetcher:
                     return weather  # return empty Weather object as we have nothing else
 
             weather.setTempF(response['main']['temp'])
+            weather.setTempK(response['main'].get("temp", 0))
             weather.setCondition(response['weather'][0]['description'])
             weather.setWindSpeedMps(response['wind']['speed'])
             weather.setWindDirection(response['wind']['deg'])
             weather.setPressure(response['main']['pressure'])
+
+            log.debug("Generated weather: %s" % (weather))
 
             timeout = datetime.datetime.now(pytz.timezone(self.settings.get('timezone')))
             timeout += datetime.timedelta(minutes=30)  # Cache for 30 minutes
@@ -56,12 +60,10 @@ class WeatherFetcher:
     def forceUpdate(self):
         self.cacheTimeout = None
 
-
 # Take a number or string, and put spaces between each character, replacing 0 for the word zero
 def splitNumber(num):
     split = ' '.join("%s" % num)
     return split.replace("0", "zero")
-
 
 # Holds our weather information
 class Weather:
@@ -105,8 +107,8 @@ class Weather:
         speech = ""
         speech += "The weather is currently %s. " % (self.condition)
         speech += "Temperature %s degrees, " % (self.temp)
-        # speech += "wind %s degrees at %s knots, " % (splitNumber(self.wdir), self.wspeed)
-        #speech += "Q N H %s hectopascals" % (splitNumber(self.pressure))
+        speech += "wind %s degrees at %s knots, " % (splitNumber(self.wdir), self.wspeed)
+        speech += "Q N H %s hectopascals" % (splitNumber(self.pressure))
 
         return speech
         

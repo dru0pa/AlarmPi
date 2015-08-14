@@ -7,6 +7,7 @@ import calendar
 import threading
 import AlarmGatherer
 import logging
+import urllib2
 from TravelCalculator import TravelCalculator
 
 log = logging.getLogger('root')
@@ -41,8 +42,6 @@ class AlarmThread(threading.Thread):
         self.travelCalculated = False  # Have we re-calculated travel for this alarm cycle?
 
     def isAlarmSounding(self):
-        #sounding = (self.media.playerActive() and self.nextAlarm is not None and self.nextAlarm < datetime.datetime.now(
-        #    pytz.timezone(self.settings.get('timezone'))))
         sounding = (self.media.playerActive() and self.nextAlarm is not None)
         # log.debug("isAlarmSounding: {0}".format(sounding))
         return sounding
@@ -62,8 +61,6 @@ class AlarmThread(threading.Thread):
 
         self.snoozing = True
 
-        #self.media.playSpeech(message)
-        #self.silenceAlarm()
         if self.use_wink == 1:
             log.debug("turning off Wink")
             self.wink.activate(self.settings.get('wink_group_id'),bool(),0)
@@ -115,11 +112,12 @@ class AlarmThread(threading.Thread):
             self.media.playVoice(speech)
 
         # Send a notification to HomeControl (OpenHAB) that we're now awake
-        # try:
-        #     log.debug("Sending wake notification to HomeControl")
-        #     urllib2.urlopen("http://homecontrol:9090/CMD?isSleeping=OFF").read()
-        # except Exception:
-        #     log.exception("Failed to send wake state to HomeControl")
+        if self.settings.getInt('use_openhab') == 1:
+            try:
+                log.debug("Sending wake notification to HomeControl")
+                urllib2.urlopen("http://homecontrol:9090/CMD?isSleeping=OFF").read()
+            except Exception:
+                log.exception("Failed to send wake state to HomeControl")
 
 
         # Automatically set up our next alarm.
@@ -199,9 +197,9 @@ class AlarmThread(threading.Thread):
             self.settings.set('manual_alarm', '')  # We've just auto-set an alarm, so clear any manual ones
 
             # Read out the time we've just set
-            # hour = event.strftime("%I").lstrip("0")
-            # readTime = "%s %s %s" % (hour, event.strftime("%M"), event.strftime("%p"))
-            # self.media.playVoice('Automatic alarm has been set for %s' % (readTime))
+            hour = event.strftime("%I").lstrip("0")
+            readTime = "%s %s %s" % (hour, event.strftime("%M"), event.strftime("%p"))
+            self.media.playVoice('Automatic alarm has been set for %s' % (readTime))
 
         except Exception as e:
             log.exception("Could not automatically set alarm")
@@ -307,12 +305,6 @@ class AlarmThread(threading.Thread):
                 self.travelAdjustAlarm()
 
             if (self.nextAlarm is not None and self.nextAlarm < now and not self.alarmMediaState):
-            # if self.nextAlarm is not None:
-            #     log.debug("self.nextAlarm is not None")
-            #     if self.nextAlarm < now:
-            #         log.debug("self.nextAlarm < now")
-            #         if not self.media.playerActive():
-            #             log.debug("not self.media.playerActive()")
                 self.soundAlarm()
 
             if (self.alarmTimeout is not None and self.alarmTimeout < now):

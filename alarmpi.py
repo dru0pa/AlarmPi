@@ -96,8 +96,8 @@ class AlarmPi:
             log.warn("Interrupted, shutting down")
 
         log.warn("Shutting down")
-        #media.playVoice('Shutting down. Goodbye')
-        #time.sleep(2)
+        media.playVoice('Shutting down. Goodbye')
+        time.sleep(2)
 
         log.info("Stopping all services")
         web.stop()

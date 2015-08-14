@@ -19,7 +19,6 @@ log = logging.getLogger('root')
 def suffix(d):
     return 'th' if 11 <= d <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(d % 10, 'th')
 
-
 def formatDate(dateObj):
     message = dateObj.strftime("%a ")
     message += dateObj.strftime("%d").lstrip("0")
@@ -27,7 +26,6 @@ def formatDate(dateObj):
     message += dateObj.strftime(" %B")
 
     return message
-
 
 #
 # Class dealing with displaying relevant information on the LCD screen
@@ -41,11 +39,8 @@ class LcdThread(threading.Thread):
 
         self.message = ""
 
-        #self.settings = Settings.Settings()
         self.settings = settings
 
-        #self.weather = WeatherFetcher()
-        #self.weather.getWeather()  # So we populate the cache straight away
         self.weather = weather
 
         self.menu = MenuControl.MenuControl(alarmThread, settings, media, shutdownCallback)
@@ -55,8 +50,9 @@ class LcdThread(threading.Thread):
         self.lcd.white()
         self.setMessage("Booting up...")
 
-        #self.rotor = InputWorker(self)
-        #self.rotor.start()
+        if self.settings.getInt('use_rotor') == 1:        
+            self.rotor = InputWorker(self)
+            self.rotor.start()
 
     def setBrightness(self, brightness):
         # We get passes a value from 0 - 15, which we need to scale to 0-255 before passing to LCDControl
