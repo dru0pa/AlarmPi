@@ -60,7 +60,8 @@ class AlarmPi:
         wink = self.initWink(settings)
         alarm = self.initAlarm(settings, media, weather, wink)
         web = self.initWeb(settings, alarm)
-        if args["mode"] != "dev":
+        mode = args.get('mode','prod')
+        if mode != "dev":
                 log.info("Entering Prod Mode")
                 clock = self.initClock(settings)
                 self.initInput(settings, alarm)
@@ -68,8 +69,6 @@ class AlarmPi:
                 bright = self.initBrightness(settings, clock, lcd)
         else:
             log.info("Entering Dev Mode")
-
-
 
         # # If there's a manual alarm time set in the database, then load it
         # manual = settings.getInt('manual_alarm')
