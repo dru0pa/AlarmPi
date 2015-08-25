@@ -6,7 +6,6 @@ import pytz
 import threading
 import MenuControl
 import Settings
-from Weather import WeatherFetcher
 from InputWorker import InputWorker
 import logging
 
