@@ -2,6 +2,15 @@
 
 import logging
 import sys
+import socket
+import threading
+import time
+
+import AlarmThread
+import Settings
+import MediaPlayer
+from Weather import WeatherFetcher
+from Web import WebApplication
 
 log = logging.getLogger('root')
 log.setLevel(logging.DEBUG)
@@ -14,100 +23,181 @@ stream.setFormatter(formatter)
 
 log.addHandler(stream)
 
-import time
-import datetime
-import threading
-import ClockThread
-import AlarmThread
-import LcdThread
-import BrightnessThread
-import Settings
-import MediaPlayer
-from Web import WebApplication
-from Weather import WeatherFetcher
-	
+arg_names = ['command','mode']
+args = dict(zip(arg_names, sys.argv))
+
 class AlarmPi:
-   def __init__(self):
-      self.stopping = False
+    def __init__(self):
+        self.stopping = False
+        self.connectivity_test_server = "www.google.com"
 
-   def stop(self):
-      self.stopping = True
+    def test_internet_connectivity(self):
+        try:
+            # see if we can resolve the host name -- tells us if there is
+            # a DNS listening
+            host = socket.gethostbyname(self.connectivity_test_server)
+            # connect to the host -- tells us if the host is actually
+            # reachable
+            s = socket.create_connection((host, 80), 2)
+            return True
+        except:
+            pass
+            return False
 
-   def execute(self):
-      log.info("Starting up AlarmPi")
+    def internet_connectivity_true(self):
+        placeholder = True
 
-      log.debug("Loading settings")
-      settings = Settings.Settings()
-      settings.setup()
 
-      log.debug("Loading weather")
-      weather = WeatherFetcher()
+    def stop(self):
+        self.stopping = True
 
-      log.debug("Loading media")
-      media = MediaPlayer.MediaPlayer()
-      media.playVoice('Starting up')
+    def execute(self):
+        log.info("Starting up AlarmPi")
 
-      log.debug("Loading clock")
-      clock = ClockThread.ClockThread()
-      clock.setDaemon(True)
+        settings = self.initSettings()
+        media = self.initMedia(settings)
+        weather = self.initWeather(settings)
+        wink = self.initWink(settings)
+        alarm = self.initAlarm(settings, media, weather, wink)
+        web = self.initWeb(settings, alarm)
+        mode = args.get('mode','prod')
+        if mode != "dev":
+                log.info("Entering Prod Mode")
+                clock = self.initClock(settings)
+                self.initInput(settings, alarm)
+                lcd = self.initLCD(settings, weather, media, alarm)
+                bright = self.initBrightness(settings, clock, lcd)
+        else:
+            log.info("Entering Dev Mode")
 
-      log.debug("Loading alarm control")
-      alarm = AlarmThread.AlarmThread(weather)
-      alarm.setDaemon(True)
+        # # If there's a manual alarm time set in the database, then load it
+        # manual = settings.getInt('manual_alarm')
+        # log.debug("manual_alarm: {0}".format(manual))
+        # if manual == 0 or manual is None:
+        alarm.autoSetAlarm()
+        # else:
+        #     alarmTime = datetime.datetime.fromtimestamp(manual, pytz.timezone(settings.get('timezone')))
+        #     log.info("Loaded previously set manual alarm time of %s", alarmTime)
+        #     alarm.manualSetAlarm(alarmTime)
 
-      log.debug("Loading LCD")
-      lcd = LcdThread.LcdThread(alarm, self.stop, weather)
-      lcd.setDaemon(True)
-      lcd.start()
+        log.debug("Starting alarm control")
+        alarm.start()
 
-      log.debug("Loading brightness control")
-      bright = BrightnessThread.BrightnessThread()
-      bright.setDaemon(True)
-      bright.registerControlObject(clock.segment.disp)
-      bright.registerControlObject(lcd)
-      bright.start()
 
-      # If there's a manual alarm time set in the database, then load it
-      manual = settings.getInt('manual_alarm')
-      if manual==0 or manual is None:
-         alarm.autoSetAlarm()
-      else:
-         alarmTime = datetime.datetime.utcfromtimestamp(manual)
-         log.info("Loaded previously set manual alarm time of %s",alarmTime)
-         alarm.manualSetAlarm(alarmTime)
 
-      log.debug("Starting clock")
-      clock.start()
 
-      log.debug("Starting alarm control")
-      alarm.start()
+        # Main loop where we just spin until we receive a shutdown request
+        log.debug("Loop until KeyboardInterrupt or SystemExit")
+        try:
+            while (self.stopping is False):
+                time.sleep(1)
+        except (KeyboardInterrupt, SystemExit):
+            log.warn("Interrupted, shutting down")
 
-      log.debug("Starting web application")
-      web = WebApplication(alarm)
-      web.setDaemon(True)
-      web.start()
+        log.warn("Shutting down")
+        media.playVoice('Shutting down. Goodbye')
+        time.sleep(2)
 
-      # Main loop where we just spin until we receive a shutdown request
-      try:
-         while(self.stopping is False):
-            time.sleep(1)
-      except (KeyboardInterrupt, SystemExit):
-         log.warn("Interrupted, shutting down")
+        log.info("Stopping all services")
+        web.stop()
+        alarm.stop()
+        clock.stop()
+        if settings.getInt('use_lcd') == 1:
+            lcd.stop()
+        bright.stop()
+        media.spotify.stop()
 
-      log.warn("Shutting down")
-      media.playVoice('Shutting down. Goodbye')
-      time.sleep(2)
 
-      log.info("Stopping all services")
-      web.stop()
-      alarm.stop()
-      clock.stop()
-      lcd.stop()
-      bright.stop()
+        log.info("Shutdown complete, now exiting")
 
-      log.info("Shutdown complete, now exiting")
+        time.sleep(2)  # To give threads time to shut down
 
-      time.sleep(2) # To give threads time to shut down
+    def initWink(self, settings):
+        use_wink = settings.getInt('use_wink')
+        if use_wink == 1:
+            import Wink
+            log.debug("Initializing Wink")
+            wink = Wink.Wink()
+        else:
+            log.debug("Not using Wink")
+            wink = None
+        return wink
 
-alarm = AlarmPi()
-alarm.execute()
+    def initWeather(self, settings):
+        log.debug("Loading weather")
+        weather = WeatherFetcher(settings)
+        return weather
+
+    def initInput(self, settings, alarm):
+        from InputWorker import InputWorker
+        log.debug("Initializing inputs")
+        inputWorker = InputWorker(alarm, settings)
+        inputWorker.start()
+        return inputWorker
+
+    def initLCD(self, settings, weather, media, alarm):
+        if settings.getInt('use_lcd') == 1:
+            import LcdThread
+            log.debug("Loading LCD")
+            lcd = LcdThread.LcdThread(alarm, settings, weather, media, self.stop)
+            lcd.setDaemon(True)
+            lcd.start()
+        else:
+            log.debug("Not using LCD")
+            lcd = None
+        return lcd
+
+    def initMedia(self, settings):
+        log.debug("Loading media")
+        media = MediaPlayer.MediaPlayer(settings)
+        # media.playVoice('Starting up')
+        return media
+
+    def initBrightness(self, settings, clock, lcd):
+        if settings.getInt('use_luminosity_sensor') == 1:
+            log.debug("Loading brightness control")
+            import BrightnessThread
+            bright = BrightnessThread.BrightnessThread(settings)
+            bright.setDaemon(True)
+            bright.registerControlObject(clock.segment.disp)
+            if settings.getInt('use_lcd') == 1:
+                log.debug("Loading brightness control for LCD")
+                bright.registerControlObject(lcd)
+            bright.start()
+        else:
+            log.debug("Not Luminosity Sensor")
+            bright = None
+        return bright
+
+    def initWeb(self, settings, alarm):
+        log.debug("Starting web application")
+        web = WebApplication(alarm, settings)
+        web.setDaemon(True)
+        web.start()
+        return web
+
+    def initAlarm(self, settings, media, weather, wink):
+        log.debug("Loading alarm thread")
+        alarm = AlarmThread.AlarmThread(settings, media, weather, wink)
+        alarm.setDaemon(True)
+        return alarm
+
+    def initClock(self, settings):
+        log.debug("Loading clock")
+        import ClockThread
+        clock = ClockThread.ClockThread(settings)
+        clock.setDaemon(True)
+
+        log.debug("Starting clock")
+        clock.start()
+        return clock
+
+    def initSettings(self):
+        log.debug("Loading settings")
+        settings = Settings.Settings()
+        settings.setup()
+        return settings
+
+
+alarm_clock = AlarmPi()
+alarm_clock.execute()
