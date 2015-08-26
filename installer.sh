@@ -15,6 +15,7 @@ git clone https://github.com/seanbechhofer/raspberrypi.git seanbechhofer
 git clone https://github.com/baudm/mplayer.py.git
 git clone https://github.com/PDKK/RpiLcdBackpack.git
 git clone https://github.com/jso/py-wink.git
+git clone https://github.com/mattdy/googletts.git
 
 svn co http://projects.mattdyson.org/projects/LCDControl
 git clone https://github.com/jwr456/alarmpi.git
@@ -35,6 +36,7 @@ ln -s ../mplayer.py/mplayer/
 ln -s ../RpiLcdBackpack/
 ln -s ../seanbechhofer/python/TSL2561.py
 ln -s ../py-wink/wink/
+ln -s ../googletts ../speech
 
 CREDFILE="CalendarCredentials.py"
 touch $CREDFILE
