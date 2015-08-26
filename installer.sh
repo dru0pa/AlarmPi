@@ -14,9 +14,10 @@ git clone https://github.com/guyc/py-gaugette.git
 git clone https://github.com/seanbechhofer/raspberrypi.git seanbechhofer
 git clone https://github.com/baudm/mplayer.py.git
 git clone https://github.com/PDKK/RpiLcdBackpack.git
+git clone https://github.com/jso/py-wink.git
 
 svn co http://projects.mattdyson.org/projects/LCDControl
-svn co http://projects.mattdyson.org/projects/alarmpi
+git clone https://github.com/jwr456/alarmpi.git
 
 touch "RpiLcdBackpack/__init__.py"
 
@@ -33,6 +34,7 @@ ln -s ../LCDControl/LCDControl/
 ln -s ../mplayer.py/mplayer/
 ln -s ../RpiLcdBackpack/
 ln -s ../seanbechhofer/python/TSL2561.py
+ln -s ../py-wink/wink/
 
 CREDFILE="CalendarCredentials.py"
 touch $CREDFILE
@@ -52,3 +54,6 @@ echo "CLIENT_ID='$clientid'" >> $CREDFILE
 echo "CLIENT_SECRET='$clientsecret'" >> $CREDFILE
 echo "DEVELOPER_KEY='$developerkey'" >> $CREDFILE
 echo "CALENDAR='$calendar'" >> $CREDFILE
+
+echo "goto https://pyspotify.mopidy.com/en/latest/installation/ to setup Spotify support"
+echo "The Wink API is currently in beta and not yet publicly available. However, you may request a set of tokens by emailing questions@quirky.com and asking for early access to the Wink API."
